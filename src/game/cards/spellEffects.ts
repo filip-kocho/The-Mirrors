@@ -1,0 +1,92 @@
+/** Explicit v0.4 operations. Printed prose is never parsed at runtime. */
+export const quickOperations = [
+  "FEAR_COURAGE",
+  "MOVE_ONE",
+  "HEXLOCK",
+  "DARKNESS_REWARD",
+  "PULL_MIRROR",
+  "REMOTE_WHITE",
+  "PULL_OBJECT",
+  "BURN_ELEMENT",
+  "FEAR_TWO",
+  "VISION",
+  "PULL_ELEMENT",
+  "DARKNESS_NEAR",
+  "BURN_MIRROR",
+  "CALM_TOKENS",
+  "EXCHANGE",
+  "REMOVE_SEAL",
+  "PULL_TWO",
+  "CLEANSE_TWO",
+  "TELEPORT_TWO",
+  "TELEPORT_UNRESTORED",
+  "CROSS_SEAL",
+  "DARKNESS_TWO",
+  "RECRUIT_NEAR",
+  "TOOL",
+  "REMOVE_TWO_SEALS",
+  "CLEANSE_HERO",
+  "MOVE_THREE",
+  "RELOCATE_GLASS",
+  "REFRESH_OTHER",
+  "TELEPORT_ANY",
+  "OCCULDOR",
+  "PORTAL_PAIR",
+  "STEAL_COMPANION",
+  "PULL_PAIR",
+  "TELEPORT_PARTY",
+] as const;
+export const permanentOperations = [
+  "CURSE_GUARD",
+  "MOVE_BONUS",
+  "ARRIVAL_GUARD",
+  "IGNORE_DARKNESS",
+  "AETHER_WILD",
+  "REMOTE_WHITE_PERMISSION",
+  "ITEM_CAPACITY",
+  "FRAGMENT_REWARD",
+  "MOVE_FLOOR",
+  "VISION_NEAR",
+  "ADJACENT_TOOLS",
+  "MIRROR_CAPACITY",
+  "COLLISION_REWARD",
+  "IGNORE_PARALYSIS",
+  "ELEMENT_CAPACITY",
+  "SEAL_IMMUNITY",
+  "PAYMENT_WILD",
+  "PARALYSIS_IMMUNITY",
+  "PORTAL_ACCESS",
+  "VISION_TWO",
+  "IGNORE_THRESHOLD",
+  "ARRIVAL_GUARD_TWO",
+  "CURSE_COMPANION_GUARD",
+  "TOOL_REWARD",
+  "SEAL_GUARD",
+  "PSYCHOLOGICAL_GUARD",
+  "MOVE_BONUS_TWO",
+  "FREE_GLASS",
+  "QUICK_RETURN",
+  "HALL_CONNECTION",
+  "ARRIVAL_IMMUNITY",
+  "TURN_PORTAL",
+  "COMPANION_IMMUNITY",
+  "REMOTE_MIRRORS",
+  "IGNORE_MOVEMENT_TOKENS",
+] as const;
+export type SpellOperation =
+  (typeof quickOperations)[number] | (typeof permanentOperations)[number];
+export type SpellTiming = "NORMAL";
+export type SpellAdapter = {
+  operation: SpellOperation;
+  timing: SpellTiming;
+  unavailable?: string;
+};
+export const spellAdapters: Record<string, SpellAdapter[]> = Object.fromEntries(
+  quickOperations.map((op, i) => [
+    `SP-${String(i + 1).padStart(2, "0")}`,
+    [
+      { operation: op, timing: "NORMAL" },
+      { operation: permanentOperations[i], timing: "NORMAL" },
+    ],
+  ]),
+);

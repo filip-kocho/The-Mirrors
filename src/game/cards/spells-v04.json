@@ -1,0 +1,1219 @@
+[
+  {
+    "id": "SP-01",
+    "name": "Spark of Certainty",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Pyromancy",
+    "learn_elements": [
+      "Fire"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Fire",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove 1 of your Fear Tokens and gain 1 Courage."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Emerald"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Reduce Courage loss from each Black Mirror curse by 1."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-02",
+    "name": "Drawn Curtain",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Aeromancy",
+    "learn_elements": [
+      "Air"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Air",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Emerald"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Immediately move to an adjacent room through a legal connection. This is additional movement."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Emerald",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Increase normal movement allowance by 1."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-03",
+    "name": "Crystal Skin",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Geomancy",
+    "learn_elements": [
+      "Earth"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Earth",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amber"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove 1 of your Hexlock Tokens."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amber",
+          "Scarlet"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Reduce Courage loss from Occuldor punishments by 1."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-04",
+    "name": "Rippling Step",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Hydromancy",
+    "learn_elements": [
+      "Water"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Water",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Fuchsia"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove 1 Darkness Token from an explored room and gain 1 Courage."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Fuchsia",
+          "Emerald"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Darkness does not prevent your room actions. Its tokens remain."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-05",
+    "name": "Aether Thread",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Astromancy",
+    "learn_elements": [
+      "Aether"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amethyst"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Move 1 loose Mirror from an adjacent explored room into your room. An eligible pair follows normal placement rules."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amethyst",
+          "Scarlet"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Aether may substitute for any Element when learning Spells."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-06",
+    "name": "Mirror Glance",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Glamoury",
+    "learn_elements": [
+      "Air"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Air",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Fuchsia"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Place 1 carried White Mirror in an adjacent explored room. Any resulting pair follows normal placement and Collide rules."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Fuchsia",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "You may place White Mirrors in adjacent explored rooms as though present. Normal placement costs and limits apply."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-07",
+    "name": "Stone Mark",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Geomancy",
+    "learn_elements": [
+      "Earth"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Earth",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amber"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Move 1 loose Item or Element from an adjacent explored room into your room."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amber",
+          "Emerald"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Increase Equipment/Tool carrying capacity by 1."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-08",
+    "name": "Ember Pulse",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Pyromancy",
+    "learn_elements": [
+      "Fire"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Fire",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Leave 1 carried Element in your room and gain 3 Courage."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Gain 1 additional Courage whenever you restore a Kaleidoscope fragment."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-09",
+    "name": "Calm Waters",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Hydromancy",
+    "learn_elements": [
+      "Water"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Water",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Emerald"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove up to 2 of your Fear Tokens. Requires at least 1 Fear Token."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Emerald",
+          "Amethyst"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Normal movement cannot fall below 2 because of Fear tier alone. Other restrictions still apply."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-10",
+    "name": "Astral Notation",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Astromancy",
+    "learn_elements": [
+      "Aether"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amethyst"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Privately inspect the fragment colors of up to 2 unexplored rooms."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amethyst",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "You can privately see fragment colors in adjacent unexplored rooms."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-11",
+    "name": "Echo Walk",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Phonomancy",
+    "learn_elements": [
+      "Air"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Air",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Emerald"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Move 1 loose Element from an adjacent explored room into your room."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Emerald",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Tools in adjacent explored rooms count as accessible. Their normal activation limits still apply."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-12",
+    "name": "Geode Shelter",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Geomancy",
+    "learn_elements": [
+      "Earth"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Earth",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amber"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove 1 Darkness Token from your room or an adjacent room."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amber",
+          "Amethyst"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Increase carried Mirror capacity by 1."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-13",
+    "name": "Kindle Resolve",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Pyromancy",
+    "learn_elements": [
+      "Fire"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Fire",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Leave 1 carried Mirror in your room and gain 3 Courage."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Gain 1 additional Courage for each completed Mirror collision."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-14",
+    "name": "Tranquil Reflection",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Psychomancy",
+    "learn_elements": [
+      "Water"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Water",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Fuchsia"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove up to 1 of your Paralysis Tokens and 1 of your Fear Tokens. Requires at least 1 eligible token."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Fuchsia",
+          "Emerald"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Ignore Paralysis movement restrictions. Tokens remain."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-15",
+    "name": "Whisper of Origin",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Oneiromancy",
+    "learn_elements": [
+      "Aether"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amethyst"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Exchange 1 carried Element with 1 Element in an explored room. Leave your original Element in that room."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amethyst",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Increase Element carrying capacity by 1."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-16",
+    "name": "Warding Flame",
+    "family": "Spell",
+    "subtype": "Basic",
+    "school": "Pyromancy",
+    "learn_elements": [
+      "Fire"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Fire",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove 1 Sigil Seal from one of your learned Spells."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Amethyst"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Prevent all new Sigil Seals on your learned Spell actions. Existing Seals remain."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-17",
+    "name": "Prismatic Exchange",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Chromomancy",
+    "learn_elements": [
+      "Air",
+      "Earth"
+    ],
+    "tool_requirement": "Prism Lens",
+    "learning_cost": "Air + Earth",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amber",
+          "Fuchsia"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Move up to 2 loose Elements from one explored room into your room. Requires at least 1 Element."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amber",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "When learning a Spell, treat one paid Element as another Element type."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-18",
+    "name": "Purifying Steam",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Hydromancy",
+    "learn_elements": [
+      "Air",
+      "Fire"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Air + Fire",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet",
+          "Emerald"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove up to 2 of your Paralysis and/or Hexlock Tokens."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Emerald"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Remove existing Paralysis Tokens and become immune to new Paralysis."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-19",
+    "name": "Corridor Mist",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Aeromancy",
+    "learn_elements": [
+      "Air",
+      "Water"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Air + Water",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Emerald",
+          "Fuchsia"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Teleport to an explored room within 2 map connections. This is additional movement."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Emerald",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "You may enter the Portal network from your room as though it contained a Portal, if another active Portal exists."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-20",
+    "name": "Star Compass",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Astromancy",
+    "learn_elements": [
+      "Air",
+      "Aether"
+    ],
+    "tool_requirement": "Astrolabe",
+    "learning_cost": "Air + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amethyst",
+          "Amber"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Immediately move to any explored room with an unrestored fragment. This is additional movement."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amethyst",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Privately see fragment colors in unexplored rooms up to 2 connections away."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-21",
+    "name": "Molten Path",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Geomancy",
+    "learn_elements": [
+      "Earth",
+      "Fire"
+    ],
+    "tool_requirement": "Geode Compass",
+    "learning_cost": "Earth + Fire",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet",
+          "Amber"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Immediately cross one Corridor Block to an adjacent room. Leave the Block in place."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Corridor Blocks do not block your movement. Their tokens remain."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-22",
+    "name": "Rooted Ward",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Floramancy",
+    "learn_elements": [
+      "Earth",
+      "Water"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Earth + Water",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Emerald",
+          "Amber"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove up to 2 Darkness Tokens from one explored room."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Emerald",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Reduce Courage loss from Occuldor punishments by 2."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-23",
+    "name": "Gravestone Key",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Necromancy",
+    "learn_elements": [
+      "Earth",
+      "Aether"
+    ],
+    "tool_requirement": "Necronomicon",
+    "learning_cost": "Earth + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amethyst",
+          "Scarlet"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Move 1 unowned Companion from an adjacent explored room into your room and recruit it."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amethyst",
+          "Scarlet"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Your attached Companions cannot be forced to leave by Black Mirror curses."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-24",
+    "name": "Steam Rune",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Dynamancy",
+    "learn_elements": [
+      "Fire",
+      "Water"
+    ],
+    "tool_requirement": "Chronoscope",
+    "learning_cost": "Fire + Water",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet",
+          "Fuchsia"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Immediately activate one accessible Tool, paying its normal cost. This activation may bypass its once-per-round limit."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Whenever a Tool ability grants you Courage, gain 1 additional Courage."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-25",
+    "name": "Lantern of Souls",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Necromancy",
+    "learn_elements": [
+      "Fire",
+      "Aether"
+    ],
+    "tool_requirement": null,
+    "learning_cost": "Fire + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amethyst",
+          "Emerald"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove up to 2 Sigil Seals from your learned Spells."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amethyst",
+          "Emerald"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Prevent 1 Sigil Seal each time an effect places Seals on your learned Spells."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-26",
+    "name": "Veil of Forgetting",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Psychomancy",
+    "learn_elements": [
+      "Water",
+      "Aether"
+    ],
+    "tool_requirement": "Psychograph",
+    "learning_cost": "Water + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Fuchsia",
+          "Amethyst"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Remove all Fear Tokens and Hexlocks from one hero in your room, including yourself."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Fuchsia",
+          "Amethyst"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Reduce Courage loss from each Psychological Black Mirror curse by 2."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-27",
+    "name": "Stonewind Equation",
+    "family": "Spell",
+    "subtype": "Intermediate",
+    "school": "Numeromancy",
+    "learn_elements": [
+      "Air",
+      "Earth"
+    ],
+    "tool_requirement": "Chronoscope",
+    "learning_cost": "Air + Earth",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amber",
+          "Emerald"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Immediately move up to 3 rooms through legal connections. This is additional movement."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amber",
+          "Emerald"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Increase normal movement allowance by 2."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-28",
+    "name": "Kaleidoscope Command",
+    "family": "Spell",
+    "subtype": "Advanced",
+    "school": "Chromomancy",
+    "learn_elements": [
+      "Earth",
+      "Fire",
+      "Water",
+      "Aether"
+    ],
+    "tool_requirement": "Prism Lens",
+    "learning_cost": "Earth + Fire + Water + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amber",
+          "Amethyst"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Relocate 1 restored fragment to another empty legal Kaleidoscope position. Gain no new Sigil, restoration or Courage reward."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amber",
+          "Amethyst",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Restore fragments in any empty Kaleidoscope position, ignoring edge/adjacency restrictions. Gain 1 additional Courage per restoration."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-29",
+    "name": "Chronomantic Anchor",
+    "family": "Spell",
+    "subtype": "Advanced",
+    "school": "Chronomancy",
+    "learn_elements": [
+      "Earth",
+      "Fire",
+      "Water",
+      "Aether"
+    ],
+    "tool_requirement": "Chronoscope",
+    "learning_cost": "Earth + Fire + Water + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Fuchsia",
+          "Amethyst"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Return up to 2 temporary Quick Sigils from your other learned Spells to storage. Permanent Sigils cannot return."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Fuchsia",
+          "Amethyst",
+          "Emerald"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "After each successful Quick activation, immediately return 1 of its assigned Sigils to storage. The rest return next owner turn."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-30",
+    "name": "Doors Without Walls",
+    "family": "Spell",
+    "subtype": "Advanced",
+    "school": "Cryptomancy",
+    "learn_elements": [
+      "Air",
+      "Fire",
+      "Water",
+      "Aether"
+    ],
+    "tool_requirement": "Cryptex",
+    "learning_cost": "Air + Fire + Water + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet",
+          "Amber"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Teleport to any discovered room. This is additional movement."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Amber",
+          "Amethyst"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Treat the Mirror Hall as directly connected to your current room for legal movement."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-31",
+    "name": "Occuldor’s Undoing",
+    "family": "Spell",
+    "subtype": "Advanced",
+    "school": "Necromancy",
+    "learn_elements": [
+      "Air",
+      "Fire",
+      "Water",
+      "Aether"
+    ],
+    "tool_requirement": "Necronomicon",
+    "learning_cost": "Air + Fire + Water + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amethyst",
+          "Scarlet"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Move Occuldor to any legal room. Resolve his normal arrival punishment for heroes there."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amethyst",
+          "Scarlet",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Suffer no Courage loss from Occuldor presence or arrival punishments. Other effects still apply."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-32",
+    "name": "Midnight Chorus",
+    "family": "Spell",
+    "subtype": "Advanced",
+    "school": "Phonomancy",
+    "learn_elements": [
+      "Air",
+      "Earth",
+      "Water",
+      "Aether"
+    ],
+    "tool_requirement": "Phonograph",
+    "learning_cost": "Air + Earth + Water + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Emerald",
+          "Fuchsia"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Place 2 matching Portal Tokens: one in your room and one in another explored room. Requires 2 available tokens and rooms without Portals."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Emerald",
+          "Fuchsia",
+          "Amethyst"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "At the start of each of your turns, you may place an available Portal Token in your room if none is present. No additional Sigils are needed."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-33",
+    "name": "The Witches’ Covenant",
+    "family": "Spell",
+    "subtype": "Advanced",
+    "school": "Floramancy",
+    "learn_elements": [
+      "Air",
+      "Earth",
+      "Water",
+      "Aether"
+    ],
+    "tool_requirement": "Florist’s Shears",
+    "learning_cost": "Air + Earth + Water + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Emerald",
+          "Amethyst"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Steal 1 Companion attached to another hero in your room. Loyal Companions follow you; Strays retain their normal behavior. This is not a discovery."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Emerald",
+          "Amethyst",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Your attached Companions are immune to forced abandonment and conflicts. Normal Stray transfers still apply."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-34",
+    "name": "Fifth Reflection",
+    "family": "Spell",
+    "subtype": "Advanced",
+    "school": "Astromancy",
+    "learn_elements": [
+      "Air",
+      "Earth",
+      "Fire",
+      "Aether"
+    ],
+    "tool_requirement": "Astrolabe",
+    "learning_cost": "Air + Earth + Fire + Aether",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Amethyst",
+          "Amber"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Move 1 loose White Mirror and 1 loose Black Mirror from explored rooms into your room. Any eligible pair follows normal placement and Collide rules."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Amethyst",
+          "Amber",
+          "Fuchsia"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Place Mirrors and flip unblocked Black Mirrors in any explored room as though present. Normal limits apply. You suffer the flipped curse; Occuldor punishes actual occupants of his arrival room."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  },
+  {
+    "id": "SP-35",
+    "name": "Unbroken Horizon",
+    "family": "Spell",
+    "subtype": "Advanced",
+    "school": "Geomancy",
+    "learn_elements": [
+      "Air",
+      "Earth",
+      "Fire",
+      "Water"
+    ],
+    "tool_requirement": "Geode Compass",
+    "learning_cost": "Air + Earth + Fire + Water",
+    "casting_modes": [
+      {
+        "name": "Quick",
+        "sigil_slots": [
+          "Scarlet",
+          "Emerald"
+        ],
+        "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+        "effect": "Teleport yourself and up to 1 consenting hero in your room to any discovered room. This is additional movement."
+      },
+      {
+        "name": "Permanent",
+        "sigil_slots": [
+          "Scarlet",
+          "Emerald",
+          "Amber"
+        ],
+        "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+        "effect": "Ignore Paralysis and Corridor Block movement restrictions. Their tokens remain."
+      }
+    ],
+    "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+    "status": "CONFIRMED revised Spell catalog v0.4"
+  }
+]

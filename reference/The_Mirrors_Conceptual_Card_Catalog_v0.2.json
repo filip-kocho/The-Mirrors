@@ -1,0 +1,2736 @@
+{
+  "metadata": {
+    "title": "The Mirrors - Complete Conceptual Card Catalog",
+    "version": "0.2 / proposal",
+    "card_count": 155,
+    "families": {
+      "White Mirror": 35,
+      "Black Mirror": 35,
+      "Item": 25,
+      "Spell": 35,
+      "Companion": 10,
+      "Secret": 15
+    },
+    "setup": {
+      "mirror_fragments": 35,
+      "sigils_by_color": {
+        "Scarlet": 7,
+        "Emerald": 7,
+        "Amber": 7,
+        "Fuchsia": 7,
+        "Amethyst": 7
+      },
+      "total_elements": 70,
+      "elements_by_type": {
+        "Air": 14,
+        "Earth": 14,
+        "Fire": 14,
+        "Water": 14,
+        "Aether": 14
+      },
+      "knowledge_slots": "4 slots unlocked at 1 total Sigil, 3 different colors, 3 matching colors, and 5 different colors; unlock permanently when achieved",
+      "courage": "Each placement +1 Courage; proposed adjacency implementation: choose one touching piece; matching color +1, different color +2; no neighbors +0. This interpretation is provisional."
+    },
+    "caveats": [
+      "All individual effects are proposed and require playtesting.",
+      "White Mirror discovery family counts and spell Element costs are mathematically verified.",
+      "Learning Element tokens are assumed spent; Tool is not consumed (provisional).",
+      "Quick Sigils exhaust and refresh at start of owner next turn (provisional).",
+      "Permanent Sigils remain on the card; disposal/recovery when leaving a Spell is deferred.",
+      "Occuldor arrival punishment: only heroes in room entered; Black Mirror curse: only hero flipping.",
+      "Black Mirror can never stop corresponding fragment restoration even if it causes death or movement (provisional).",
+      "Room objects accessible without carrying; Spells still require learning and Sigils."
+    ]
+  },
+  "cards": {
+    "White Mirror": [
+      {
+        "id": "WM-01",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Secret",
+          "Companion",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 secret, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-02",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Item",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 item immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-03",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 2 spells immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-04",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Secret"
+        ],
+        "effect": "When illuminated, reveal 2 spells, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-05",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Item",
+          "Item"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 2 items immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-06",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Secret",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-07",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Item",
+          "Companion"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 item, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-08",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Item",
+          "Item",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 2 items immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-09",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Item"
+        ],
+        "effect": "When illuminated, reveal 2 spells, 1 item immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-10",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Item"
+        ],
+        "effect": "When illuminated, reveal 2 spells, 1 item immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-11",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Secret"
+        ],
+        "effect": "When illuminated, reveal 2 spells, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-12",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Item",
+          "Secret"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 item, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-13",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Companion",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-14",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Secret",
+          "Companion"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 secret, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-15",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Item",
+          "Item",
+          "Companion"
+        ],
+        "effect": "When illuminated, reveal 2 items, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-16",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Secret",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-17",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Item",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 item immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-18",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Item",
+          "Companion",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 item, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-19",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Item",
+          "Item",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 2 items immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-20",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Companion"
+        ],
+        "effect": "When illuminated, reveal 2 spells, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-21",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Secret",
+          "Secret",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 2 secrets immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-22",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Companion",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-23",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Item",
+          "Item",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 2 items immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-24",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Secret"
+        ],
+        "effect": "When illuminated, reveal 2 spells, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-25",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Item",
+          "Item",
+          "Secret"
+        ],
+        "effect": "When illuminated, reveal 2 items, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-26",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Item",
+          "Item"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 2 items immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-27",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Item",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 item immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-28",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Item",
+          "Secret",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 item, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-29",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Secret",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 secret immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-30",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Item"
+        ],
+        "effect": "When illuminated, reveal 2 spells, 1 item immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-31",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 2 spells immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-32",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Companion",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-33",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Secret",
+          "Secret"
+        ],
+        "effect": "When illuminated, reveal 1 spell, 2 secrets immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-34",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Item",
+          "Companion",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 1 item, 1 companion immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      },
+      {
+        "id": "WM-35",
+        "name": "White Mirror",
+        "family": "White Mirror",
+        "subtype": "Discovery",
+        "slots": [
+          "Spell",
+          "Spell",
+          "Empty"
+        ],
+        "effect": "When illuminated, reveal 2 spells immediately. Put Items, Spells and Companions in this room; give any Secrets privately to the discoverer.",
+        "cost": "No additional cost; activation is governed by the mirror-pair rules.",
+        "duration": "Immediate; discoveries remain as specified.",
+        "status": "CONFIRMED structure / PROPOSED exact pattern allocation"
+      }
+    ],
+    "Black Mirror": [
+      {
+        "id": "BM-01",
+        "name": "Unwelcome Reflection",
+        "family": "Black Mirror",
+        "subtype": "Psychological",
+        "effect": "Lose 2 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Low",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-02",
+        "name": "The Coward in Glass",
+        "family": "Black Mirror",
+        "subtype": "Psychological",
+        "effect": "Lose 1 Courage for each different Sigil color you currently possess (maximum 3).",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-03",
+        "name": "A Face Without Eyes",
+        "family": "Black Mirror",
+        "subtype": "Psychological",
+        "effect": "Lose 2 Courage. Your movement allowance is reduced by 1 on your next turn (minimum 1).",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-04",
+        "name": "Echo of Panic",
+        "family": "Black Mirror",
+        "subtype": "Psychological",
+        "effect": "Lose 3 Courage unless you have a Companion present with you.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-05",
+        "name": "Borrowed Terror",
+        "family": "Black Mirror",
+        "subtype": "Psychological",
+        "effect": "Lose 1 Courage and place a Dread marker on yourself; remove it after your next mandatory movement. While marked, you cannot gain bonus movement.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Until next move",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-06",
+        "name": "Shattered Nerve",
+        "family": "Black Mirror",
+        "subtype": "Psychological",
+        "effect": "Lose 3 Courage. You cannot receive a protective Courage refund from a card during this curse.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "High",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-07",
+        "name": "Occuldor’s Smile",
+        "family": "Black Mirror",
+        "subtype": "Psychological",
+        "effect": "Lose 4 Courage; if this would reduce you to 0, resolve the fragment restoration first.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "High",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-08",
+        "name": "Empty Pockets",
+        "family": "Black Mirror",
+        "subtype": "Material",
+        "effect": "Leave 1 carried Element of your choice in this room.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Low",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-09",
+        "name": "Cracked Satchel",
+        "family": "Black Mirror",
+        "subtype": "Material",
+        "effect": "Leave 1 carried Item of your choice in this room; its ongoing effect ends when you leave.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-10",
+        "name": "Stolen Color",
+        "family": "Black Mirror",
+        "subtype": "Material",
+        "effect": "Choose one Element type you carry. Leave all your tokens of that type in this room (maximum 2).",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-11",
+        "name": "The Unpacking",
+        "family": "Black Mirror",
+        "subtype": "Material",
+        "effect": "Choose up to 2 carried objects (Elements, Mirrors or Items) and leave them in the room; if you have fewer, leave what you can.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-12",
+        "name": "False Weight",
+        "family": "Black Mirror",
+        "subtype": "Material",
+        "effect": "Until the end of your next turn, your Element capacity is 1 lower (minimum 1). Place excess Elements in this room.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-13",
+        "name": "Fractured Case",
+        "family": "Black Mirror",
+        "subtype": "Material",
+        "effect": "If carrying a White or Black Mirror, leave one in this room; otherwise lose 2 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-14",
+        "name": "The Price of Vanity",
+        "family": "Black Mirror",
+        "subtype": "Material",
+        "effect": "Choose: leave one Tool or Equipment in this room, or lose 3 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "High",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-15",
+        "name": "Backwards Passage",
+        "family": "Black Mirror",
+        "subtype": "Spatial",
+        "effect": "After the collision, move to an adjacent connected room of your choice; this is forced movement, not your mandatory move.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "After collision",
+        "severity": "Low",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-16",
+        "name": "Hallway of Doubles",
+        "family": "Black Mirror",
+        "subtype": "Spatial",
+        "effect": "After the collision, return to the last room you occupied before entering this one, if reachable; otherwise lose 1 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "After collision",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-17",
+        "name": "Twisted Step",
+        "family": "Black Mirror",
+        "subtype": "Spatial",
+        "effect": "Your next mandatory movement must end in a room you have previously visited, if legally reachable.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-18",
+        "name": "Distant Reflection",
+        "family": "Black Mirror",
+        "subtype": "Spatial",
+        "effect": "After the collision, move to the nearest discovered room containing an Element; if tied, choose.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "After collision",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-19",
+        "name": "Doors Remember",
+        "family": "Black Mirror",
+        "subtype": "Spatial",
+        "effect": "Choose one connection from your current room. You may not use that connection on your next turn.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-20",
+        "name": "Lost Direction",
+        "family": "Black Mirror",
+        "subtype": "Spatial",
+        "effect": "On your next turn, move exactly your normal movement allowance if possible instead of up to it.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "High",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-21",
+        "name": "Mirror Spiral",
+        "family": "Black Mirror",
+        "subtype": "Spatial",
+        "effect": "After the collision, move to any discovered room sharing a connection with the central Hall; if none exists, lose 2 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "After collision",
+        "severity": "High",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-22",
+        "name": "Frightened Familiar",
+        "family": "Black Mirror",
+        "subtype": "Supernatural",
+        "effect": "One of your Follower Companions (your choice) stays in this room until recruited again. If none, lose 1 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Immediate",
+        "severity": "Low",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-23",
+        "name": "Faded Incantation",
+        "family": "Black Mirror",
+        "subtype": "Supernatural",
+        "effect": "One Quick Sigil assigned to a Spell you control becomes exhausted until your next turn. If none, lose 1 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "Low",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-24",
+        "name": "Muted Words",
+        "family": "Black Mirror",
+        "subtype": "Supernatural",
+        "effect": "Choose one of your learned Spells. You cannot Quick-cast it on your next turn.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-25",
+        "name": "Strange Appetite",
+        "family": "Black Mirror",
+        "subtype": "Supernatural",
+        "effect": "One Companion with you cannot grant its positive ability during your next turn. If none, lose 2 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-26",
+        "name": "Cold Binding",
+        "family": "Black Mirror",
+        "subtype": "Supernatural",
+        "effect": "One Permanent Spell you control is suppressed until the end of your next turn; its bound Sigils remain attached. If none, lose 2 Courage.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-27",
+        "name": "The Broken Chant",
+        "family": "Black Mirror",
+        "subtype": "Supernatural",
+        "effect": "Until your next turn, the first Quick Spell you cast requires exhausting one additional available matching Sigil (if none, you cannot cast that Spell).",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "High",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-28",
+        "name": "Haunting Silence",
+        "family": "Black Mirror",
+        "subtype": "Supernatural",
+        "effect": "Choose two different learned Spells, if able. Neither can be Quick-cast on your next turn.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Next turn",
+        "severity": "High",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-29",
+        "name": "A Door Turns Pale",
+        "family": "Black Mirror",
+        "subtype": "Castle-wide",
+        "effect": "After the collision, mark one connection touching this room. It is closed until the beginning of your next turn.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Temporary map change",
+        "severity": "Low",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-30",
+        "name": "The Lights Die",
+        "family": "Black Mirror",
+        "subtype": "Castle-wide",
+        "effect": "Place a Darkness marker on this room. The next hero to enter it removes the marker and must end movement there; no Courage loss is dealt by this curse.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Persistent room condition",
+        "severity": "Low",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-31",
+        "name": "Wandering Stair",
+        "family": "Black Mirror",
+        "subtype": "Castle-wide",
+        "effect": "Move one neutral stair marker to a different legal room connection; that connection is a shortcut until the next collision.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Map rule",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-32",
+        "name": "False Sanctuary",
+        "family": "Black Mirror",
+        "subtype": "Castle-wide",
+        "effect": "Place a Distortion marker in this room. The next discovered Companion cannot be recruited from this room until someone leaves and re-enters it.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Room rule",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-33",
+        "name": "Broken Corridor",
+        "family": "Black Mirror",
+        "subtype": "Castle-wide",
+        "effect": "Select one connection on the castle map. Close it until another fragment is restored; players may use other legal paths.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Map rule",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-34",
+        "name": "Occuldor’s Echo",
+        "family": "Black Mirror",
+        "subtype": "Castle-wide",
+        "effect": "Place an Echo marker on this room. The next Black Mirror flipped here forces its flipper to lose 1 additional Courage, then remove Echo.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Deferred flipper-only penalty",
+        "severity": "Medium",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "BM-35",
+        "name": "Restless Manor",
+        "family": "Black Mirror",
+        "subtype": "Castle-wide",
+        "effect": "Place one Haunting marker on any explored room. The first hero who chooses to use its local inventory must lose 1 Courage or ignore those objects this turn; then discard Haunting.",
+        "cost": "Flip an unblocked Black Mirror; only the flipping hero resolves this card.",
+        "duration": "Deferred environmental cost",
+        "severity": "High",
+        "status": "PROPOSED effect"
+      }
+    ],
+    "Item": [
+      {
+        "id": "IT-01",
+        "name": "Element Bandolier",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Passive",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Your carried Element capacity increases by 1.",
+        "notes": "Room access grants the increase only while present.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-02",
+        "name": "Double-Pocket Satchel",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Passive",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Your Equipment/Tool carrying capacity increases by 1.",
+        "notes": "Cannot use its own bonus to remove itself while over capacity.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-03",
+        "name": "Mirror Harness",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Passive",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Your carried Mirror capacity increases by 1.",
+        "notes": "White and Black Mirrors share this capacity.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-04",
+        "name": "Swiftstep Boots",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Movement",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Gain +1 maximum movement on each mandatory move.",
+        "notes": "Movement still mandatory.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-05",
+        "name": "Traveler’s Lantern",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Arrival defense",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "The first Courage loss from Occuldor entering your room each round is reduced by 1.",
+        "notes": "No effect against Black Mirror curses.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-06",
+        "name": "Reflective Mantle",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Flip defense",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per turn, reduce Courage lost from your Black Mirror curse by 1.",
+        "notes": "Cannot reduce unrelated Occuldor arrival punishment.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-07",
+        "name": "Lockable Mirror Case",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Passive",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Black Mirror curses cannot force you to leave carried Mirror cards in a room.",
+        "notes": "Does not stop voluntary trading.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-08",
+        "name": "Interchange Pouch",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Preparation",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per turn, exchange 1 carried Element for 1 different Element present in your room without counting an additional action.",
+        "notes": "No Element is created.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-09",
+        "name": "Corridor Chalk",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Navigation",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once during your mandatory movement, treat one already-explored adjacent room as a legal transit room even if one temporary Darkness restriction applies.",
+        "notes": "Does not bypass hard-closed connections.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-10",
+        "name": "Portable Writing Desk",
+        "family": "Item",
+        "subtype": "Equipment",
+        "timing": "Spell management",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "You may learn a Spell in your current room before or after movement when its requirements are available.",
+        "notes": "Learning still pays all Elements and uses a knowledge slot.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-11",
+        "name": "Prism Lens",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Inspection",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per turn, look privately at one face-down Black Mirror in your room; return it face-down.",
+        "notes": "Spell requirement: Chromomancy / mirror foresight.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-12",
+        "name": "Astrolabe",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Preparation",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per turn, inspect the color of one unexplored room adjacent to your current room; do not explore it.",
+        "notes": "Spell requirement: Astromancy.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-13",
+        "name": "Cryptex",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Secret research",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per turn, you may exchange one Secret in your hand for the top Secret of the deck, keeping the new card private.",
+        "notes": "Spell requirement: Cryptomancy; old Secret is discarded.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-14",
+        "name": "Chronoscope",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Time",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per round, treat your movement allowance as 1 higher or lower (minimum 1).",
+        "notes": "Spell requirement: Chronomancy.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-15",
+        "name": "Necronomicon",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Spirit lore",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "When entering a room with a Ghost Companion, you may resolve its beneficial entry effect once even if not recruited.",
+        "notes": "Spell requirement: Necromancy.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-16",
+        "name": "Phonograph",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Sound",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per turn, cancel a non-Courage movement restriction caused by one Companion in your room.",
+        "notes": "Spell requirement: Phonomancy.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-17",
+        "name": "Florist’s Shears",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Growth",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "A Plant Companion in your room may be treated as a Follower until your next move ends.",
+        "notes": "Spell requirement: Floramancy.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-18",
+        "name": "Geode Compass",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Geology",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per turn, exchange one Earth Element for any one Element present in the same room.",
+        "notes": "Spell requirement: Geomancy; no token creation.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-19",
+        "name": "Psychograph",
+        "family": "Item",
+        "subtype": "Tool",
+        "timing": "Mind",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once per round, treat yourself as one Fear tier higher for the purpose of a Spell’s condition (not for Courage or movement).",
+        "notes": "Spell requirement: Psychomancy.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-20",
+        "name": "Ring of Steady Light",
+        "family": "Item",
+        "subtype": "Relic",
+        "timing": "Passive",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "The first point of Courage you lose on your own turn each round is prevented.",
+        "notes": "Does not reduce Occuldor arrival loss on another turn.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-21",
+        "name": "Pendant of the Third Eye",
+        "family": "Item",
+        "subtype": "Relic",
+        "timing": "Mirror placement",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Once each round, after you place a Mirror pair, you may look at the face-down Black Mirror in that room.",
+        "notes": "You may not reveal it to others.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-22",
+        "name": "Brooch of Passage",
+        "family": "Item",
+        "subtype": "Relic",
+        "timing": "Movement",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "When starting movement at Courage 7 or lower, you may move up to 2 rooms regardless of your current tier allowance.",
+        "notes": "Does not prevent paralysis.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-23",
+        "name": "Crown Shard of Resolve",
+        "family": "Item",
+        "subtype": "Relic",
+        "timing": "Courage",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Whenever you restore a fragment whose placement has zero same-color neighbors, gain +1 Courage.",
+        "notes": "Once per restored fragment; no stacking from multiple Relics.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-24",
+        "name": "Amulet of Unbinding",
+        "family": "Item",
+        "subtype": "Relic",
+        "timing": "Sigil",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "The first time each game you abandon a Spell with Permanent Sigils, recover one bound Sigil to your exhausted supply instead of discarding it.",
+        "notes": "Sigil cannot activate again until refreshed.",
+        "status": "PROPOSED effect"
+      },
+      {
+        "id": "IT-25",
+        "name": "Locket of the Drunken Pony",
+        "family": "Item",
+        "subtype": "Relic",
+        "timing": "Companion",
+        "cost": "No learning cost. Access in your room or carry within Item/Relic limits.",
+        "effect": "Your first Companion conflict each round may be ignored; both Companions remain.",
+        "notes": "Characters still follow their own timing rules.",
+        "status": "PROPOSED effect"
+      }
+    ],
+    "Spell": [
+      {
+        "id": "SP-01",
+        "name": "Spark of Certainty",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Pyromancy",
+        "learn_elements": [
+          "Fire"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Fire",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "After revealing your Black Mirror curse, reduce its Courage loss by 1."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Emerald"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, when you flip a Black Mirror, gain +1 Courage after all its effects."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-02",
+        "name": "Drawn Curtain",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Aeromancy",
+        "learn_elements": [
+          "Air"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Air",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Emerald"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Before your mandatory move, ignore one temporary room-entry restriction."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Emerald",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Your mandatory movement has +1 maximum range."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-03",
+        "name": "Crystal Skin",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Geomancy",
+        "learn_elements": [
+          "Earth"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Earth",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amber"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Prevent 1 Courage loss from Occuldor arriving in your room."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amber",
+              "Scarlet"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Whenever Occuldor enters your room, prevent 1 Courage loss."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-04",
+        "name": "Rippling Step",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Hydromancy",
+        "learn_elements": [
+          "Water"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Water",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Fuchsia"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "After mandatory movement, move one additional connected room (you may enter it)."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Fuchsia",
+              "Emerald"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "The first forced relocation you suffer each round may be redirected to an adjacent explored room."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-05",
+        "name": "Aether Thread",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Astromancy",
+        "learn_elements": [
+          "Aether"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Aether",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amethyst"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Recover one exhausted Quick Sigil after resolving your current action."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amethyst",
+              "Scarlet"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, after you Quick-cast a Spell, refresh one other exhausted Quick Sigil."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-06",
+        "name": "Mirror Glance",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Glamoury",
+        "learn_elements": [
+          "Air"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Air",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Fuchsia"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Privately inspect one installed face-down Black Mirror in your current room."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Fuchsia",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once each round, before flipping a Black Mirror, you may inspect it first."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-07",
+        "name": "Stone Mark",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Geomancy",
+        "learn_elements": [
+          "Earth"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Earth",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amber"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Place a Waymark in your current room; you may retrieve it later as a free preparation action."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amber",
+              "Emerald"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "During movement, you may traverse one temporarily closed doorway per turn."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-08",
+        "name": "Ember Pulse",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Pyromancy",
+        "learn_elements": [
+          "Fire"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Fire",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Gain +1 Courage after entering a previously unexplored room this turn."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Whenever you reveal a White Mirror with at least one Spell symbol, gain +1 Courage."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-09",
+        "name": "Calm Waters",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Hydromancy",
+        "learn_elements": [
+          "Water"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Water",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Emerald"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Gain +1 Courage if your Courage is 14 or lower."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Emerald",
+              "Amethyst"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Your movement allowance is never reduced below 2 by Fear tier alone."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-10",
+        "name": "Astral Notation",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Astromancy",
+        "learn_elements": [
+          "Aether"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Aether",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amethyst"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Look at one currently unexplored room’s fragment color adjacent to you."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amethyst",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, look at the fragment color of one unexplored room up to two connections away."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-11",
+        "name": "Echo Walk",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Phonomancy",
+        "learn_elements": [
+          "Air"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Air",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Emerald"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "For this mandatory move, you may stop at any intermediate room and explore it."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Emerald",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per turn, treat a passed-through explored room as your current room for one Item or Tool effect only."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-12",
+        "name": "Geode Shelter",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Geomancy",
+        "learn_elements": [
+          "Earth"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Earth",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amber"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Place a Ward on this room, preventing 1 Courage loss to you on Occuldor’s next arrival here."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amber",
+              "Amethyst"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "While in any room containing your Ward, prevent 1 Courage loss from each Occuldor arrival."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-13",
+        "name": "Kindle Resolve",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Pyromancy",
+        "learn_elements": [
+          "Fire"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Fire",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "After your Black Mirror curse resolves, gain +1 Courage if you survived."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "When you restore a fragment, gain +1 additional Courage (not per adjacent piece)."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-14",
+        "name": "Tranquil Reflection",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Psychomancy",
+        "learn_elements": [
+          "Water"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Water",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Fuchsia"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "You may treat your current Fear state as Calm for your mandatory movement this turn."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Fuchsia",
+              "Emerald"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Your movement allowance is at least 2 while not Paralyzed."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-15",
+        "name": "Whisper of Origin",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Oneiromancy",
+        "learn_elements": [
+          "Aether"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Aether",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amethyst"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Swap one Element you carry with one different Element in your current room."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amethyst",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, convert one Element you pay for learning into any other Element type."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-16",
+        "name": "Warding Flame",
+        "family": "Spell",
+        "subtype": "Basic",
+        "school": "Pyromancy",
+        "learn_elements": [
+          "Fire"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Fire",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Prevent the next 1 Courage loss you would suffer before your next turn."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Amethyst"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "The first Black Mirror curse you resolve each round deals at most 2 Courage loss to you."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-17",
+        "name": "Prismatic Exchange",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Chromomancy",
+        "learn_elements": [
+          "Air",
+          "Earth"
+        ],
+        "tool_requirement": "Prism Lens",
+        "learning_cost": "Air + Earth; requires access to Prism Lens (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amber",
+              "Fuchsia"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "For one Spell learning payment, treat one spent Element as any chosen Element type."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amber",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per turn, exchange one carried Element with one token from the general Element supply; return the old token to supply."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-18",
+        "name": "Purifying Steam",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Hydromancy",
+        "learn_elements": [
+          "Air",
+          "Fire"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Air + Fire",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet",
+              "Emerald"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Remove Paralysis or Dread from yourself; you may then take your normal mandatory move."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Emerald"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Ignore the first Paralysis token placed on you each round."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-19",
+        "name": "Corridor Mist",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Aeromancy",
+        "learn_elements": [
+          "Air",
+          "Water"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Air + Water",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Emerald",
+              "Fuchsia"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Move to any explored room at most two connections away; this does not replace mandatory movement."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Emerald",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Your movement may pass through one hero-occupied or Occuldor-occupied room without stopping."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-20",
+        "name": "Star Compass",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Astromancy",
+        "learn_elements": [
+          "Air",
+          "Aether"
+        ],
+        "tool_requirement": "Astrolabe",
+        "learning_cost": "Air + Aether; requires access to Astrolabe (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amethyst",
+              "Amber"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Reveal the fragment color of any one unexplored room."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amethyst",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once each turn, inspect the color of one unexplored room before deciding your mandatory route."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-21",
+        "name": "Molten Path",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Geomancy",
+        "learn_elements": [
+          "Earth",
+          "Fire"
+        ],
+        "tool_requirement": "Geode Compass",
+        "learning_cost": "Earth + Fire; requires access to Geode Compass (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet",
+              "Amber"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Open one temporarily closed doorway until end of turn; you may use it this move."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, make one closed connection touching your current room passable for the whole turn."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-22",
+        "name": "Rooted Ward",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Floramancy",
+        "learn_elements": [
+          "Earth",
+          "Water"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Earth + Water",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Emerald",
+              "Amber"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Prevent 2 Courage loss from Occuldor arriving in your current room."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Emerald",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, prevent 1 Courage loss for each other hero in your room from the same Occuldor arrival."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-23",
+        "name": "Gravestone Key",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Necromancy",
+        "learn_elements": [
+          "Earth",
+          "Aether"
+        ],
+        "tool_requirement": "Necronomicon",
+        "learning_cost": "Earth + Aether; requires access to Necronomicon (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amethyst",
+              "Scarlet"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Move one Ghost Companion from an adjacent explored room into yours, resolving entry behavior."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amethyst",
+              "Scarlet"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Ghost Companions in your room cannot be forced to flee."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-24",
+        "name": "Steam Rune",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Dynamancy",
+        "learn_elements": [
+          "Fire",
+          "Water"
+        ],
+        "tool_requirement": "Chronoscope",
+        "learning_cost": "Fire + Water; requires access to Chronoscope (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet",
+              "Fuchsia"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Make an additional legal Item/Tool activation in your current room this turn."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per turn, activate a Tool in your room a second time."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-25",
+        "name": "Lantern of Souls",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Necromancy",
+        "learn_elements": [
+          "Fire",
+          "Aether"
+        ],
+        "tool_requirement": null,
+        "learning_cost": "Fire + Aether",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amethyst",
+              "Emerald"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "After your Black Mirror curse, gain 2 Courage if it made a Companion flee or disabled a Spell."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amethyst",
+              "Emerald"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "The first supernatural Black Mirror curse that would disable your Companion or Spell each round does not do so."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-26",
+        "name": "Veil of Forgetting",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Psychomancy",
+        "learn_elements": [
+          "Water",
+          "Aether"
+        ],
+        "tool_requirement": "Psychograph",
+        "learning_cost": "Water + Aether; requires access to Psychograph (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Fuchsia",
+              "Amethyst"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "After looking at a hidden Black Mirror via a Tool or Spell, you may place it at the bottom of the remaining Black Mirror deck and replace it with the top card, face-down."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Fuchsia",
+              "Amethyst"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, reduce Courage loss from a Psychological Black Mirror curse by 2."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-27",
+        "name": "Stonewind Equation",
+        "family": "Spell",
+        "subtype": "Intermediate",
+        "school": "Numeromancy",
+        "learn_elements": [
+          "Air",
+          "Earth"
+        ],
+        "tool_requirement": "Chronoscope",
+        "learning_cost": "Air + Earth; requires access to Chronoscope (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amber",
+              "Emerald"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Change your mandatory movement allowance by +2 or -1 this turn (minimum 1)."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amber",
+              "Emerald"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Whenever you complete mandatory movement exactly 2 rooms long, gain +1 Courage."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-28",
+        "name": "Kaleidoscope Command",
+        "family": "Spell",
+        "subtype": "Advanced",
+        "school": "Chromomancy",
+        "learn_elements": [
+          "Earth",
+          "Fire",
+          "Water",
+          "Aether"
+        ],
+        "tool_requirement": "Prism Lens",
+        "learning_cost": "Earth + Fire + Water + Aether; requires access to Prism Lens (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amber",
+              "Amethyst"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Choose one legal Kaleidoscope placement space for this restoration. If it borders at least two colors, gain +1 Courage."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amber",
+              "Amethyst",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "When you restore a piece adjacent to a different-colored piece, gain +1 additional Courage."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-29",
+        "name": "Chronomantic Anchor",
+        "family": "Spell",
+        "subtype": "Advanced",
+        "school": "Chronomancy",
+        "learn_elements": [
+          "Earth",
+          "Fire",
+          "Water",
+          "Aether"
+        ],
+        "tool_requirement": "Chronoscope",
+        "learning_cost": "Earth + Fire + Water + Aether; requires access to Chronoscope (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Fuchsia",
+              "Amethyst"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Take one additional Spell Quick action immediately, using its required Sigils; no mandatory move is repeated."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Fuchsia",
+              "Amethyst",
+              "Emerald"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "At the start of each turn, recover one Quick Sigil that would otherwise remain exhausted."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-30",
+        "name": "Doors Without Walls",
+        "family": "Spell",
+        "subtype": "Advanced",
+        "school": "Cryptomancy",
+        "learn_elements": [
+          "Air",
+          "Fire",
+          "Water",
+          "Aether"
+        ],
+        "tool_requirement": "Cryptex",
+        "learning_cost": "Air + Fire + Water + Aether; requires access to Cryptex (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet",
+              "Amber"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Travel to any explored room connected by a route of up to three rooms; this is additional Spell movement."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Amber",
+              "Amethyst"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per turn, treat the central Hall as adjacent to one explored room of your choice for your mandatory move."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-31",
+        "name": "Occuldor’s Undoing",
+        "family": "Spell",
+        "subtype": "Advanced",
+        "school": "Necromancy",
+        "learn_elements": [
+          "Air",
+          "Fire",
+          "Water",
+          "Aether"
+        ],
+        "tool_requirement": "Necronomicon",
+        "learning_cost": "Air + Fire + Water + Aether; requires access to Necronomicon (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amethyst",
+              "Scarlet"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Force Occuldor to leave your current guarded Black Mirror and move to another installed Black Mirror (if one exists)."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amethyst",
+              "Scarlet",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, when Occuldor arrives in your room, redirect him to another installed Black Mirror instead; resolve his arrival there."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-32",
+        "name": "Midnight Chorus",
+        "family": "Spell",
+        "subtype": "Advanced",
+        "school": "Phonomancy",
+        "learn_elements": [
+          "Air",
+          "Earth",
+          "Water",
+          "Aether"
+        ],
+        "tool_requirement": "Phonograph",
+        "learning_cost": "Air + Earth + Water + Aether; requires access to Phonograph (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Emerald",
+              "Fuchsia"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Allow every hero in your room to prevent 2 Courage loss from the next Occuldor arrival this round."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Emerald",
+              "Fuchsia",
+              "Amethyst"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Every hero occupying your room ignores the first 1 Courage loss from Occuldor arrival each round."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-33",
+        "name": "The Witches’ Covenant",
+        "family": "Spell",
+        "subtype": "Advanced",
+        "school": "Floramancy",
+        "learn_elements": [
+          "Air",
+          "Earth",
+          "Water",
+          "Aether"
+        ],
+        "tool_requirement": "Florist’s Shears",
+        "learning_cost": "Air + Earth + Water + Aether; requires access to Florist’s Shears (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Emerald",
+              "Amethyst"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Move one Companion from any explored room into your room, resolving conflicts."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Emerald",
+              "Amethyst",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Residents in your room count as Followers for their abilities but do not move unless a separate effect allows."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-34",
+        "name": "Fifth Reflection",
+        "family": "Spell",
+        "subtype": "Advanced",
+        "school": "Astromancy",
+        "learn_elements": [
+          "Air",
+          "Earth",
+          "Fire",
+          "Aether"
+        ],
+        "tool_requirement": "Astrolabe",
+        "learning_cost": "Air + Earth + Fire + Aether; requires access to Astrolabe (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Amethyst",
+              "Amber"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Inspect two face-down Black Mirrors in any explored rooms, without revealing them publicly."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Amethyst",
+              "Amber",
+              "Fuchsia"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "Once per round, before a Black Mirror is flipped in your room, privately inspect it."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      },
+      {
+        "id": "SP-35",
+        "name": "Unbroken Horizon",
+        "family": "Spell",
+        "subtype": "Advanced",
+        "school": "Geomancy",
+        "learn_elements": [
+          "Air",
+          "Earth",
+          "Fire",
+          "Water"
+        ],
+        "tool_requirement": "Geode Compass",
+        "learning_cost": "Air + Earth + Fire + Water; requires access to Geode Compass (not consumed)",
+        "casting_modes": [
+          {
+            "name": "Quick",
+            "sigil_slots": [
+              "Scarlet",
+              "Emerald"
+            ],
+            "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
+            "effect": "Open any one existing castle connection for this turn and travel through it if legal."
+          },
+          {
+            "name": "Permanent",
+            "sigil_slots": [
+              "Scarlet",
+              "Emerald",
+              "Amber"
+            ],
+            "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
+            "effect": "You and your Companions ignore one movement restriction caused by a room or Companion each turn."
+          }
+        ],
+        "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
+        "status": "PROPOSED spell ability; Element economy verified"
+      }
+    ],
+    "Companion": [
+      {
+        "id": "CO-01",
+        "name": "Rex the Dog",
+        "family": "Companion",
+        "subtype": "Follower / Beast",
+        "trait": "Loyal",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "When Occuldor enters your room, prevent 1 Courage loss for you once per round.",
+        "conflict": "Flees if Mamba is present in the same room; remains there until recruited again.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-02",
+        "name": "Alexis the Cat",
+        "family": "Companion",
+        "subtype": "Wanderer / Beast",
+        "trait": "Curious",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "When you enter an explored room with Alexis, you may look at one unrevealed White Mirror discovery pattern there, if any.",
+        "conflict": "Does not stay with Julius the Rat; Alexis moves to an adjacent explored room.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-03",
+        "name": "Poe the Raven",
+        "family": "Companion",
+        "subtype": "Follower / Bird",
+        "trait": "Scout",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "Before your mandatory movement, you may inspect the fragment color of one adjacent unexplored room.",
+        "conflict": "Does not reveal the room or Black Mirror curse.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-04",
+        "name": "Julius the Rat",
+        "family": "Companion",
+        "subtype": "Follower / Beast",
+        "trait": "Scavenger",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "Once per turn, take one Element from the current room even when normal preparation is unavailable; obey carried capacity before leaving.",
+        "conflict": "Runs to adjacent explored room if Alexis enters.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-05",
+        "name": "Madison the Ghost Twin",
+        "family": "Companion",
+        "subtype": "Wanderer / Spirit",
+        "trait": "Portal",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "Once per round, you may enter a room containing Mason from an adjacent room despite one closed doorway.",
+        "conflict": "If Mason is in the same room, also gain +1 movement this turn.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-06",
+        "name": "Mason the Ghost Twin",
+        "family": "Companion",
+        "subtype": "Wanderer / Spirit",
+        "trait": "Haunt",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "Once per round, when you enter Mason’s room, recover one exhausted Quick Sigil you own.",
+        "conflict": "If Madison is in the same room, both become immobile until end of your turn after the bonus.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-07",
+        "name": "Mad Mama",
+        "family": "Companion",
+        "subtype": "Resident / Spirit",
+        "trait": "Protective",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "While in this room, you may protect one of your carried Items from a Material Black Mirror curse.",
+        "conflict": "Never follows heroes.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-08",
+        "name": "Mamba the Snake",
+        "family": "Companion",
+        "subtype": "Follower / Beast",
+        "trait": "Threatening",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "After your Black Mirror curse resolves, you may reduce Courage loss by 1 and leave Mamba in the room.",
+        "conflict": "Rex and Coco cannot remain with Mamba.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-09",
+        "name": "Coco the Rabbit",
+        "family": "Companion",
+        "subtype": "Follower / Beast",
+        "trait": "Fleet",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "Add +1 to your maximum mandatory movement.",
+        "conflict": "If Mamba enters, Coco flees to the nearest adjacent explored room.",
+        "status": "PROPOSED effect / Original named character"
+      },
+      {
+        "id": "CO-10",
+        "name": "Julia the Venus",
+        "family": "Companion",
+        "subtype": "Resident / Plant",
+        "trait": "Growth",
+        "acquisition": "Appears in a room when discovered; recruitment or local use follows its behavior.",
+        "effect": "While in Julia’s room, reduce the cost of learning one Spell by one Earth or Water Element (minimum one Element total).",
+        "conflict": "Cannot follow without a specified Tool or Spell effect.",
+        "status": "PROPOSED effect / Original named character"
+      }
+    ],
+    "Secret": [
+      {
+        "id": "SE-01",
+        "name": "A Promise in the Pub",
+        "family": "Secret",
+        "subtype": "Objective",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal after you restore your next mirror fragment. Gain +1 Courage.",
+        "notes": "Single reward; cannot be claimed twice.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-02",
+        "name": "No Hero Left Behind",
+        "family": "Secret",
+        "subtype": "Objective",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal after you prevent Courage loss for another hero. Gain +2 Courage.",
+        "notes": "Does not trigger from preventing your own loss.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-03",
+        "name": "The Cartographer’s Secret",
+        "family": "Secret",
+        "subtype": "Objective",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal when you have explored at least three rooms in this game. Gain +2 Courage.",
+        "notes": "Previously explored rooms count if recorded; otherwise use the next three rooms you explore.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-04",
+        "name": "Silent Witness",
+        "family": "Secret",
+        "subtype": "Objective",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal when you flip a Black Mirror while at Courage 7 or lower. Gain +3 Courage after the curse.",
+        "notes": "Collision still happens even if curse reduces Courage to 0.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-05",
+        "name": "Five Colours, One Promise",
+        "family": "Secret",
+        "subtype": "Objective",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal when you have obtained Sigils of all five colors, even if you completed the condition before drawing this Secret. Gain +2 Courage.",
+        "notes": "It is an achievement, not a spent Sigil requirement.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-06",
+        "name": "Half of the Truth",
+        "family": "Secret",
+        "subtype": "Knowledge",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Once, privately check the colors of two unexplored adjacent rooms; keep this Secret until used, then discard.",
+        "notes": "No Black Mirror contents are revealed.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-07",
+        "name": "A Hidden Passage",
+        "family": "Secret",
+        "subtype": "Knowledge",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Once, declare any one explored connection as open for your mandatory movement, ignoring a temporary door closure; then discard.",
+        "notes": "Not a new permanent map connection.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-08",
+        "name": "The Witches’ Mark",
+        "family": "Secret",
+        "subtype": "Knowledge",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Once, before Occuldor arrives in your room, reduce your resulting Courage loss by 2; then discard.",
+        "notes": "Only owner benefits.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-09",
+        "name": "An Unwritten Name",
+        "family": "Secret",
+        "subtype": "Knowledge",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Once, treat one Tool requirement of the Spell you are learning as satisfied; then discard.",
+        "notes": "You must still pay Element learning costs.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-10",
+        "name": "Letter Never Sent",
+        "family": "Secret",
+        "subtype": "Knowledge",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Once, recover one previously discarded Element of your choice to the current room, then discard this card.",
+        "notes": "Supply must have an available token.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-11",
+        "name": "When the Candles Blink",
+        "family": "Secret",
+        "subtype": "Reaction",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal when Occuldor enters your room; you may immediately leave one Element in the room to prevent 2 Courage loss to yourself.",
+        "notes": "Only if you have access to an Element.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-12",
+        "name": "Second Reflection",
+        "family": "Secret",
+        "subtype": "Reaction",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal after drawing a Black Mirror curse; choose to lose 2 Courage instead of its printed direct penalty.",
+        "notes": "Cannot cancel world-changing effects unless explicitly included.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-13",
+        "name": "The Narrow Escape",
+        "family": "Secret",
+        "subtype": "Reaction",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal when forced to relocate by a curse; choose a different adjacent explored destination instead.",
+        "notes": "Does not cancel mandatory movement.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-14",
+        "name": "A Friend in Shadow",
+        "family": "Secret",
+        "subtype": "Reaction",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal when one of your Companions would flee; keep it in your room and exhaust its ability until your next turn.",
+        "notes": "Does not prevent other hazards.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      },
+      {
+        "id": "SE-15",
+        "name": "The Last Toast",
+        "family": "Secret",
+        "subtype": "Reaction",
+        "cost": "Private; draw into owner’s hand when revealed by a White Mirror.",
+        "timing": "Reveal only at the stated trigger.",
+        "effect": "Reveal when your Courage would drop to 0; remain at 1 Courage and discard the Secret.",
+        "notes": "Usable once; no restoration can be undone.",
+        "status": "EXPERIMENTAL — Secret identity not finalized"
+      }
+    ]
+  }
+}
