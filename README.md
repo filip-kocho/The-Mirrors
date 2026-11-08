@@ -1,57 +1,129 @@
-# The Mirrors
+﻿<div align="center">
 
-A local, hot-seat browser adaptation of the supplied original tabletop game. The original 155-card catalog is imported from `reference/` and validated at startup. The supplied Black Mirror v0.4 review catalog updates its 35 Black Mirror definitions by stable ID.
+# THE MIRRORS
 
-## Run
+### Restore the glass. Imprison the wizard. Become the hero.
 
-Requires Node.js 22.12+ (tested with Node 24) and pnpm. If pnpm is missing, install it with `npm install -g pnpm`.
+**A gothic fantasy board game for 2–5 players, brought to life in your browser.**
+
+[Get started](#get-started) · [How to play](#how-to-play) · [Development](#development) · [Rules & design](#rules--design)
+
+<img src="public/icons/sigils.png" alt="Five ornate stained-glass Mirror Sigils" width="620" />
+
+**35 rooms · 155 cards · One shattered prison**
+
+</div>
+
+---
+
+## Enter the Mirror Castle
+
+A dare at the Drunken Pony leads a band of adventurers into an abandoned manor. Beneath its central Hall lies the broken kaleidoscopic prison of **Occuldor**, a wizard of mirrors and illusions. To seal him away again, the heroes must explore the castle, place White and Black Mirrors, survive their collisions, and restore all **35 fragments**.
+
+The Mirrors is an original game by **Filip Kochoski**, adapted here as a playable, local hot-seat browser game. It combines cooperation with personal ambition: everyone needs the prison restored, but the most heroic surviving player claims victory.
+
+## Inside the game
+
+| Feature | What you can do |
+| --- | --- |
+| **Explore the castle** | Navigate 35 connected rooms with Courage-based movement, discoveries, tokens, and paired Portals. |
+| **Place & Collide** | Combine accessible White and Black Mirrors, reveal discoveries, lure Occuldor away, and resolve Black Mirror curses. |
+| **Restore the Kaleidoscope** | Choose pentagonal cells, connect colored fragments, and earn Courage from neighboring pieces and completed gems. |
+| **Build your character** | Manage Mirrors, Elements, Equipment, Tools, Relics, Companions, and four unlockable Spell slots. |
+| **Learn & cast Spells** | Pay with carried or room Elements, assign matching Sigils, and choose Quick or Permanent effects. |
+| **Complete private Secrets** | Inspect hidden achievements and reveal them when their conditions are met. |
+| **Finish an expedition** | Save locally, resume between sessions, and reach victory or defeat with a final player ranking. |
+
+The catalog includes **35 White Mirrors, 35 Black Mirrors, 25 Items, 35 Spells, 10 Companions, and 15 Secrets**. Original card IDs and source definitions are retained, with designer-approved revisions applied through explicit adapters.
+
+## Get started
+
+Requires **Node.js 22.12 or newer** and **pnpm**. Node.js 24 has been used for development.
 
 ```sh
+git clone https://github.com/filip-kocho/The-Mirrors.git
+cd The-Mirrors
+npm install -g pnpm
 pnpm install
 pnpm dev
 ```
 
-Open http://localhost:3000. Choose 2–5 heroes and enter the castle. Each new game shuffles the castle and decks automatically; Resume keeps your saved expedition. Dependencies need internet access to install; gameplay uses no remote services, fonts, images, accounts, or backend.
+Open **[localhost:3000](http://localhost:3000)**, start a new expedition, and choose 2–5 heroes.
+
+Dependencies require internet access to install. Local gameplay needs no account, backend, or external asset service. Players take turns on the same browser; this is not online multiplayer.
+
+For a production build:
 
 ```sh
-pnpm test
-pnpm typecheck
 pnpm build
 pnpm start
-pnpm exec playwright install chromium
-pnpm test:e2e
 ```
 
-## Playable now
+## How to play
 
-- Seeded 35-room setup; five stone castle wings, battlements, towers, a gatehouse and a pentagonal Hall; zoom, scroll/pan, keyboard room selection and path previews.
-- Mandatory Courage-based movement; only the destination is entered and explored.
-- Clickable inventory icons for inspecting Elements, Mirrors, Items and Spells; click the Hall center to open the enlarged pentagonal Kaleidoscope.
-- Individual resource transfers, shared room resources, carrying capacities, and local capacity equipment.
-- Supplied Element, Item/subtype, Mirror, Companion, Secret and Sigil artwork; automatic Companion attachment and private Secret icons on the hero board.
-- Learn any discovered Spell by paying its exact Elements from hand and/or current room, accessing its required Tool, and automatically filling the first free unlocked Knowledge slot. Click the **Learn** book icon on the Spell card or its room token. Exact Elements are paid automatically from room resources first, then carried resources; the button stays disabled if any requirement is missing.
-- White Mirror icons opening oval board-game card faces, public Black Mirror faces on click, public room objects, and a Place chooser beside the hero's Mirror slots: select the exact White and Black from hand and/or room. Every White discovery appears; Secrets stay private; Occuldor relocates and applies local arrival penalties.
-- Unblocked Black flips, collisions, exactly matched Sigil awards, irreversible Knowledge achievements (1 Sigil / 3 different / 3 matching / all 5 colors), Rage, and player-chosen Kaleidoscope placements with cumulative bonuses from every edge-adjacent fragment: +1 for each matching color, +2 for each different color, plus +1 base placement Courage. The first fragment must start on an outer edge; every later fragment must share an edge with an existing piece.
-- A final-room Confront fallback, death drops, full-board victory/defeat, survivor ranking, and saved games including pending penalty/placement resolution.
+1. **Explore.** Move to a room using your hero's Courage-based allowance. Only your destination is entered and discovered.
+2. **Prepare a pair.** In a room with an unrestored Sigil, place one White and one Black Mirror from your board and/or the room. The White Mirror reveals all its discoveries. Occuldor arrives and guards the Black Mirror.
+3. **Lure Occuldor away.** Place another pair elsewhere to free the previously guarded pair.
+4. **Collide.** Return to an unguarded pair, activate its Black Mirror curse, and receive the room's Sigil. Occuldor's Rage increases.
+5. **Restore the glass.** Click a legal Kaleidoscope cell. The first piece starts at the border; later pieces must touch existing glass. Every neighboring fragment contributes a Courage bonus.
+6. **Grow stronger.** Collect Sigils to unlock Knowledge slots, learn Spells, use Items, and reveal completed Secret achievements.
+7. **Seal the prison.** Restore all 35 fragments before every hero falls. Surviving heroes are ranked at the end.
 
-The button beside Mirror slots reads **Place** when both colors are accessible in an unrestored room, and **Collide** for an unguarded installed pair. Discovered Black Mirrors are publicly inspectable; curses activate only on Collide. All 35 v0.4 curses resolve through automatic operations and validated target choices. Rewards commit once after the immediate curse; deferred movement/turn effects follow Kaleidoscope placement. Seven persistent/temporary token types affect capacity, turns, spells and castle connections.
+Click objects to inspect their cards. Click the center of the Hall to enlarge the Kaleidoscope. The in-game **How to Play** explains the controls and rules in more detail.
 
-**This is an incremental core-loop playtest, not the completed specification.** All 25 revised Item abilities and Permanent Sigil commitment are implemented. Printed Spell casting, Quick refresh, other Companion powers and Secret rewards remain unfinished. Selected Companion conflicts use documented review rules. Spell learning, automatic Companion attachment and private Secret inspection are implemented. Discoveries remain inspectable, and unavailable mechanics are identified. The board can reach its endgame without those optional card systems, but balance and full rules fidelity depend on completing them.
+### Saving your expedition
 
-The room inspector sits above the enlarged castle. Occuldor's track and the chronicle sit below it. End Turn is on the character board; collected Sigils sit above Knowledge slots. Closed/open padlocks mark slot status, while unlocked empty slots remain blank. Click the Hall center to enlarge the Kaleidoscope.
+Successful game commands save progress in this browser, and the Save control is also available. Resume restores the expedition, including pending choices. Saves are browser-local: they do not sync through GitHub or between devices. Clearing browser storage removes them.
 
-## First ritual
+Hot-seat privacy hides private information during handovers; it is not a security boundary against someone inspecting browser storage.
 
-1. Explore rooms, collect or leave Mirrors, and move one or both to a room that needs a pair. You can use mirrors lying in your current room without picking them up.
-2. Click **Place** beside your Mirror slots. Choose one White and one Black from your hand and/or current room, then confirm. All White discoveries appear, and Occuldor guards the Black Mirror.
-3. Place another pair elsewhere to lure him away.
-4. Return to the unblocked pair and click **Collide** to flip the Black Mirror. Resolve its curse and any target choices, then choose a legal Kaleidoscope cell. Every existing fragment sharing an edge adds its Courage bonus automatically; the preview lists all contributions.
-5. Repeat. All 35 fragments seal the prison; the last guarded pair can be freed with the labeled provisional Confront action.
+## Current development status
 
-The Save button and every successful command store the expedition in this browser. Resume opens the privacy screen. Saves contain hidden information locally; hot-seat privacy protects the rendered UI, not access through browser developer tools. Do not clear browser storage if you want to retain your expedition.
+This is an actively developed, playable adaptation. The core loop, endgame, 35 revised Black Mirror curses, 25 Item abilities, 15 Secret achievements, and all **70 Quick/Permanent Spell configurations** have engine implementations.
 
-See [rules coverage](docs/RULES_STATUS.md), [open design decisions](docs/OPEN_DESIGN_DECISIONS.md), [architecture](docs/ARCHITECTURE.md), and [card implementation coverage](docs/CARD_IMPLEMENTATION_STATUS.md).
+Some designer decisions remain deliberately configurable or unresolved:
 
-Black Mirror v0.4: [implementation and provisional review decisions](docs/BLACK_MIRROR_IMPLEMENTATION.md). Spell casting and most other card-family powers remain in development.
+- **15 Spells have obsolete Tool prerequisites** and remain blocked from learning until replacement requirements are approved.
+- Companion attachment, following, and selected conflicts are implemented; additional individual behaviors remain provisional.
+- Balance, selected edge cases, and playtest defaults are tracked explicitly in the design documents.
 
-Revised Item controls, per-card behavior, retained Spell prerequisites and design questions: [Item v0.3 implementation](docs/ITEM_IMPLEMENTATION.md).
+See the coverage reports below for the exact limits; implemented does not mean final or fully balanced.
+
+## Development
+
+Built with **Next.js App Router, React, strict TypeScript, Tailwind CSS, Zustand, and Zod**. Authoritative game rules live in a pure TypeScript engine, separate from the React interface. Seeded setup makes game generation reproducible.
+
+```sh
+pnpm typecheck                     # TypeScript validation
+pnpm test                          # Vitest engine and component tests
+pnpm exec playwright install chromium
+pnpm test:e2e                      # Browser interaction tests
+pnpm build                         # Production compilation
+```
+
+### Project layout
+
+```text
+app/                 Application routes and global styling
+src/components/      Game table, character boards, cards, and dialogs
+src/game/            Domain engine, card adapters, systems, maps, and setup
+src/stores/          Client game state
+public/icons/        Supplied game artwork
+reference/           Original catalogs and revised designer specifications
+tests/               Engine, component, and browser tests
+docs/                Rules status, implementation reports, and design decisions
+```
+
+## Rules & design
+
+- [Rules status](docs/RULES_STATUS.md) — confirmed, provisional, and outstanding mechanics
+- [Open design decisions](docs/OPEN_DESIGN_DECISIONS.md) — unresolved questions and playtest defaults
+- [Card implementation coverage](docs/CARD_IMPLEMENTATION_STATUS.md)
+- [Black Mirror implementation](docs/BLACK_MIRROR_IMPLEMENTATION.md)
+- [Item implementation](docs/ITEM_IMPLEMENTATION.md)
+- [Secret achievements](docs/SECRET_IMPLEMENTATION.md)
+- [Spell implementation v0.4](docs/SPELL_IMPLEMENTATION_v0.4.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Changelog](docs/CHANGELOG.md)
+
+The original game, supplied artwork, and card catalogs are part of this project's creative source material. This repository does not currently include an open-source license.
