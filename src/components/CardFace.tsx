@@ -69,13 +69,28 @@ export function CardFace({
         <h2>{card.name}</h2>
       </div>
       <div className="card-illustration" aria-hidden="true">
-        <span className="card-halo" />
-        <GameIcon name={card.family === "Item" ? card.subtype : card.family} />
+        {card.family === "Companion" ? (
+          <span
+            className="companion-portrait"
+            style={{
+              backgroundPosition: `${((Number(card.id.slice(3)) - 1) % 5) * 25}% ${Number(card.id.slice(3)) > 5 ? 100 : 0}%`,
+            }}
+          />
+        ) : (
+          <>
+            <span className="card-halo" />
+            <GameIcon
+              name={card.family === "Item" ? card.subtype : card.family}
+            />
+          </>
+        )}
         <span className="card-art-ornament">✧</span>
       </div>
       <div className="card-type-ribbon">
         {card.family === "Secret"
-          ? (card.subtype==="DIAMOND_CHALLENGE"?"Diamond Challenge":"Heroic Achievement")
+          ? card.subtype === "DIAMOND_CHALLENGE"
+            ? "Diamond Challenge"
+            : "Heroic Achievement"
           : card.subtype || card.family}
       </div>
       <div className="card-rules">

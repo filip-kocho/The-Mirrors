@@ -49,6 +49,10 @@ test("clickable Sigils cancel freely, activate once, persist, and return on owne
       .locator(".spell-action-panel")
       .getByRole("button", { name: "Activate Quick" }),
   ).toBeDisabled();
+  const cardBox = await dialog.locator(".game-card").boundingBox();
+  const panelBox = await dialog.locator(".spell-action-panel").boundingBox();
+  expect(panelBox!.x).toBeGreaterThanOrEqual(cardBox!.x + cardBox!.width);
+  expect(Math.abs(panelBox!.y - cardBox!.y)).toBeLessThan(5);
   await quick.getByRole("checkbox", { name: "fear fear-a" }).check();
   await dialog.getByRole("button", { name: /Quick .* socket 1/ }).click();
   await expect(

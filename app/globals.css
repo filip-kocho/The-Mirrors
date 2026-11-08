@@ -2262,3 +2262,23 @@ dialog.card-inspector-dialog {
 .room-gems { display: flex; flex-wrap: wrap; gap: 6px; }
 .gem-glass[role="button"]:not([aria-disabled="true"]) { cursor: pointer; filter: drop-shadow(0 0 4px #f8db86); }
 .gem-glass[role="button"]:focus-visible { outline: none; stroke: white; stroke-width: 5px; }
+
+/* Keep Spell resolution beside its printed card on desktop. */
+.card-inspector-dialog:has(> .spell-action-panel)[open] {
+  width: min(1000px, calc(100vw - 24px)); max-width: 1000px;
+  display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+  gap: 18px; align-items: start;
+}
+.card-inspector-dialog > .spell-action-panel {
+  grid-column: 2; grid-row: 1; margin: 0; min-width: 0;
+  border: 1px solid #ad987c66; border-radius: 8px;
+}
+.card-inspector-dialog:has(> .spell-action-panel) > .game-card { grid-column: 1; grid-row: 1; }
+@media(max-width:700px) {
+  .card-inspector-dialog:has(> .spell-action-panel)[open] { display: block; }
+  .card-inspector-dialog > .spell-action-panel { margin-top: 16px; }
+}
+.companion-portrait { position: absolute; inset: 0; background-image: url('/art/companion-portraits.webp'); background-size: 500% 200%; background-repeat: no-repeat; }
+.card-companion .card-illustration::before, .card-companion .card-illustration::after { display: none; }
+
+.card-companion .card-illustration { height: auto; aspect-ratio: 1; }

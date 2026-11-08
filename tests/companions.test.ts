@@ -11,6 +11,7 @@ import {
   planTransfer,
 } from "../src/game/domain/engine";
 import {
+  validateCompanionRelationships,
   companionDefinitions,
   companionById,
 } from "../src/game/cards/companions";
@@ -332,7 +333,9 @@ describe("real card integration", () => {
     s.players[0].spellSlots[0] = "SP-33";
     for (const color of byId["SP-33"].casting_modes![0].sigil_slots)
       grantSigil(s, "P1", color);
-    const ids = availableSigils(s, "P1").filter(t=>t.color!=="Wild").map((t) => t.id);
+    const ids = availableSigils(s, "P1")
+      .filter((t) => t.color !== "Wild")
+      .map((t) => t.id);
     s = reduce(s, {
       type: "CAST_SPELL",
       playerId: "P1",
@@ -372,4 +375,68 @@ describe("real card integration", () => {
           companionLocations(s).find((x) => x.token.card === victim)?.owner,
         ).toBeUndefined();
       });
+});
+
+describe("approved exclusive relationship correction", () => {
+  const expected = [
+    [[7], [2, 4], [], []],
+    [[1, 7, 8], [9], [4], []],
+    [[8, 10], [], [9], []],
+    [[1, 7], [], [], [2, 8, 10]],
+    [[7, 9], [], [], []],
+    [[7, 9], [], [], []],
+    [[], [1, 2, 4, 5, 6], [], []],
+    [[], [2, 3], [4, 9], []],
+    [[2], [5, 6], [], [3, 8, 10]],
+    [[], [3], [4, 9], []],
+  ];
+  it("matches all four approved lists for all ten Companions", () => {
+    companionDefinitions.forEach((c, i) => {
+      [c.dreadIds, c.huntIds, c.predatorIds, c.preyIds].forEach((ids, j) => {
+        expect([...ids].sort()).toEqual(
+          expected[i][j].map((n) => "CO-" + String(n).padStart(2, "0")).sort(),
+        );
+      });
+    });
+    expect(() =>
+      validateCompanionRelationships(companionDefinitions),
+    ).not.toThrow();
+  });
+  for (const hunter of companionDefinitions)
+    for (const victim of hunter.huntIds) {
+      it(hunter.id + " frightens " + victim + " without eating it", () => {
+        const s = fixture();
+        add(s, hunter.id);
+        const token = add(s, victim, 1);
+        resolveEncounters(s, "R01");
+        expect(s.removed.some((t) => t.id === token.id)).toBe(false);
+        const place = companionLocations(s).find(
+          (x) => x.token.id === token.id,
+        );
+        expect(place).toBeDefined();
+        expect(place!.room).not.toBe("R01");
+        expect(s.log.some((e) => e.text.includes("flees"))).toBe(true);
+      });
+    }
+  for (const defect of [
+    "overlapHunt",
+    "overlapDread",
+    "reciprocalHunt",
+    "reciprocalPredator",
+    "unknown",
+    "self",
+    "count",
+  ]) {
+    it("rejects " + defect, () => {
+      const defs = JSON.parse(JSON.stringify(companionDefinitions));
+      if (defect === "overlapHunt") defs[0].predatorIds.push("CO-02");
+      if (defect === "overlapDread") defs[1].preyIds.push("CO-01");
+      if (defect === "reciprocalHunt") defs[1].dreadIds = [];
+      if (defect === "reciprocalPredator") defs[3].preyIds = [];
+      if (defect === "unknown") defs[0].huntIds.push("CO-99");
+      if (defect === "self") defs[0].huntIds.push("CO-01");
+      if (defect === "count") defs.pop();
+      expect(() => validateCompanionRelationships(defs)).toThrow();
+    });
+  }
 });

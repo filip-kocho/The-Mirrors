@@ -35,6 +35,9 @@ test("Carriers use Item slots, Followers remain separate, and cards show v0.6 re
     .getByRole("button", { name: /Inspect Mamba/ })
     .click();
   const dialog = page.getByRole("dialog");
+  await expect(dialog.locator(".companion-portrait")).toBeVisible();
+  expect((await page.request.get("/art/companion-portraits.webp")).ok()).toBe(true);
+  await expect(dialog.locator(".companion-portrait")).toHaveCSS("background-position", "50% 100%");
   await expect(dialog.getByLabel("Companion characteristics")).toContainText(
     "STRAY",
   );

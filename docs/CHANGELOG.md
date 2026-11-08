@@ -195,3 +195,10 @@ Implemented common Spell activation, exact physical Sigils, Quick return, perman
 ## Spell catalog v0.4 (2026-11-08)
 
 Replaced all 35 Spell definitions with v0.4 and implemented all 70 effects, including remote mirrors, movement, immunities, Tool reuse, Portal supply, fragment relocation and consent-based teleportation. Preserved original Companion discoverer separately from current ownership. Moved execution controls outside Spell cards while retaining clickable Sigils directly on each card. Obsolete Tool learning remains blocked.
+
+## Companion relationships and card presentation
+
+- Apply the approved exclusive fear/predation matrix and startup validation.
+- Add ten distinct gothic Companion portraits.
+- Position Spell resolution beside the card on desktop, preserving clickable sockets.
+- Add exact relationship and encounter regressions plus browser layout checks.
