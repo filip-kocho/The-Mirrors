@@ -2250,3 +2250,15 @@ dialog.card-inspector-dialog {
 .spell-resolution p,.spell-resolution small {color:#c9d1dd;}
 .spell-target-list label {justify-content:flex-start;gap:10px;color:#ece5da;}
 .spell-target-list input {width:auto;flex:none;margin:6px 0;}
+
+/* Shared reunion marker without replacing either physical Companion card. */
+.inventory-icon { position: relative; }
+.twin-link { position: absolute; right: 0; top: 0; color: #e7dcff; background: #332641; border-radius: 50%; padding: 0 4px; font-size: 16px; line-height: 18px; }
+.companion-characteristics p { font-size: 0.85rem; line-height: 1.4; margin: 0.35rem 0; }
+.gem-storage { padding: 12px 0; border-top: 1px solid #655a44; }
+.gem-storage .game-icon, .room-gems .game-icon { width: 30px; height: 30px; vertical-align: middle; }
+.gem-actions { display: grid; gap: 6px; padding: 8px 0; }
+.gem-storage > button { margin: 3px; max-width: 100%; }
+.room-gems { display: flex; flex-wrap: wrap; gap: 6px; }
+.gem-glass[role="button"]:not([aria-disabled="true"]) { cursor: pointer; filter: drop-shadow(0 0 4px #f8db86); }
+.gem-glass[role="button"]:focus-visible { outline: none; stroke: white; stroke-width: 5px; }

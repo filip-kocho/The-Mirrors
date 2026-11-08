@@ -1,3 +1,4 @@
+import { companionById } from "../cards/companions";
 import { spellCapacity } from "./spellModifiers";
 import type { State } from "../domain/engine";
 import { effectsForTokens } from "./itemAccess";
@@ -27,13 +28,16 @@ export function inventoryCapacities(
 export function carryingSlot(
   t: Token,
 ): "mirrors" | "elements" | "items" | "relics" | null {
-  return t.kind.endsWith("Mirror")
-    ? "mirrors"
-    : t.kind === "Element"
-      ? "elements"
-      : t.kind === "Item"
-        ? byId[t.card!]?.subtype === "Relic"
-          ? "relics"
-          : "items"
-        : null;
+  return t.kind === "Companion" &&
+    companionById[t.card!]?.followingType === "CARRIER"
+    ? "items"
+    : t.kind.endsWith("Mirror")
+      ? "mirrors"
+      : t.kind === "Element"
+        ? "elements"
+        : t.kind === "Item"
+          ? byId[t.card!]?.subtype === "Relic"
+            ? "relics"
+            : "items"
+          : null;
 }

@@ -41,6 +41,33 @@ export function BoardIcon({
   size: number;
 }) {
   const artwork = iconAtlas[name];
+  if (name === "Diamond" || name === "Wild")
+    return (
+      <svg
+        x={x}
+        y={y}
+        width={size}
+        height={size}
+        viewBox="0 0 40 40"
+        aria-hidden="true"
+      >
+        <path
+          d={
+            name === "Wild"
+              ? "M20 2 38 15 31 37 9 37 2 15Z"
+              : "M20 2 37 20 20 38 3 20Z"
+          }
+          fill="#d3eeff"
+          stroke="#d5af65"
+          strokeWidth="2"
+        />
+        <path
+          d="M20 3 28 20 20 37 12 20Z"
+          fill={name === "Wild" ? "#b16ac7" : "#68b6c9"}
+        />
+        <path d="M4 20H36" stroke="#ed8d9a" strokeWidth="3" />
+      </svg>
+    );
   if (!artwork) return null;
   return (
     <svg
@@ -65,6 +92,34 @@ export function GameIcon({
   name: string;
   className?: string;
 }) {
+  if (name === "Wild" || name === "Diamond")
+    return (
+      <svg
+        className={"game-icon " + className}
+        viewBox="0 0 40 40"
+        aria-hidden="true"
+      >
+        <path
+          d={
+            name === "Wild"
+              ? "M20 2 38 15 31 37 9 37 2 15Z"
+              : "M20 2 37 20 20 38 3 20Z"
+          }
+          fill="#e0e7f7"
+          stroke="#c49c55"
+          strokeWidth="2"
+        />
+        <path
+          d="M20 3V37M3 20H37M7 9 33 31M7 31 33 9"
+          stroke={name === "Wild" ? "#aa58bc" : "#5ba7bc"}
+          strokeWidth="3"
+        />
+        <path
+          d="M20 8 29 20 20 32 11 20Z"
+          fill={name === "Wild" ? "#efb865" : "#b8e9ed"}
+        />
+      </svg>
+    );
   const resolvedName = iconAtlas[name]
     ? name
     : name === "Empty"

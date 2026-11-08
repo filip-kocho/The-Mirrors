@@ -1,3 +1,4 @@
+import {takeSigils,discardSigils} from "../src/game/systems/sigils";
 import { describe, it, expect } from "vitest";
 import {
   initialState,
@@ -58,6 +59,8 @@ import { resolveCompanionConflicts } from "../src/game/systems/companionConflict
 const near = roomGraph.R01.neighbors.find((id) => id !== "Hall")!;
 function fixture(id = "SP-01", action = 0) {
   const s = initialState(["Rowan", "Elara", "Morgan"], "spells-v04");
+  // These existing effect tests isolate colored payment; Wild lifecycle has dedicated v0.6 tests.
+  discardSigils(s,takeSigils(s,"P1",["WILD-P1"]));
   const all = Object.values(s.rooms).flatMap((r) => r.findings);
   for (const r of Object.values(s.rooms)) {
     r.explored = true;
@@ -307,7 +310,8 @@ describe("all 35 v0.4 Spells", () => {
       if (i === 25) expect(next.blackMirror.seals).toHaveLength(0);
       if ([23, 33].includes(i)) {
         expect(next.players[0].companions[0].id).toBe("CO-01");
-        expect(next.players[0].companions[0].discoverer).toBe("P2");
+        expect(next.players[0].companions[0].originalDiscoverer).toBe("P2");
+        expect(next.players[0].companions[0].discoverer).toBe("P1");
       }
       if (i === 24) {
         expect(next.spentElements.some((t) => t.id === "E-Fire-1")).toBe(true);
@@ -357,7 +361,7 @@ describe("all 35 v0.4 Spells", () => {
       expect(loadSave(JSON.stringify(s))).toEqual(s);
       abandonSpell(s, s.players[0], id);
       expect(activePermanent(s, "P1", id)).toBe(false);
-      expect(s.spells.spentIds).toEqual(ids);
+      expect(s.spells.spentIds).toEqual(["WILD-P1",...ids]);
       assertState(s);
     });
   }
@@ -605,7 +609,7 @@ describe("all 35 v0.4 Spells", () => {
       beginEffects(s, "BM-23", "immediate", [{ op: "COMPANIONS" }]);
       advanceEffects(s);
       expect(s.players[0].companions).toHaveLength(1);
-      add(s, "CO-08", s.players[0].companions);
+      add(s, "CO-07", s.players[0].companions);
       resolveCompanionConflicts(s, s.players[0]);
       expect(s.players[0].companions.some((t) => t.id === "CO-01")).toBe(
         id === "SP-33",
@@ -740,6 +744,6 @@ describe("all 35 v0.4 Spells", () => {
     expect(
       placementReward(mosaic, last, "Scarlet", true, []) -
         placementReward(mosaic, last, "Scarlet", true, [gem.id]),
-    ).toBe(gem.bonus);
+    ).toBe(0);
   });
 });

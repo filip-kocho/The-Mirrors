@@ -33,7 +33,7 @@ export function CompletedSecrets({
                 <GameIcon name="Secret" />
                 <span>
                   {byId[c.id].name}
-                  <small>+{c.gained} Courage · completed</small>
+                  <small>{c.rewardType==="DIAMOND_GEM"?"1 Diamond Gem":"+"+c.gained+" Courage"} · completed</small>
                 </span>
               </button>
             ))}

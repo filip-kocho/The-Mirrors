@@ -20,14 +20,14 @@ Updated 2026-10-29 for Black Mirror Catalog v0.4. The latest explicit designer c
 | Quick refresh / Permanent abandonment | Planned owner-next-turn / spent-bound-Sigil defaults; binding implemented; printed casting abilities and Quick refresh remain unfinished                                                                                                                                        | Future casting system                             |
 | Spell learning Tools                  | Required Tool carried, not consumed by default                                                                                                                                                       | GameRulesConfig.consumeLearningTool               |
 | Leaving a learned Spell               | Free its slot, leave the card locally, no Element refund; relearning requires a fresh payment (PROVISIONAL)                                                                                                                      | LEAVE_SPELL command                               |
-| Companion ownership and conflicts | Discovery attaches to the hero; LOYAL defaults, STRAY departure behavior, abandonment and recruitment implemented. Recruited LOYAL changes owner by default. Selected source conflicts implemented with configurable destinations; other abilities unfinished. | blackMirrorPolicies / blackMirrorRuntime.ts |
+| Companion ownership and conflicts | v0.6 classifications confirmed. Flee destination, Carrier overflow, reunion claim and group-effect handling defaults documented in COMPANION_IMPLEMENTATION_v0.6.md. | companionPolicies / companions.ts |
 | Secret activation                     | v0.5 achievements implemented; SE-15 unreachable under all-LOYAL default until a per-card Stray mapping is approved                                                                                                                                                                                        | SECRET_IMPLEMENTATION.md                              |
 
 Black Mirror v0.4 is implemented. All provisional interpretations A-N and migration policies are listed in BLACK_MIRROR_IMPLEMENTATION.md. Spell casting remains a separate unfinished module; Sigil Seal state and suppression predicates are ready for its integration.
 
 Next implementation priorities: Spell casting/Quick refresh, remaining Companion abilities, tiny scenario configuration and expanded developer tooling.
 
-Companion behavior now uses only LOYAL/STRAY. No resident/wanderer logic is inferred from prose. Per-card mapping remains a review decision.
+Companion v0.6 supplies the confirmed per-card LOYAL/STRAY and FOLLOWER/CARRIER mapping. No Resident/Wanderer logic is used.
 
 Latest interface/learning decisions: Place requires both accessible mirror colors. Spell learning is a single icon action, pays exact Element types and equips the first free unlocked slot automatically; plain transfers cannot take Spells. Automatic payment uses local tokens before carried tokens of the same type (implementation default; physical tokens of one Element are equivalent). Required Tool access and Knowledge limits remain enforced. No payment/slot selection form remains below card inspection.
 
@@ -50,3 +50,8 @@ Spell defaults: exclusive alternative modes, one Quick use per Spell per owner t
 ## Spell catalog v0.4 (2026-11-08)
 
 Designer confirmed obsolete Tool requirements stay blocked and discard means leave in the current room. Portal token count is still unconfirmed (10 configurable provisional). Mode exclusivity, one Quick per turn, additional mandatory movement, relocation connectivity and first-printed-Sigil automatic refresh retain documented defaults. See SPELL_IMPLEMENTATION_v0.4.md for all remaining questions.
+
+
+## Secrets, Gems and Kaleidoscope v0.6
+
+See [current resource policies](SECRETS_GEMS_IMPLEMENTATION_v0.6.md). Diamond capacity defaults to one; direct hero transfer is disabled; installation is permitted in ordinary action windows; only an adjacent selected Corridor Block is bypassed for the next movement; removing Paralysis retains existing turn immobilization; relocation must preserve support for filled gaps. Wilds do not unlock Knowledge milestones. Victory still requires the 35 fragments only. Old adjacency and automatic closure rewards are superseded.

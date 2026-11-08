@@ -48,11 +48,11 @@ export const blackMirrorStateSchema = z
     bindings: z
       .record(
         z.string(),
-        z.array(z.enum(["Scarlet", "Emerald", "Amber", "Fuchsia", "Amethyst"])),
+        z.array(z.enum(["Scarlet", "Emerald", "Amber", "Fuchsia", "Amethyst", "Wild"])),
       )
       .default({}),
     spentSigils: z
-      .array(z.enum(["Scarlet", "Emerald", "Amber", "Fuchsia", "Amethyst"]))
+      .array(z.enum(["Scarlet", "Emerald", "Amber", "Fuchsia", "Amethyst", "Wild"]))
       .default([]),
     resolution: z
       .object({

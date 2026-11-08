@@ -29,9 +29,14 @@ export function TokenIcon({
     <button
       className={`inventory-icon${ready ? " item-ready" : ""}`}
       aria-label={`Inspect ${label}${context ? ` · ${context}` : ""}`}
-      title={label}
+      title={label + (token.linkedGroupId ? " - Linked Ghost Twins" : "")}
       onClick={() => onInspect(token)}
     >
+      {token.linkedGroupId && (
+        <span className="twin-link" aria-label="Linked Ghost Twins">
+          &#8734;
+        </span>
+      )}
       {token.kind === "Companion" && token.card ? (
         <svg
           className="game-icon companion-miniature"

@@ -1,4 +1,10 @@
 "use client";
+import { MagicButton } from "./GemStorage";
+import {
+  gapReady,
+  installedGap,
+  storedGems,
+} from "../game/systems/magicResources";
 import { hasSpell } from "../game/systems/spellModifiers";
 import { hasItemEffect, rewardFor } from "../game/systems/itemAccess";
 import { spellFragmentBonus } from "../game/systems/spellModifiers";
@@ -45,6 +51,7 @@ export function KaleidoscopeArt({
   freePlacement = false,
   gemColors = {},
   allowedCells,
+  onSelectGap,
 }: {
   mosaic: (string | null)[];
   active?: boolean;
@@ -54,6 +61,7 @@ export function KaleidoscopeArt({
   freePlacement?: boolean;
   gemColors?: Record<string, string>;
   allowedCells?: number[];
+  onSelectGap?: (id: string) => void;
 }) {
   return (
     <svg
@@ -71,40 +79,72 @@ export function KaleidoscopeArt({
         strokeWidth="3"
       />
       {kaleidoscopeGems.map((g) => {
-        const complete = g.cells.every((id) => mosaic[id]),
+        const ready = g.cells.every((id) => mosaic[id]),
+          complete = !!gemColors[g.id],
           preview =
             selected !== null &&
             closingGems(mosaic, selected).some((x) => x.id === g.id);
         return (
-          <polygon
-            key={g.id}
-            className={
-              "gem-glass" +
-              (complete ? " complete" : "") +
-              (preview ? " preview" : "")
-            }
-            data-gem={g.id}
-            aria-label={
-              (g.bonus === 5 ? "Central gem" : "Small gem") +
-              (complete ? " complete" : " incomplete")
-            }
-            points={g.points.map((p) => p.join(",")).join(" ")}
-            fill={
-              complete
-                ? (gemColors[g.id] ?? "#b9a780")
-                : g.bonus === 5
-                  ? "#8c8e97"
-                  : "#090e17"
-            }
-            stroke={complete ? "#fff0d0" : preview ? "#f8db86" : "#303847"}
-            strokeWidth={preview ? 4 : 2}
-          >
-            <title>
-              {g.bonus === 5
-                ? "Central gem +5 Courage"
-                : "Small gem +3 Courage"}
-            </title>
-          </polygon>
+          <g key={g.id}>
+            <polygon
+              className={
+                "gem-glass" +
+                (complete ? " complete" : "") +
+                (preview ? " preview" : "")
+              }
+              data-gem={g.id}
+              role={onSelectGap ? "button" : undefined}
+              tabIndex={onSelectGap && ready && !complete ? 0 : undefined}
+              onClick={() => {
+                if (ready && !complete) onSelectGap?.(g.id);
+              }}
+              onKeyDown={(e) => {
+                if (
+                  (e.key === "Enter" || e.key === " ") &&
+                  ready &&
+                  !complete
+                ) {
+                  e.preventDefault();
+                  onSelectGap?.(g.id);
+                }
+              }}
+              aria-disabled={onSelectGap ? !ready || complete : undefined}
+              aria-label={
+                (g.bonus === 5 ? "Central pentagon" : "Diamond gap") +
+                (complete ? " filled" : ready ? " ready" : " incomplete")
+              }
+              points={g.points.map((p) => p.join(",")).join(" ")}
+              fill={
+                complete
+                  ? (gemColors[g.id] ?? "#b9a780")
+                  : g.bonus === 5
+                    ? "#8c8e97"
+                    : "#090e17"
+              }
+              stroke={
+                complete ? "#fff0d0" : ready || preview ? "#f8db86" : "#303847"
+              }
+              strokeWidth={preview ? 4 : 2}
+            >
+              <title>
+                {g.bonus === 5
+                  ? "Install a Wild Sigil: +5 Courage"
+                  : "Install a Diamond Gem: +3 Courage"}
+              </title>
+            </polygon>
+            {complete && (
+              <BoardIcon
+                name={g.bonus === 5 ? "Wild" : "Diamond"}
+                x={
+                  g.points.reduce((n, p) => n + p[0], 0) / g.points.length - 18
+                }
+                y={
+                  g.points.reduce((n, p) => n + p[1], 0) / g.points.length - 18
+                }
+                size={36}
+              />
+            )}
+          </g>
         );
       })}
       {kaleidoscopeCells.map((c) => {
@@ -173,6 +213,7 @@ export function KaleidoscopeBoard({
 }) {
   const dialog = useRef<HTMLDialogElement>(null),
     [cell, setCell] = useState<number | null>(null),
+    [gap, setGap] = useState<string | null>(null),
     [zoom, setZoom] = useState(1);
   const pending = s.pending?.stage === "placement" ? s.pending : null,
     p = s.players[s.active];
@@ -265,6 +306,7 @@ export function KaleidoscopeBoard({
                 active={!!pending}
                 selected={cell}
                 onSelect={setCell}
+                onSelectGap={pending ? undefined : setGap}
               />
             </div>
           </div>
@@ -284,32 +326,11 @@ export function KaleidoscopeBoard({
                     ? "Choose a highlighted cell sharing an edge with an existing fragment. Every new piece must join the placed glass."
                     : "Place the first fragment in a highlighted outer-edge cell."}
               </p>
-              {bonuses.length > 0 && (
-                <ul
-                  className="adjacency-bonuses"
-                  aria-label="Adjacent fragment bonuses"
-                >
-                  {bonuses.map((n) => (
-                    <li key={n.id}>
-                      Cell {n.id + 1} {"\u00b7"} {n.color}: +{n.bonus} Courage
-                    </li>
-                  ))}
-                </ul>
-              )}
               {!!rewardFor(s, "FRAGMENT") && (
                 <p>
                   Kaleidoscope's Bargain: +{rewardFor(s, "FRAGMENT")} Courage.
                 </p>
               )}
-              {cell !== null &&
-                closingGems(s.mosaic, cell, Object.keys(s.gemOwners)).map(
-                  (g) => (
-                    <p key={g.id}>
-                      Close {g.bonus === 5 ? "the central gem" : "a small gem"}:
-                      +{g.bonus} Courage
-                    </p>
-                  ),
-                )}
               <p className="reward-preview">
                 {reward === null
                   ? "Select a cell to preview Courage."
@@ -336,6 +357,43 @@ export function KaleidoscopeBoard({
               <p className="eyebrow">The shattered prison</p>
               <h3>{s.mosaic.filter(Boolean).length} fragments restored</h3>
               <p>
+                Select a glowing gap to install a resource. Enclosing a gap
+                alone awards no Courage.
+              </p>
+              {gap && (
+                <section aria-label="Gap installation">
+                  <h3>{gap}</h3>
+                  <p>
+                    {kaleidoscopeGems.find((g) => g.id === gap)?.bonus === 5
+                      ? "Requires one available Wild Sigil. +5 Courage."
+                      : "Requires one Diamond Gem (ready or exhausted). +3 Courage."}
+                  </p>
+                  {(kaleidoscopeGems.find((g) => g.id === gap)?.bonus === 5
+                    ? s.magic.wildStorage.filter((t) => t.owner === p.id)
+                    : storedGems(s)
+                  ).map((t) => (
+                    <MagicButton
+                      key={t.id}
+                      s={s}
+                      dispatch={dispatch}
+                      command={{
+                        type: "MAGIC",
+                        playerId: p.id,
+                        action:
+                          kaleidoscopeGems.find((g) => g.id === gap)?.bonus ===
+                          5
+                            ? "INSTALL_WILD"
+                            : "INSTALL_GEM",
+                        resource: t.id,
+                        target: gap,
+                      }}
+                    >
+                      Install {t.id}
+                    </MagicButton>
+                  ))}
+                </section>
+              )}
+              <p>
                 Restore a room’s mirror pair to receive its fragment and choose
                 where it belongs.
               </p>
@@ -348,18 +406,13 @@ export function KaleidoscopeBoard({
             </p>
             <p>+1 Courage for placing glass.</p>
             <p>
-              +1 for each same-color neighbor.
-              <br />
-              +2 for each different-color neighbor.
-            </p>
-            <p>
-              Close a small diamond gem: +3 Courage. Close the central pentagon:
-              +5 Courage. Both shine in the closing hero's color. The hero
-              placing the last surrounding tile receives the bonus once.
+              Install a Diamond Gem in a ready diamond gap: +3 Courage. Install
+              an available Wild Sigil in the ready central pentagon: +5 Courage.
+              Each gap pays once, only on installation.
             </p>
             <small>
-              Every shared-edge neighbor adds its bonus. Gems are enclosed gaps,
-              not fragment slots.
+              Neighbor colors grant no additional Courage. Item and Spell
+              bonuses still apply.
             </small>
           </div>
         </aside>

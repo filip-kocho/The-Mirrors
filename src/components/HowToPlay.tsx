@@ -151,20 +151,11 @@ export function HowToPlay() {
           piece. Highlighted cells show legal choices; choose one and confirm.
         </p>
         <p>
-          Gain 1 Courage for placement, plus a bonus from{" "}
-          <strong>every touching fragment</strong>: +1 for the same color, +2
-          for a different color. For example, touching one matching and two
-          different pieces earns 1 + 1 + 2 + 2 = 6 Courage. The preview shows
-          the total, and Courage cannot exceed 35.
+          Gain exactly 1 base Courage for each restored fragment. Neighbor colors add no Courage. Existing Item and Spell bonuses still apply.
         </p>
-        <p>
-          Close a small diamond-shaped gap by placing its last surrounding
-          fragment: gain an additional 3 Courage and the gem takes your player
-          color. Close the central pentagonal gap to gain an additional 5
-          Courage; its glass takes your player color. Each completed gem rewards
-          only the hero who finishes it. These rewards add to all
-          touching-fragment bonuses.
-        </p>
+        <p>Enclosing one of the ten diamond gaps makes it ready, without granting a reward. Install a carried Diamond Gem there for +3 Courage. Install one available Wild Sigil in the ready central pentagon for +5 Courage. Each gap rewards installation once.</p>
+        <p>Each hero starts with one Wild Sigil. It fills one colored Spell socket, returns next turn after Quick use, or remains bound for a Permanent Spell. Wilds do not count toward colored Knowledge achievements.</p>
+        <p>Diamond Gems have dedicated storage (one per hero by default). A ready Gem can remove one Paralysis Token, remove one inventory Hexlock, bypass one adjacent blocked corridor for the next movement, or add +1 movement allowance. It then exhausts until its holder's next turn. Exhausted Gems can still be installed. Gems left in rooms remain public and collectible.</p>
       </section>
       <section>
         <h3>7. Unlock Knowledge and learn Spells</h3>
@@ -228,8 +219,12 @@ export function HowToPlay() {
         <p>
           A curse can abandon Companions in a room. Use their up-arrow to
           recruit them. Loyal followers stay with their new holder; Strays
-          follow the first hero leaving.
+          follow the first hero leaving. Followers occupy the free Companion area; Carriers occupy an Item slot. If no slot is free, an automatic Carrier discovery or transfer stays behind (provisional). Eating removes prey before fear is resolved. Frightened Companions flee to a connected explored room, or stay detached when none is available (provisional).
         </p>
+      </section>
+      <section>
+        <h3>The Ghost Twins</h3>
+        <p>Madison and Mason begin as separate Loyal Followers. When they meet, their reunion waits for the first departing hero to claim both; if they already share an owner, they reunite immediately under the default policy. Reunited Twins are permanently linked Strays. Both cards travel and transfer together. A single-card sacrifice cannot split them.</p>
       </section>
       <section>
         <h3>Items, Tools and Relics</h3>
@@ -252,7 +247,7 @@ export function HowToPlay() {
           Mirror Offering and Farewell Whistle work before movement and prevent
           replacements until departure. The Ring reduces penalties, not
           voluntary costs. The Crown permits any empty Kaleidoscope cell; actual
-          neighbors still determine bonuses. The Amulet rewards newly committed
+          neighbor colors do not add base bonuses. The Amulet rewards newly committed
           Permanent Sigils, which cannot be freely recovered.
         </p>
       </section>
@@ -285,18 +280,12 @@ export function HowToPlay() {
           Secrets are private, one-time achievements. Click a Secret icon to
           read its condition, reward and current eligibility. Use Reveal
           achievement before or after moving when you qualify. It becomes
-          public, grants Courage up to 35 and stays in your completed
+          public, grants its reward and stays in your completed
           collection. You keep all qualifying objects; several Secrets can use
           the same collection.
         </p>
         <p>
-          Conditions use what you possess now, not what you held earlier. Only
-          The Master Craftsman counts Tools in your current room. Keeper of
-          Whispers includes itself among four hidden Secrets. Master of
-          Incantations uses printed Spell tiers, regardless of discounts. The
-          Runic Trinity counts only permanent Sigils on learned Spells.
-          Completed Secrets never count as hidden cards and cannot pay Whisper
-          Cipher's cost.
+          All conditions use current personal collections, never room resources. Ten Diamond Challenges award one reserved Gem each and no direct Courage. Five Heroic Achievements award +5 Courage each, capped at 35. Keeper of Whispers counts itself among two unrevealed Secrets. Sigil Harmony requires two available actual colors, excluding Wild, Quick-assigned and bound Sigils. Completed Secrets cannot pay Whisper Cipher's cost.
         </p>
         <p>
           Actions autosave in this browser. Save also records the current

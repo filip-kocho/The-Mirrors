@@ -1,6 +1,42 @@
 import { itemRulesSchema, defaultItemRules } from "../systems/itemState";
 import { z } from "zod";
 export const rulesSchema = z.object({
+  gemPolicies: z
+    .object({
+      capacity: z.number().int().min(1).default(1),
+      victory: z
+        .enum(["FRAGMENTS_ONLY", "ALL_INLAYS"])
+        .default("FRAGMENTS_ONLY"),
+      adjacentPassageOnly: z.boolean().default(true),
+      directTransfer: z.boolean().default(false),
+      installWindow: z.enum(["ANY_ACTION", "POST_MOVE"]).default("ANY_ACTION"),
+      paralysisMovement: z.boolean().default(false),
+      relocation: z
+        .enum(["PRESERVE_SUPPORT", "RETAIN_INSTALLED"])
+        .default("PRESERVE_SUPPORT"),
+    })
+    .default(() => ({
+      capacity: 1,
+      victory: "FRAGMENTS_ONLY" as const,
+      adjacentPassageOnly: true,
+      directTransfer: false,
+      installWindow: "ANY_ACTION" as const,
+      paralysisMovement: false,
+      relocation: "PRESERVE_SUPPORT" as const,
+    })),
+  companionPolicies: z
+    .object({
+      reunion: z
+        .enum(["FIRST_DEPARTURE", "SAME_OWNER_IMMEDIATE"])
+        .default("SAME_OWNER_IMMEDIATE"),
+      flee: z.enum(["EXPLORED_NEIGHBOR", "STAY"]).default("EXPLORED_NEIGHBOR"),
+      overflow: z.literal("LEAVE_CARRIER").default("LEAVE_CARRIER"),
+    })
+    .default(() => ({
+      reunion: "SAME_OWNER_IMMEDIATE" as const,
+      flee: "EXPLORED_NEIGHBOR" as const,
+      overflow: "LEAVE_CARRIER" as const,
+    })),
   spellPolicies: z
     .object({
       portalTokenSupply: z.number().int().min(0).default(10),
@@ -75,6 +111,20 @@ export const rulesSchema = z.object({
 });
 export type GameRulesConfig = z.infer<typeof rulesSchema>;
 export const defaultRules: GameRulesConfig = {
+  gemPolicies: {
+    capacity: 1,
+    victory: "FRAGMENTS_ONLY" as const,
+    adjacentPassageOnly: true,
+    directTransfer: false,
+    installWindow: "ANY_ACTION",
+    paralysisMovement: false,
+    relocation: "PRESERVE_SUPPORT",
+  },
+  companionPolicies: {
+    reunion: "SAME_OWNER_IMMEDIATE",
+    flee: "EXPLORED_NEIGHBOR",
+    overflow: "LEAVE_CARRIER",
+  },
   spellPolicies: {
     portalTokenSupply: 10,
     unresolvedTools: "BLOCK",

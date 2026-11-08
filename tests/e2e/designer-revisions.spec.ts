@@ -120,7 +120,7 @@ test("leaving a capacity Item asks which excess objects to leave and resumes saf
   await expect(page.locator('[data-slot="elements"]')).toHaveCount(3);
 });
 
-test("closing small and central gems previews and pays their Courage reward", async ({
+test("surrounding gaps makes them ready without automatic installation rewards", async ({
   page,
 }, testInfo) => {
   for (const bonus of [3, 5]) {
@@ -148,7 +148,7 @@ test("closing small and central gems previews and pays their Courage reward", as
       .getByRole("button", { name: `Cell ${last + 1} legal`, exact: true })
       .click();
     await expect(puzzle).toContainText(
-      `Close ${bonus === 5 ? "the central gem" : "a small gem"}: +${bonus} Courage`,
+      "+1 Courage",
     );
     await puzzle
       .getByRole("button", {
@@ -158,7 +158,7 @@ test("closing small and central gems previews and pays their Courage reward", as
     expect((await saved(page)).players[0].courage).toBe(5 + reward);
     await expect(puzzle.locator(`[data-gem="${gem.id}"]`)).toHaveAttribute(
       "fill",
-      "#efc77b",
+      bonus === 5 ? "#8c8e97" : "#090e17",
     );
     await page.screenshot({
       path: testInfo.outputPath(`gem-${bonus}.png`),

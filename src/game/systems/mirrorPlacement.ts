@@ -1,3 +1,4 @@
+import { attachCompanion } from "./companions";
 import type { State } from "../domain/engine";
 import { byId } from "../cards/catalog";
 import { hasSpell, roomActionsBlocked } from "./spellModifiers";
@@ -61,15 +62,20 @@ export function placeMirrorPair(
     if (!card) throw Error("Discovery deck exhausted unexpectedly.");
     if (slot === "Secret") p.secrets.push(card);
     else if (slot === "Companion") {
-      p.companions.push({
-        id: card,
-        card,
-        kind: slot,
-        behavior: s.rules.blackMirrorPolicies.defaultCompanionBehavior,
-        discoverer: p.id,
-        originalDiscoverer: p.id,
-      });
-      log(`${byId[card].name} joins ${p.name} when discovered.`);
+      attachCompanion(
+        s,
+        p,
+        {
+          id: card,
+          card,
+          kind: slot,
+          behavior: s.rules.blackMirrorPolicies.defaultCompanionBehavior,
+          discoverer: p.id,
+          originalDiscoverer: p.id,
+        },
+        true,
+      );
+      log(`${p.name} discovers ${byId[card].name}.`);
       itemReward(s, p.id, "COMPANION");
       resolveCompanionConflicts(s, p, card);
     } else r.objects.push({ id: card, card, kind: slot });

@@ -317,13 +317,7 @@ test("final Confront, collision and spatial placement reach the victory screen",
   s.players[0].restored = 34;
   s.players[0].room = "R35";
   s.players[0].courage = 20;
-  const expectedBonus =
-    1 +
-    [27, 30].reduce(
-      (total, neighbor) =>
-        total + (s.mosaic[neighbor] === s.rooms.R35.color ? 1 : 2),
-      0,
-    );
+  const expectedBonus = 1;
   s.occuldor = "R35";
   s.moved = true;
   // BM-35 invokes two personal arrival punishments before restoration.
@@ -344,7 +338,7 @@ test("final Confront, collision and spatial placement reach the victory screen",
   await expect(page.getByLabel("Bonus neighbor")).toHaveCount(0);
   await expect(
     page.getByRole("list", { name: "Adjacent fragment bonuses" }).locator("li"),
-  ).toHaveCount(2);
+  ).toHaveCount(0);
   await expect(
     page.getByRole("button", {
       name: `Confirm placement · +${expectedBonus} Courage`,

@@ -66,24 +66,30 @@ export function SpellCastGuide({ spellId, s }: { spellId: string; s?: State }) {
                   s &&
                   (index === 1
                     ? (s.blackMirror.bindings[spellId]?.length ?? 0) > i
-                    : s.spells.quick
-                        .filter(
-                          (q) =>
-                            q.owner === s.players[s.active].id &&
-                            q.spell === spellId &&
-                            q.action === index,
-                        )
-                        .flatMap((q) => q.sigils)
-                        .filter((t) => t.color === color).length >=
-                      mode.sigil_slots
-                        .slice(0, i + 1)
-                        .filter((c) => c === color).length)
+                    : s.spells.quick.some(
+                        (q) =>
+                          q.owner === s.players[s.active].id &&
+                          q.spell === spellId &&
+                          q.action === index &&
+                          q.sigils.some((t, j) => (t.socket ?? j) === i),
+                      ))
                     ? "guide-sigil used"
                     : "guide-sigil"
                 }
                 title={s ? readiness(s, spellId, index) : color}
               >
                 <GameIcon name={color} />
+                {s &&
+                  (index === 1
+                    ? s.blackMirror.bindings[spellId]?.[i]
+                    : s.spells.quick
+                        .find(
+                          (q) =>
+                            q.spell === spellId &&
+                            q.owner === s.players[s.active].id,
+                        )
+                        ?.sigils.find((t, j) => (t.socket ?? j) === i)
+                        ?.color) === "Wild" && <GameIcon name="Wild" />}
               </span>
             ))}
           </div>

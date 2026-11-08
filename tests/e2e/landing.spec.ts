@@ -54,8 +54,8 @@ test("mirror landing, tabbed catalog, card return and detailed rules work on des
   await expect(dialog.getByRole("tab", { name: /^Companion/ })).toBeFocused();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "How to play" }).click();
-  await expect(dialog.getByRole("heading", { level: 3 })).toHaveCount(11);
-  await expect(dialog.getByText(/1 \+ 1 \+ 2 \+ 2 = 6/)).toBeVisible();
+  await expect(dialog.getByRole("heading", { level: 3 })).toHaveCount(12);
+  await expect(dialog.getByText(/Neighbor colors add no Courage/)).toBeVisible();
   await expect(
     dialog.getByText(/Open the Spell to click matching Sigils/),
   ).toBeVisible();

@@ -1,4 +1,6 @@
 "use client";
+import { GemStorage, RoomGems } from "./GemStorage";
+import { isCarrier, carrierRoom } from "../game/systems/companions";
 import { roomActionsBlocked } from "../game/systems/spellModifiers";
 import { InventorySlots, HexlockOverlay } from "./InventorySlots";
 import { banishmentPlan } from "../game/systems/banishment";
@@ -216,7 +218,7 @@ export function Game() {
                     : inspected.family === "Spell"
                       ? "Learn in an unlocked Knowledge slot, then assign matching Sigils to activate Quick or Permanent abilities. Unavailable effects explain their missing requirements."
                       : inspected.family === "Companion"
-                        ? "Loyal Companions follow their holder. Strays follow the first hero departing their room. Abandoned Companions remain available for recruitment; Rex/Coco/Mamba and Alexis/Julius conflicts use review rules; other printed abilities are not active."
+                        ? "Loyal Companions follow their holder; Strays follow the first departing hero. Carriers need an Item slot. Eating resolves before fear. Reunited Ghost Twins travel together. Individual printed abilities are not activated by this framework."
                         : "This proposed ability is not yet automated."}
             </p>
           )}
@@ -399,6 +401,8 @@ export function Game() {
           aria-label={`Recruit ${label(t)}`}
           title="Recruit Companion"
           disabled={
+            (isCarrier(t) && carrierRoom(s, p) < 1) ||
+            s.items.restrictions[p.id]?.companions === p.room ||
             !!s.pending ||
             !!s.blackMirror.resolution ||
             !!darkness(s, p.room) ||
@@ -651,10 +655,13 @@ export function Game() {
               <InventorySlots
                 s={s}
                 slot="items"
-                tokens={p.inventory.filter(
-                  (t) =>
-                    t.kind === "Item" && byId[t.card!]?.subtype !== "Relic",
-                )}
+                tokens={[
+                  ...p.inventory.filter(
+                    (t) =>
+                      t.kind === "Item" && byId[t.card!]?.subtype !== "Relic",
+                  ),
+                  ...p.companions.filter(isCarrier),
+                ]}
                 icon="Item"
                 context="item slot"
                 onInspect={showToken}
@@ -676,6 +683,7 @@ export function Game() {
           </div>
           <CurseStatus s={s} />
           <PlayerSigils player={p} state={s} />
+          <GemStorage s={s} dispatch={dispatch} openPuzzle={()=>setPuzzleOpen(true)}/>
           {visibleSpellColors(s).length > 0 && (
             <details>
               <summary>Private fragment visions</summary>
@@ -898,6 +906,7 @@ export function Game() {
                   </>
                 )}
                 <h3>Room findings</h3>
+                <RoomGems s={s} room={room.id} dispatch={dispatch}/>
                 {room.objects.length ? (
                   <div className="token-grid">
                     {room.objects.map((t) => tokenRow(t))}

@@ -33,7 +33,7 @@ export function activePermanent(s: State, owner: string, spell: string) {
     ) &&
     bound.length === cost.length &&
     cost.length > 0 &&
-    cost.every((c, n) => bound[n] === c) &&
+    cost.every((c, n) => bound[n] === c || bound[n] === "Wild") &&
     !applicableSpellSeals(s, spell, action).length
   );
 }

@@ -1,3 +1,5 @@
+import { availableSigils } from "../game/systems/sigils";
+import { isCarrier } from "../game/systems/companions";
 import type { State, Token } from "../game/domain/engine";
 import { GameIcon } from "./GameIcon";
 import { TokenIcon } from "./TokenIcon";
@@ -15,16 +17,24 @@ export function PlayerCollection({
 }) {
   return (
     <div className="player-collection">
-      <h3>Companions · {player.companions.length}</h3>
+      <h3>
+        Followers - {player.companions.filter((t) => !isCarrier(t)).length}
+      </h3>
       <div className="collection-icons">
-        {player.companions.map((token) => (
-          <TokenIcon
-            key={token.id}
-            token={token}
-            onInspect={onInspect}
-            context="attached companion"
-          />
-        ))}
+        {player.companions
+          .filter((t) => !isCarrier(t))
+          .map((token) => (
+            <TokenIcon
+              key={token.id}
+              token={token}
+              onInspect={onInspect}
+              context={
+                token.linkedGroupId
+                  ? "Linked Ghost Twins - Stray Follower"
+                  : "attached companion"
+              }
+            />
+          ))}
       </div>
       {player.companions.length > 0 && (
         <p className="muted">
@@ -59,9 +69,17 @@ export function PlayerSigils({
   return (
     <div className="sigils-above-knowledge">
       {" "}
-      <h3>Mirror Sigils · {player.sigils.length}</h3>
+      <h3>
+        Mirror Sigils ·{" "}
+        {state
+          ? availableSigils(state, player.id).length
+          : player.sigils.length}
+      </h3>
       <div className="player-sigils" aria-label="Your Mirror Sigils">
-        {player.sigils.map((color, i) => (
+        {(state
+          ? availableSigils(state, player.id).map((t) => t.color)
+          : player.sigils
+        ).map((color, i) => (
           <span
             key={i}
             title={`${color} Sigil · available for future Spells`}
@@ -71,8 +89,18 @@ export function PlayerSigils({
           </span>
         ))}
       </div>
-      {!player.sigils.length && (
-        <p className="empty">{state && (state.spells.quick.some(q=>q.owner===player.id)||player.spellSlots.some(id=>id&&state.blackMirror.bindings[id]?.length)) ? "No free Sigils." : "Restore a fragment to gain its Sigil."}</p>
+      {!(state
+        ? availableSigils(state, player.id).length
+        : player.sigils.length) && (
+        <p className="empty">
+          {state &&
+          (state.spells.quick.some((q) => q.owner === player.id) ||
+            player.spellSlots.some(
+              (id) => id && state.blackMirror.bindings[id]?.length,
+            ))
+            ? "No free Sigils."
+            : "Restore a fragment to gain its Sigil."}
+        </p>
       )}
     </div>
   );

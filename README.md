@@ -28,7 +28,7 @@ The Mirrors is an original game by **Filip Kochoski**, adapted here as a playabl
 | --- | --- |
 | **Explore the castle** | Navigate 35 connected rooms with Courage-based movement, discoveries, tokens, and paired Portals. |
 | **Place & Collide** | Combine accessible White and Black Mirrors, reveal discoveries, lure Occuldor away, and resolve Black Mirror curses. |
-| **Restore the Kaleidoscope** | Choose pentagonal cells, connect colored fragments, and earn Courage from neighboring pieces and completed gems. |
+| **Restore the Kaleidoscope** | Choose pentagonal cells, connect colored fragments, and earn +1 Courage per fragment, +3 per installed Diamond Gem, and +5 for the central Wild Sigil. |
 | **Build your character** | Manage Mirrors, Elements, Equipment, Tools, Relics, Companions, and four unlockable Spell slots. |
 | **Learn & cast Spells** | Pay with carried or room Elements, assign matching Sigils, and choose Quick or Permanent effects. |
 | **Complete private Secrets** | Inspect hidden achievements and reveal them when their conditions are met. |
@@ -65,7 +65,7 @@ pnpm start
 2. **Prepare a pair.** In a room with an unrestored Sigil, place one White and one Black Mirror from your board and/or the room. The White Mirror reveals all its discoveries. Occuldor arrives and guards the Black Mirror.
 3. **Lure Occuldor away.** Place another pair elsewhere to free the previously guarded pair.
 4. **Collide.** Return to an unguarded pair, activate its Black Mirror curse, and receive the room's Sigil. Occuldor's Rage increases.
-5. **Restore the glass.** Click a legal Kaleidoscope cell. The first piece starts at the border; later pieces must touch existing glass. Every neighboring fragment contributes a Courage bonus.
+5. **Restore the glass.** Click a legal Kaleidoscope cell. The first piece starts at the border; later pieces must touch existing glass. Each fragment awards +1 base Courage. Enclosed gaps await a Diamond Gem or central Wild Sigil installation.
 6. **Grow stronger.** Collect Sigils to unlock Knowledge slots, learn Spells, use Items, and reveal completed Secret achievements.
 7. **Seal the prison.** Restore all 35 fragments before every hero falls. Surviving heroes are ranked at the end.
 
@@ -84,7 +84,7 @@ This is an actively developed, playable adaptation. The core loop, endgame, 35 r
 Some designer decisions remain deliberately configurable or unresolved:
 
 - **15 Spells have obsolete Tool prerequisites** and remain blocked from learning until replacement requirements are approved.
-- Companion attachment, following, and selected conflicts are implemented; additional individual behaviors remain provisional.
+- Companion v0.6 ownership, Carrier slots, eating/fear relationships, and linked Ghost Twins are implemented. Flee destinations, overflow handling, and reunion claim timing have documented provisional defaults; individual Companion powers remain outside this revision.
 - Balance, selected edge cases, and playtest defaults are tracked explicitly in the design documents.
 
 See the coverage reports below for the exact limits; implemented does not mean final or fully balanced.
@@ -121,8 +121,9 @@ docs/                Rules status, implementation reports, and design decisions
 - [Card implementation coverage](docs/CARD_IMPLEMENTATION_STATUS.md)
 - [Black Mirror implementation](docs/BLACK_MIRROR_IMPLEMENTATION.md)
 - [Item implementation](docs/ITEM_IMPLEMENTATION.md)
-- [Secret achievements](docs/SECRET_IMPLEMENTATION.md)
+- [Secrets, Diamond Gems and Wild Sigils v0.6](docs/SECRETS_GEMS_IMPLEMENTATION_v0.6.md)
 - [Spell implementation v0.4](docs/SPELL_IMPLEMENTATION_v0.4.md)
+- [Companion system v0.6](docs/COMPANION_IMPLEMENTATION_v0.6.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Changelog](docs/CHANGELOG.md)
 

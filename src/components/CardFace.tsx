@@ -1,3 +1,5 @@
+import { companionById } from "../game/cards/companions";
+import { companionLocations } from "../game/systems/companions";
 import { itemById } from "../game/cards/items";
 import { whiteMirrorHaiku } from "../game/cards/whiteMirrorHaiku";
 import { secretById, secretRewardText } from "../game/cards/secrets";
@@ -73,7 +75,7 @@ export function CardFace({
       </div>
       <div className="card-type-ribbon">
         {card.family === "Secret"
-          ? "Secret achievement"
+          ? (card.subtype==="DIAMOND_CHALLENGE"?"Diamond Challenge":"Heroic Achievement")
           : card.subtype || card.family}
       </div>
       <div className="card-rules">
@@ -108,7 +110,9 @@ export function CardFace({
                 ? "Personal curse"
                 : card.family === "Secret"
                   ? "Achievement"
-                  : "Ability"}
+                  : card.family === "Companion"
+                    ? "Original proposed ability - not active"
+                    : "Ability"}
             </h3>
             <p>{card.effect}</p>
           </section>
@@ -126,12 +130,51 @@ export function CardFace({
           </section>
         )}
         {controls}
-        {card.family === "Companion" && typeof card.conflict === "string" && (
-          <section>
-            <h3>Conflict</h3>
-            <p>{card.conflict}</p>
-          </section>
-        )}
+        {card.family === "Companion" &&
+          companionById[card.id] &&
+          (() => {
+            const definition = companionById[card.id];
+            const location =
+              state &&
+              companionLocations(state).find((x) => x.token.card === card.id);
+            const linked = location?.token.linkedGroupId;
+            const reunionPending =
+              state &&
+              location &&
+              ["CO-05", "CO-06"].includes(card.id) &&
+              companionLocations(state).filter(
+                (x) =>
+                  x.room === location.room &&
+                  ["CO-05", "CO-06"].includes(x.token.card!),
+              ).length === 2;
+            return (
+              <section
+                className="companion-characteristics"
+                aria-label="Companion characteristics"
+              >
+                <h3>
+                  {linked ? "STRAY" : definition.movementType} /{" "}
+                  {definition.followingType}
+                </h3>
+                {linked && <p>Linked Ghost Twins: always travel together</p>}
+                {!linked && reunionPending && (
+                  <p>Reunion pending: first departing hero claims both Twins</p>
+                )}
+                {(
+                  ["dreadIds", "huntIds", "predatorIds", "preyIds"] as const
+                ).map((key, i) => (
+                  <p key={key}>
+                    <strong>
+                      {["Dread", "Hunt", "Predator", "Prey"][i]}:{" "}
+                    </strong>
+                    {definition[key]
+                      .map((id) => companionById[id].name)
+                      .join(", ") || "None"}
+                  </p>
+                ))}
+              </section>
+            );
+          })()}
         {spellActions ??
           card.casting_modes?.map((mode, index) => (
             <section className="card-casting-mode" key={mode.name}>

@@ -1,174 +1,98 @@
 import type { State, Token } from "../domain/engine";
 import { byId, elements } from "../cards/catalog";
-import {
-  secretById,
-  spellTiers,
-  type SecretCard,
-  type SpellTier,
-} from "../cards/secrets";
+import { secretById, type SecretCard, type SpellTier } from "../cards/secrets";
 import { inventoryCapacities, carryingSlot } from "./inventoryCapacity";
 import { gainCourage } from "./courage";
-
-const unique = (tokens: Token[]) => [
-  ...new Map(tokens.map((t) => [t.id, t])).values(),
-];
+import { awardDiamondGem } from "./magicResources";
+const unique = (ts: Token[]) => [...new Map(ts.map((t) => [t.id, t])).values()];
 export interface SecretEvaluation {
   eligible: boolean;
   progress: string;
   variants: { tier?: SpellTier; reward: number }[];
 }
-/** Current collections only. No historical progress, payment modifiers or state mutation. */
 export function evaluateSecretCondition(
   card: SecretCard,
   playerId: string,
   s: State,
 ): SecretEvaluation {
   const p = s.players.find((p) => p.id === playerId);
-  if (!p) return { eligible: false, progress: "Unknown hero.", variants: [] };
+  if (!p) return { eligible: false, progress: "Unknown hero", variants: [] };
   const carried = unique(p.inventory),
-    subtype = (t: Token, kind: string) =>
-      t.kind === "Item" && byId[t.card!]?.subtype === kind,
-    relics = carried.filter((t) => subtype(t, "Relic")).length,
-    learned = [
-      ...new Set(
+    cap = inventoryCapacities(
+      carried,
+      [],
+      s.blackMirror.heroes[p.id]?.hexlocks ?? [],
+      s,
+      p.id,
+    );
+  const countType = (type: string) =>
+    carried.filter((t) => t.kind === type).length;
+  const itemType = (type: string) =>
+    carried.filter((t) => t.kind === "Item" && byId[t.card!]?.subtype === type)
+      .length;
+  const counts = elements.map(
+    (e) =>
+      carried.filter((t) => t.kind === "Element" && t.element === e).length,
+  );
+  const legalCapacity = Object.keys(cap).every(
+    (slot) =>
+      [...carried, ...p.companions].filter((t) => carryingSlot(t) === slot)
+        .length <= cap[slot as keyof typeof cap],
+  );
+  let count = 0;
+  switch (card.condition.type) {
+    case "ELEMENT_PAIR":
+      count = Math.max(...counts);
+      break;
+    case "ELEMENT_TYPES":
+      count = counts.filter(Boolean).length;
+      break;
+    case "MIRROR_BALANCE":
+      count =
+        Number(countType("White Mirror") > 0) +
+        Number(countType("Black Mirror") > 0);
+      break;
+    case "MATCHING_MIRRORS":
+      count = Math.max(countType("White Mirror"), countType("Black Mirror"));
+      break;
+    case "CRAFTSMAN":
+      count = Number(itemType("Equipment") > 0) + Number(itemType("Tool") > 0);
+      break;
+    case "RELICS":
+      count = Math.min(cap.relics, itemType("Relic"));
+      break;
+    case "SPELLS":
+      count = new Set(
         p.spellSlots.filter(
-          (id, i): id is string =>
-            !!id &&
+          (id, i) =>
+            id &&
             p.knowledge[i] &&
             carried.some((t) => t.id === id && t.kind === "Spell"),
         ),
-      ),
-    ],
-    companions = unique(p.companions.filter((t) => t.kind === "Companion")),
-    elementCounts = elements.map((e) => ({
-      element: e,
-      count: carried.filter((t) => t.kind === "Element" && t.element === e)
-        .length,
-    })),
-    distinct = elementCounts.filter((e) => e.count > 0).length,
-    black = carried.filter((t) => t.kind === "Black Mirror").length,
-    white = carried.filter((t) => t.kind === "White Mirror").length,
-    minimum = card.condition.minimumCount;
-  let count = 0,
-    label = "",
-    extra = true;
-  switch (card.condition.type) {
-    case "CARRIED_ELEMENTS_SAME_TYPE": {
-      const best = [...elementCounts].sort((a, b) => b.count - a.count)[0];
-      count = best.count;
-      label = `${best.element} Elements`;
-      break;
-    }
-    case "CARRIED_ELEMENTS_DISTINCT_TYPES":
-    case "ALL_FIVE_ELEMENTS_CARRIED":
-      count = distinct;
-      label = "different Element types";
-      break;
-    case "CARRIED_BLACK_MIRRORS":
-      count = black;
-      label = "carried Black Mirrors";
-      break;
-    case "CARRIED_WHITE_MIRRORS":
-      count = white;
-      label = "carried White Mirrors";
-      break;
-    case "CARRIED_EQUIPMENT_COUNT":
-      count = carried.filter((t) => subtype(t, "Equipment")).length;
-      label = "carried Equipment";
-      break;
-    case "ACCESSIBLE_DISTINCT_TOOLS":
-      count = new Set(
-        unique([...carried, ...(s.rooms[p.room]?.objects ?? [])])
-          .filter((t) => subtype(t, "Tool"))
-          .map((t) => t.card),
       ).size;
-      label = "accessible Tools";
       break;
-    case "EQUIPPED_RELICS_COUNT":
-      count = relics;
-      label = "equipped Relics";
+    case "COMPANIONS":
+      count = unique(p.companions).length;
       break;
-    case "LEARNED_SPELLS_COUNT":
-      count = learned.length;
-      label = "learned Spells";
+    case "SECRETS":
+      count = new Set(p.secrets).size;
       break;
-    case "LEARNED_SPELLS_SAME_PRINTED_LEVEL": {
-      const counts = spellTiers.map((tier) => ({
-        tier,
-        count: learned.filter((id) => byId[id]?.subtype === tier).length,
-      }));
-      const variants = counts
-        .filter((t) => t.count >= minimum)
-        .map(({ tier }) => ({
-          tier,
-          reward:
-            "byTier" in card.reward
-              ? card.reward.byTier[tier]
-              : card.reward.amount,
-        }));
-      return {
-        eligible: variants.length > 0,
-        progress: counts
-          .map((t) => `${t.tier}: ${t.count}/${minimum}`)
-          .join(" · "),
-        variants,
-      };
-    }
-    case "ATTACHED_COMPANIONS_COUNT":
-      count = companions.length;
-      label = "attached Companions";
+    case "COLORED_SIGILS":
+      count = new Set(p.sigils).size;
       break;
-    case "UNREVEALED_SECRETS_COUNT":
-      count = new Set(
-        p.secrets.filter(
-          (id) =>
-            secretById[id] && !p.completedSecrets.some((c) => c.id === id),
-        ),
-      ).size;
-      label = "unrevealed Secrets (including this card)";
-      break;
-    case "MIXED_MIRROR_COLLECTION":
-      count = black + white;
-      label = `carried Mirrors (${black} Black, ${white} White; both needed)`;
-      extra = black >= 1 && white >= 1;
-      break;
-    case "PERMANENT_SIGILS_DISTINCT_COLORS":
-      count = new Set(learned.flatMap((id) => s.blackMirror.bindings[id] ?? []))
-        .size;
-      label = "permanently assigned Sigil colors";
-      break;
-    case "LOYAL_STRAY_AND_RELIC": {
-      const loyal = companions.some(
-          (t) =>
-            (t.behavior ??
-              s.rules.blackMirrorPolicies.defaultCompanionBehavior) === "LOYAL",
-        ),
-        stray = companions.some(
-          (t) =>
-            (t.behavior ??
-              s.rules.blackMirrorPolicies.defaultCompanionBehavior) === "STRAY",
-        );
-      count = Number(loyal) + Number(stray) + Number(relics > 0);
-      label = `requirements (Loyal: ${loyal ? "yes" : "no"}; Stray: ${stray ? "yes" : "no"}; Relic: ${relics > 0 ? "yes" : "no"})`;
-      break;
-    }
   }
-  const eligible = count >= minimum && extra;
+  const eligible = legalCapacity && count >= card.condition.minimumCount;
   return {
     eligible,
-    progress: `${count}/${minimum} ${label}`,
-    variants:
-      eligible && "amount" in card.reward
-        ? [{ reward: card.reward.amount }]
-        : [],
+    progress: `${count}/${card.condition.minimumCount}${legalCapacity ? "" : " - resolve carrying overflow"}`,
+    variants: eligible ? [{ reward: card.reward.amount }] : [],
   };
 }
-/** Same permission/eligibility path used by the UI and reducer. Reward is never client supplied. */
 export function secretRevealPlan(
   s: State,
   playerId: string,
   id: string,
-  tier?: SpellTier,
+  _tier?: SpellTier,
 ) {
   const p = s.players[s.active],
     card = secretById[id];
@@ -177,9 +101,11 @@ export function secretRevealPlan(
   if (
     s.outcome !== "playing" ||
     p.dead ||
-    p.courage === 0 ||
+    !p.courage ||
     s.pending ||
-    s.blackMirror.resolution
+    s.blackMirror.resolution ||
+    s.spells.consent ||
+    s.spells.portalOffer
   )
     throw Error("Finish the current resolution before revealing a Secret.");
   if (
@@ -188,28 +114,20 @@ export function secretRevealPlan(
     s.players.some((h) => h.completedSecrets.some((c) => c.id === id))
   )
     throw Error("This Secret is not in your unrevealed hand.");
-  // Old saves may contain excess carried objects. Resolve that using existing inventory rules first.
-  const cap = inventoryCapacities(
-    p.inventory,
-    [],
-    s.blackMirror.heroes[p.id]?.hexlocks ?? [],
-    s,
-    p.id,
-  );
-  for (const slot of Object.keys(cap) as (keyof typeof cap)[])
-    if (p.inventory.filter((t) => carryingSlot(t) === slot).length > cap[slot])
-      throw Error("Resolve excess carried objects before revealing a Secret.");
   const evaluation = evaluateSecretCondition(card, playerId, s);
   if (!evaluation.eligible)
     throw Error("Achievement not yet eligible: " + evaluation.progress);
-  const variant = tier
-    ? evaluation.variants.find((v) => v.tier === tier)
-    : evaluation.variants.length === 1
-      ? evaluation.variants[0]
-      : undefined;
-  if (!variant)
-    throw Error("Choose a currently qualifying printed Spell tier.");
-  return { ...evaluation, ...variant, card };
+  if (
+    card.reward.type === "DIAMOND_GEM" &&
+    !s.magic.gems.some((g) => g.secret === id && g.location === "RESERVED")
+  )
+    throw Error("Reserved Diamond Gem is unavailable.");
+  return {
+    ...evaluation,
+    reward: card.reward.amount,
+    card,
+    tier: undefined as SpellTier | undefined,
+  };
 }
 export function revealSecret(
   s: State,
@@ -220,26 +138,25 @@ export function revealSecret(
   const plan = secretRevealPlan(s, playerId, id, tier),
     p = s.players[s.active],
     before = p.courage;
-  p.secrets = p.secrets.filter((secret) => secret !== id);
-  gainCourage(s, p.id, plan.reward);
-  const gained = p.courage - before;
+  if (plan.card.reward.type === "DIAMOND_GEM") awardDiamondGem(s, id, p.id);
+  else gainCourage(s, p.id, 5);
+  p.secrets = p.secrets.filter((c) => c !== id);
   p.completedSecrets.push({
     id,
     turn: s.turn,
     reward: plan.reward,
-    gained,
-    ...(plan.tier ? { tier: plan.tier } : {}),
+    gained: p.courage - before,
+    rewardType: plan.card.reward.type,
   });
   s.log.push({
     id: s.log.length + 1,
     turn: s.turn,
-    text: `${p.name} reveals ${plan.card.name} (${id})${plan.tier ? ` — ${plan.tier}` : ""}: ${plan.card.effect} Gains +${gained} Courage${gained < plan.reward ? ` (${plan.reward} reward, capped at 35)` : ""}. Achievement completed; requirements are kept.`,
+    text: `${p.name} reveals ${plan.card.name} (${id}): ${plan.card.reward.type === "DIAMOND_GEM" ? "receives one Diamond Gem" : "gains +" + (p.courage - before) + " Courage"}. Requirements are kept.`,
   });
 }
-
 export function assertSecretState(s: State) {
   const ids = [
-    ...(s.decks.Secret ?? []),
+    ...s.decks.Secret,
     ...s.players.flatMap((p) => [
       ...p.secrets,
       ...p.completedSecrets.map((c) => c.id),
@@ -258,19 +175,15 @@ export function assertSecretState(s: State) {
     ) ||
     s.players.some((p) => p.inventory.some((t) => t.kind === "Secret"))
   )
-    throw Error(
-      "Secrets belong in private or completed collections, never room inventory.",
-    );
+    throw Error("Secrets belong in private or completed collections.");
   for (const p of s.players)
-    for (const c of p.completedSecrets) {
-      const reward = secretById[c.id].reward;
+    for (const c of p.completedSecrets)
       if (
         c.turn > s.turn ||
-        c.gained > c.reward ||
-        ("amount" in reward
-          ? c.reward !== reward.amount || !!c.tier
-          : !c.tier || c.reward !== reward.byTier[c.tier])
+        (!c.legacy &&
+          (c.reward !== secretById[c.id].reward.amount ||
+            c.rewardType !== secretById[c.id].reward.type ||
+            c.gained > (c.rewardType === "DIAMOND_GEM" ? 0 : 5)))
       )
         throw Error("Invalid completed Secret reward.");
-    }
 }

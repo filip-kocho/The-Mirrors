@@ -292,6 +292,7 @@ export function CastleBoard({
                 </g>
               )}
               <RoomParty s={s} roomId={n.id} />
+              {s.magic.gems.some(g=>g.location==="ROOM"&&g.room===n.id) && <g aria-label="Diamond Gem in room"><BoardIcon name="Diamond" x={-9} y={20} size={18}/></g>}
               {r.objects.length > 0 && (
                 <g
                   className="room-object-markers"

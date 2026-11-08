@@ -1,3 +1,5 @@
+import { supportsFilledGaps } from "./magicResources";
+import { attachCompanion } from "./companions";
 import type { State, Token } from "../domain/engine";
 import { byId } from "../cards/catalog";
 import { spellAdapters } from "../cards/spellEffects";
@@ -95,7 +97,8 @@ export function spellActivationPlan(
   const free = [...availableSigils(s)],
     selected: string[] = [];
   for (const color of mode.sigil_slots) {
-    const i = free.findIndex((t) => t.color === color);
+    let i = free.findIndex((t) => t.color === color);
+    if (i < 0) i = free.findIndex((t) => t.color === "Wild");
     if (i < 0) throw Error(`Missing available ${color} Sigil(s).`);
     selected.push(free.splice(i, 1)[0].id);
   }
@@ -425,7 +428,11 @@ export function spellActivationPlan(
               cell.id !== i &&
               !copy[cell.id] &&
               legalCell(copy, cell.id) &&
-              mosaicConnected(copy, cell.id)
+              mosaicConnected(copy, cell.id) &&
+              supportsFilledGaps(
+                s,
+                copy.map((c, n) => (n === cell.id ? s.mosaic[i] : c)),
+              )
             )
               choices.push({
                 id: `${i}:${cell.id}`,
@@ -585,7 +592,11 @@ export function activateSpell(
     new Set(ids).size !== ids.length ||
     ids.some(
       (id, i) =>
-        available.find((t) => t.id === id)?.color !== plan.mode.sigil_slots[i],
+        !available.some(
+          (t) =>
+            t.id === id &&
+            (t.color === plan.mode.sigil_slots[i] || t.color === "Wild"),
+        ),
     )
   )
     throw Error(
@@ -605,7 +616,10 @@ export function activateSpell(
     };
     return;
   }
-  const paid = takeSigils(s, p.id, ids);
+  const paid = takeSigils(s, p.id, ids).map((token, socket) => ({
+    ...token,
+    socket,
+  }));
   let assignment: State["spells"]["quick"][number] | undefined;
   if (plan.quick) {
     assignment = {
@@ -759,7 +773,7 @@ export function activateSpell(
         break;
       case "RECRUIT_NEAR": {
         const t = extract(targets[0]);
-        p.companions.push(t);
+        attachCompanion(s, p, t);
         resolveCompanionConflicts(s, p, t.id);
         break;
       }
@@ -771,7 +785,7 @@ export function activateSpell(
           1,
         )[0];
         stolen.originalDiscoverer ??= stolen.discoverer ?? h.id;
-        p.companions.push(stolen);
+        attachCompanion(s, p, stolen);
         resolveCompanionConflicts(s, p, targets[0]);
         break;
       }

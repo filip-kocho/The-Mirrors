@@ -479,19 +479,19 @@ describe("all 25 revised Item abilities", () => {
   it("IT-25 suppresses conflicts but preserves normal Stray transfer", () => {
     const s = fixture();
     card(s, "CO-01", s.players[0].companions);
-    card(s, "CO-08", s.players[0].companions);
+    card(s, "CO-07", s.players[0].companions);
     const unprotected = structuredClone(s);
     resolveCompanionConflicts(unprotected, unprotected.players[0]);
     expect(unprotected.players[0].companions.map((t) => t.id)).toEqual([
-      "CO-08",
+      "CO-07",
     ]);
     card(s, "IT-25");
     resolveCompanionConflicts(s, s.players[0]);
     expect(s.players[0].companions).toHaveLength(2);
-    s.players[0].companions[0].behavior = "STRAY";
+    // Rex stays Loyal; Mad Mara is a Stray.
     s.players[1].room = "R01";
     visitRoom(s, s.players[1], "Hall");
-    expect(s.players[1].companions.map((t) => t.id)).toContain("CO-01");
+    expect(s.players[1].companions.map((t) => t.id)).toContain("CO-07");
   });
   it("rejects stale, duplicate and foreign costs without mutating state", () => {
     const s = fixture();
@@ -571,19 +571,19 @@ describe("all 25 revised Item abilities", () => {
   });
   it("Companion conflict destination is explicit and configurable", () => {
     const s = fixture();
-    card(s, "CO-02", s.players[0].companions);
-    card(s, "CO-04", s.players[0].companions);
-    s.rules.itemPolicies.conflictDestination = "STAY";
-    resolveCompanionConflicts(s, s.players[0], "CO-02");
-    expect(s.rooms.R01.objects.map((t) => t.id)).toContain("CO-04");
+    card(s, "CO-07", s.players[0].companions);
+    card(s, "CO-01", s.players[0].companions);
+    s.rules.companionPolicies.flee = "STAY";
+    resolveCompanionConflicts(s, s.players[0], "CO-07");
+    expect(s.rooms.R01.objects.map((t) => t.id)).toContain("CO-01");
   });
   it("a room Locket protects nobody; taking it protects only the holder", () => {
     const s = fixture();
     card(s, "IT-25", s.rooms.R01.objects);
     card(s, "CO-01", s.players[0].companions);
-    card(s, "CO-08", s.players[0].companions);
+    card(s, "CO-07", s.players[0].companions);
     resolveCompanionConflicts(s, s.players[0]);
-    expect(s.players[0].companions.map((t) => t.id)).toEqual(["CO-08"]);
+    expect(s.players[0].companions.map((t) => t.id)).toEqual(["CO-07"]);
   });
   it("migrates old saves and rejects impossible usage owners", () => {
     const s = fixture(),

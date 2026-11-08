@@ -225,7 +225,7 @@ describe("latest designer rules", () => {
     expect(loadSave(JSON.stringify(loaded))).toEqual(loaded);
   });
   it.each(kaleidoscopeGems)(
-    "awards $bonus only on closing $id, in addition to every adjacent tile",
+    "makes $id ready on closure without awarding an installation bonus",
     (gem) => {
       const mosaic: (string | null)[] = Array(35).fill(null),
         last = gem.cells.at(-1)!;
@@ -240,7 +240,7 @@ describe("latest designer rules", () => {
         );
       expect(closingGems(mosaic, last).map((g) => g.id)).toContain(gem.id);
       expect(placementReward(mosaic, last, "Amber", true)).toBe(
-        ordinary + gem.bonus,
+        1,
       );
       mosaic[last] = "Amber";
       expect(completedGems(mosaic).map((g) => g.id)).toContain(gem.id);
@@ -248,16 +248,14 @@ describe("latest designer rules", () => {
       expect(() => placementReward(mosaic, last, "Amber", true)).toThrow();
     },
   );
-  it("adds all gem rewards if one placement completes several gaps", () => {
+  it("grants only base Courage even if a fragment encloses several gaps", () => {
     const mosaic: (string | null)[] = Array(35).fill("Scarlet"),
       last = 11;
     mosaic[last] = null;
     const gems = closingGems(mosaic, last);
     expect(gems.length).toBeGreaterThan(1);
     expect(placementReward(mosaic, last, "Scarlet")).toBe(
-      1 +
-        kaleidoscopeCells[last].neighbors.length +
-        gems.reduce((n, g) => n + g.bonus, 0),
+      1,
     );
   });
   it("bows inter-wing corridors and uses the same path in previews without drawing Portal jumps", () => {

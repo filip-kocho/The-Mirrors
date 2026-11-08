@@ -48,11 +48,7 @@ export function placementReward(
         ? "Every new fragment must share an edge with an existing fragment."
         : "Place the first fragment on an empty outer-edge cell.",
     );
-  return (
-    1 +
-    placementBonuses(placed, id, color).reduce((sum, n) => sum + n.bonus, 0) +
-    closingGems(placed, id, awarded).reduce((sum, g) => sum + g.bonus, 0)
-  );
+  return 1;
 }
 
 export function placementBonuses(
@@ -65,6 +61,6 @@ export function placementBonuses(
     .map((n) => ({
       id: n,
       color: placed[n]!,
-      bonus: placed[n] === color ? 1 : 2,
+      bonus: 0,
     }));
 }

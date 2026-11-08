@@ -28,14 +28,24 @@ export function SecretControls({
     return (
       <section className="secret-completion" aria-label="Completed achievement">
         <h3>Completed by {owner.name}</h3>
-        <p>
-          Turn {completed.turn}
-          {completed.tier ? ` · ${completed.tier}` : ""} · +{completed.gained}{" "}
-          Courage gained
-        </p>
-        {completed.gained < completed.reward && (
-          <p>The +{completed.reward} reward was capped by the Courage track.</p>
+        {completed.legacy && (
+          <p>
+            Completed under earlier rules. Its original Courage reward was
+            preserved during migration.
+          </p>
         )}
+        <p>
+          Turn {completed.turn}:{" "}
+          {completed.rewardType === "DIAMOND_GEM"
+            ? "1 Diamond Gem awarded"
+            : "+" + completed.gained + " Courage gained"}
+        </p>
+        {completed.rewardType !== "DIAMOND_GEM" &&
+          completed.gained < completed.reward && (
+            <p>
+              The +{completed.reward} reward was capped by the Courage track.
+            </p>
+          )}
         <small>
           Revealed to everyone. This achievement cannot be claimed again.
         </small>
@@ -77,7 +87,13 @@ export function SecretControls({
           </select>
         </label>
       )}
-      {reward !== undefined && (
+      {card.reward.type === "DIAMOND_GEM" && (
+        <p>
+          Reveal to receive 1 Diamond Gem. No Courage is awarded until
+          installation. If storage is full, the Gem stays in your room.
+        </p>
+      )}
+      {reward !== undefined && card.reward.type !== "DIAMOND_GEM" && (
         <p>
           Reveal to gain +{Math.min(35 - p.courage, reward)} Courage
           {p.courage + reward > 35 ? ` (+${reward} reward, capped at 35)` : ""}.

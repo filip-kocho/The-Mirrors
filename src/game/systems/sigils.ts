@@ -8,16 +8,24 @@ export function availableSigils(
   s: State,
   owner = s.players[s.active].id,
 ): PhysicalSigil[] {
-  return s.players
-    .find((p) => p.id === owner)!
-    .sigils.map((color, i) => ({
-      color,
-      id: s.spells.availableIds[owner]?.[i] ?? `legacy:${owner}:${i}:${color}`,
-    }));
+  return [
+    ...s.players
+      .find((p) => p.id === owner)!
+      .sigils.map((color, i) => ({
+        color,
+        id:
+          s.spells.availableIds[owner]?.[i] ?? `legacy:${owner}:${i}:${color}`,
+      })),
+    ...s.magic.wildStorage
+      .filter((t) => t.owner === owner)
+      .map((t) => ({ id: t.id, color: "Wild" as const })),
+  ];
 }
 export function normalizeSigilIdentities(s: State) {
   for (const p of s.players)
-    s.spells.availableIds[p.id] = availableSigils(s, p.id).map((t) => t.id);
+    s.spells.availableIds[p.id] = availableSigils(s, p.id)
+      .filter((t) => t.color !== "Wild")
+      .map((t) => t.id);
   for (const [spell, list] of Object.entries(s.blackMirror.bindings))
     s.spells.permanentIds[spell] = list.map(
       (c, i) =>
@@ -26,6 +34,22 @@ export function normalizeSigilIdentities(s: State) {
   s.spells.spentIds = s.blackMirror.spentSigils.map(
     (c, i) => s.spells.spentIds[i] ?? `legacy:spent:${i}:${c}`,
   );
+  for (const q of s.spells.quick) {
+    const slots = byId[q.spell]?.casting_modes?.[q.action]?.sigil_slots ?? [];
+    const used = new Set(
+      q.sigils.flatMap((t) => (t.socket === undefined ? [] : [t.socket])),
+    );
+    for (const t of q.sigils)
+      if (t.socket === undefined) {
+        const index = slots.findIndex(
+          (c, i) => !used.has(i) && (c === t.color || t.color === "Wild"),
+        );
+        if (index >= 0) {
+          t.socket = index;
+          used.add(index);
+        }
+      }
+  }
   s.spells.identityReady = true;
 }
 export function takeSigils(s: State, owner: string, ids: string[]) {
@@ -38,15 +62,29 @@ export function takeSigils(s: State, owner: string, ids: string[]) {
   const selected = ids.map((id) => available.find((t) => t.id === id)!);
   const rest = available.filter((t) => !ids.includes(t.id));
   const p = s.players.find((p) => p.id === owner)!;
-  p.sigils = rest.map((t) => t.color);
-  s.spells.availableIds[owner] = rest.map((t) => t.id);
+  p.sigils = rest
+    .filter((t) => t.color !== "Wild")
+    .map((t) => t.color) as typeof p.sigils;
+  s.magic.wildStorage = s.magic.wildStorage.filter((t) => !ids.includes(t.id));
+  s.spells.availableIds[owner] = rest
+    .filter((t) => t.color !== "Wild")
+    .map((t) => t.id);
   return selected;
 }
 export function giveSigils(s: State, owner: string, tokens: PhysicalSigil[]) {
   const p = s.players.find((p) => p.id === owner)!;
   const ids = (s.spells.availableIds[owner] ??= []);
-  p.sigils.push(...tokens.map((t) => t.color));
-  ids.push(...tokens.map((t) => t.id));
+  p.sigils.push(
+    ...(tokens
+      .filter((t) => t.color !== "Wild")
+      .map((t) => t.color) as typeof p.sigils),
+  );
+  ids.push(...tokens.filter((t) => t.color !== "Wild").map((t) => t.id));
+  s.magic.wildStorage.push(
+    ...tokens
+      .filter((t) => t.color === "Wild")
+      .map((t) => ({ id: t.id, owner })),
+  );
 }
 export function grantSigil(
   s: State,
@@ -99,7 +137,10 @@ export function settleDeadQuickSigils(s: State, owner: string) {
 }
 export function assertSigils(s: State) {
   if (!s.spells.identityReady) return;
-  const ids: string[] = [];
+  const ids: string[] = [
+    ...s.magic.wildStorage.map((t) => t.id),
+    ...(s.magic.pentagon ? [s.magic.pentagon.id] : []),
+  ];
   const consent = s.spells.consent;
   if (
     consent &&
@@ -161,9 +202,24 @@ export function assertSigils(s: State) {
       !q.sigils.length
     )
       throw Error("Invalid Quick assignment.");
+    const sockets = q.sigils.flatMap((t) =>
+      t.socket === undefined ? [] : [t.socket],
+    );
+    if (
+      new Set(sockets).size !== sockets.length ||
+      q.sigils.some(
+        (t) =>
+          t.socket !== undefined &&
+          (!mode.sigil_slots[t.socket] ||
+            (t.color !== "Wild" && mode.sigil_slots[t.socket] !== t.color)),
+      )
+    )
+      throw Error("Invalid Quick socket assignment.");
     const remaining = [...mode.sigil_slots];
-    for (const t of q.sigils) {
-      const i = remaining.indexOf(t.color);
+    for (const t of [...q.sigils].sort(
+      (a, b) => Number(a.color === "Wild") - Number(b.color === "Wild"),
+    )) {
+      const i = t.color === "Wild" ? 0 : remaining.indexOf(t.color);
       if (i < 0) throw Error("Invalid Quick Sigil color.");
       remaining.splice(i, 1);
     }

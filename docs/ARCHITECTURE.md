@@ -44,3 +44,6 @@ Spell framework: spellState + sigils hold physical token identities, Quick assig
 ## Spell catalog v0.4 (2026-11-08)
 
 Spell execution uses per-ID typed operations with shared movement, physical transfers, curse immunity, Tool payment and mirror placement. Temporary assignments retain physical identities; consent and turn-start Portal offers are serialized. Card sockets render inside CardFace; action controls render outside via a React portal. See SPELL_IMPLEMENTATION_v0.4.md.
+
+
+Resource v0.6: `magicState.ts` defines the ten canonical Diamond records, available Wild storage and central installation. `magicResources.ts` validates commands, readiness, transfer, exhaustion and installation. Wild Quick/Permanent/spent tokens reuse the existing physical Sigil lifecycle; available Wilds never enter the colored-only Knowledge or achievement arrays. Every Quick token records its socket index, including after partial early return. The central `gainCourage` pipeline handles all awards.

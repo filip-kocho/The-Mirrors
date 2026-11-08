@@ -8,9 +8,9 @@ export const companionShapes: Record<string, string> = {
   "CO-04": "rat",
   "CO-05": "ghost-madison",
   "CO-06": "ghost-mason",
-  "CO-07": "ghost-mama",
+  "CO-07": "ghost-mara",
   "CO-08": "snake",
-  "CO-09": "rabbit",
+  "CO-09": "spider",
   "CO-10": "plant",
 };
 
@@ -105,7 +105,7 @@ export function CompanionFigurine({
           <>
             <path
               d={
-                shape === "ghost-mama"
+                shape === "ghost-mara"
                   ? "M-8-8Q-10-21 0-23Q10-21 8-8L14 12 7 10 3 15-1 10-7 14-13 11Z"
                   : "M-8-7Q-9-18 0-19Q9-18 8-7L11 12 6 9 1 14-3 10-9 13-12 8Z"
               }
@@ -118,7 +118,7 @@ export function CompanionFigurine({
             {shape === "ghost-mason" && (
               <path d="M-1-15Q4-13 2-11Q-2-11-1-15" fill="#fdfdfa" />
             )}
-            {shape === "ghost-mama" && (
+            {shape === "ghost-mara" && (
               <path
                 d="M-7-11Q0-24 7-11M-8 3Q0 7 8 3M0 7V12"
                 fill="none"
@@ -139,6 +139,16 @@ export function CompanionFigurine({
             <path d="M0-11V1" stroke="#bac9cf" strokeWidth="2" />
             <path
               d="M-3-15-1-14M3-14 5-15M1-19V-23M1-22-1-24M1-22 3-24"
+              fill="none"
+            />
+          </>
+        )}
+        {shape === "spider" && (
+          <>
+            <ellipse cy="3" rx="6" ry="8" />
+            <circle cy="-7" r="4" />
+            <path
+              d="M-4-3-12-10-16-6M4-3 12-10 16-6M-5 0-15-3-18 1M5 0 15-3 18 1M-5 5-15 5-18 10M5 5 15 5 18 10M-4 8-11 13-11 17M4 8 11 13 11 17"
               fill="none"
             />
           </>

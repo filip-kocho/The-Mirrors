@@ -1,3 +1,20 @@
+import {
+  applyMagic,
+  victoryReady,
+  assertMagic,
+  dropGems,
+  gemMovement,
+  awardDiamondGem,
+  type MagicCommand,
+} from "../systems/magicResources";
+import { magicSchema, createMagic } from "../systems/magicState";
+import {
+  normalizeCompanions,
+  assertCompanions,
+  attachCompanion,
+  leaveCompanion,
+  isCarrier,
+} from "../systems/companions";
 import { kaleidoscopeGems } from "../map/kaleidoscopeCells";
 import { updateTurnSpellOffer } from "../systems/blackMirrorRuntime";
 import { hasSpell, roomActionsBlocked } from "../systems/spellModifiers";
@@ -86,6 +103,8 @@ const tokenSchema = z.object({
   behavior: z.enum(["LOYAL", "STRAY"]).optional(),
   discoverer: z.string().optional(),
   originalDiscoverer: z.string().optional(),
+  linkedGroupId: z.string().optional(),
+  fearEncounter: z.string().optional(),
 });
 const heroSchema = z.object({
   id: z.string(),
@@ -103,6 +122,8 @@ const heroSchema = z.object({
         id: z.string(),
         turn: z.number().int().positive(),
         reward: z.number().int().positive(),
+        rewardType: z.enum(["COURAGE", "DIAMOND_GEM"]).optional(),
+        legacy: z.boolean().optional(),
         gained: z.number().int().min(0).max(35),
         tier: z.enum(spellTiers).optional(),
       }),
@@ -142,6 +163,7 @@ export const stateSchema = z.object({
   ),
 });
 export const gameSchema = stateSchema.extend({
+  magic: magicSchema,
   spells: spellStateSchema,
   blackMirror: blackMirrorStateSchema,
   items: itemStateSchema,
@@ -174,6 +196,7 @@ export const gameSchema = stateSchema.extend({
 export type State = z.infer<typeof gameSchema>;
 export type Token = z.infer<typeof tokenSchema>;
 export type Command =
+  | MagicCommand
   | { type: "PLACE_WHITE"; playerId: string; roomId: string; whiteId: string }
   | { type: "SPELL_CONSENT"; playerId: string; accept: boolean }
   | { type: "SPELL_PORTAL"; playerId: string; accept: boolean }
@@ -239,6 +262,23 @@ export type Command =
     }
   | { type: "PLACE"; playerId: string; cell: number };
 export const commandSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("MAGIC"),
+    playerId: z.string(),
+    action: z.enum([
+      "TAKE",
+      "LEAVE",
+      "GIVE",
+      "BREAK_PARALYSIS",
+      "REMOVE_HEXLOCK",
+      "PASSAGE",
+      "SWIFT",
+      "INSTALL_GEM",
+      "INSTALL_WILD",
+    ]),
+    resource: z.string(),
+    target: z.string().optional(),
+  }),
   z.object({
     type: z.literal("PLACE_WHITE"),
     playerId: z.string(),
@@ -411,6 +451,7 @@ export function initialState(
       };
     });
   return {
+    magic: createMagic(names.map((_, i) => `P${i + 1}`)),
     spells: {
       ...spellStateSchema.parse(undefined),
       identityReady: true,
@@ -473,6 +514,7 @@ export function initialState(
   };
 }
 export const movement = (s: State) =>
+  gemMovement(s) +
   itemMovement(s) +
   spellMovement(
     s,
@@ -493,11 +535,18 @@ function checkCapacity(
   owner = s?.players[s.active].id,
 ) {
   const cap = capacities(inventory, local, locks, s, owner);
+  inventory = [
+    ...inventory,
+    ...(s?.players.find((p) => p.id === owner)?.companions.filter(isCarrier) ??
+      []),
+  ];
   const groups = {
     mirrors: inventory.filter((t) => t.kind.endsWith("Mirror")),
     elements: inventory.filter((t) => t.kind === "Element"),
     items: inventory.filter(
-      (t) => t.kind === "Item" && byId[t.card!]?.subtype !== "Relic",
+      (t) =>
+        isCarrier(t) ||
+        (t.kind === "Item" && byId[t.card!]?.subtype !== "Relic"),
     ),
     relics: inventory.filter((t) => byId[t.card!]?.subtype === "Relic"),
   };
@@ -550,6 +599,7 @@ export function reduce(state: State, command: Command): State {
   const s = structuredClone(state),
     p = s.players[s.active],
     r = s.rooms[p.room];
+  normalizeCompanions(s);
   normalizeSigilIdentities(s);
   if (
     command.playerId !== p.id &&
@@ -626,9 +676,12 @@ export function reduce(state: State, command: Command): State {
         for (const id of [...hero.spellSlots])
           if (id) abandonSpell(s, hero, id);
         s.rooms[hero.room].objects.push(...hero.inventory);
-        s.rooms[hero.room].objects.push(...hero.companions);
+        for (const t of [...hero.companions])
+          if (hero.companions.some((x) => x.id === t.id))
+            leaveCompanion(s, t, hero.room);
         hero.inventory = [];
         hero.companions = [];
+        dropGems(s, hero.id, hero.room);
         hero.spellSlots = [null, null, null, null];
         log(
           `${hero.name} falls. Their carried objects remain in ${hero.room}.`,
@@ -676,7 +729,7 @@ export function reduce(state: State, command: Command): State {
       );
       s.spells.afterCurse = { owner: p.id, turn: s.turn };
       s.pending = null;
-      if (s.mosaic.every(Boolean)) s.outcome = "victory";
+      if (victoryReady(s)) s.outcome = "victory";
       else {
         deaths();
         if (endTurn) passTurn(s);
@@ -729,6 +782,9 @@ export function reduce(state: State, command: Command): State {
     );
     s.spells.afterCurse = null;
     deaths();
+  } else if (command.type === "MAGIC") {
+    applyMagic(s, command);
+    if (victoryReady(s)) s.outcome = "victory";
   } else if (command.type === "REVEAL_SECRET") {
     revealSecret(s, command.playerId, command.secretId, command.tier);
   } else if (command.type === "BANISH_OCCULDOR") {
@@ -796,7 +852,7 @@ export function reduce(state: State, command: Command): State {
     )
       throw Error("This Loyal Companion awaits its original discoverer.");
     companion.originalDiscoverer ??= companion.discoverer ?? p.id;
-    p.companions.push(...r.objects.splice(i, 1));
+    attachCompanion(s, p, companion);
     if ((companion.behavior ?? "LOYAL") === "LOYAL")
       companion.discoverer = p.id;
     log(`${p.name} recruits ${byId[companion.card!].name}.`);
@@ -992,13 +1048,7 @@ export function reduce(state: State, command: Command): State {
             (n) => !!s.mosaic[n] && s.mosaic[n] !== color,
           ),
         );
-    const gems = closingGems(s.mosaic, command.cell, Object.keys(s.gemOwners));
     s.mosaic[command.cell] = color;
-    for (const gem of gems) s.gemOwners[gem.id] = p.id;
-    for (const gem of gems)
-      log(
-        `${p.name} closes ${gem.bonus === 5 ? "the central gem" : "a small gem"}: +${p.dead ? 0 : gem.bonus} Courage included in placement.`,
-      );
     gainCourage(s, p.id, reward);
     log(
       `${p.name} places ${color} in cell ${command.cell + 1}: ${p.dead ? "no Courage awarded to an eliminated hero" : `+${reward} Courage`}.`,
@@ -1033,12 +1083,15 @@ export function reduce(state: State, command: Command): State {
     checkCapacity(p.inventory, r.objects, statusOf(s, p.id).hexlocks, s, p.id);
     passTurn(s);
   }
+  normalizeCompanions(s);
   assertState(s);
   return s;
 }
 export function assertState(s: State) {
   gameSchema.parse(s);
+  assertCompanions(s);
   assertSigils(s);
+  assertMagic(s);
   assertSecretState(s);
   assertBlackMirrorState(s);
   const heroIds = new Set(s.players.map((p) => p.id));
@@ -1176,7 +1229,25 @@ export function loadSave(raw: string): State {
       ...itemStateSchema.parse(undefined),
       round: Math.floor((stored.turn - 1) / stored.players.length) + 1,
     };
+  const migrateMagic = !stored.magic;
+  if (migrateMagic) {
+    stored.magic = createMagic(stored.players.map((p: { id: string }) => p.id));
+    stored.gemOwners = {};
+  }
   const s = gameSchema.parse(stored);
+  if (migrateMagic) {
+    s.log.push({
+      id: s.log.length + 1,
+      turn: s.turn,
+      text: "Updated to Secrets/Gems v0.6: preserved past Courage and completed achievements, released their reserved Gems, and added one starting Wild Sigil per hero. Previously enclosed gaps now await resource installation.",
+    });
+    for (const p of s.players)
+      for (const completed of p.completedSecrets) {
+        completed.legacy = true;
+        if (Number(completed.id.slice(3)) <= 10)
+          awardDiamondGem(s, completed.id, p.id);
+      }
+  }
   if (stored.spells?.identityReady) assertSigils(s);
   normalizeSigilIdentities(s);
   const legacyPortals = Object.values(s.blackMirror.rooms).some(
@@ -1227,6 +1298,7 @@ export function loadSave(raw: string): State {
   if (revision === undefined || revision < 3)
     for (const player of s.players)
       unlockKnowledge(player, s.rules.orderedKnowledge);
+  normalizeCompanions(s);
   assertState(s);
   return s;
 }

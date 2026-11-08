@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-08 - Secrets, Gems and Kaleidoscope v0.6
+
+Replaced all fifteen Secret definitions. Added ten reserved Diamond Gems, utility/exhaustion/storage/installation, and one starting Wild Sigil per hero. Reused physical Spell assignments for Wilds. Replaced color adjacency and automatic closure rewards with +1 fragments, +3 Gem installation and +5 central Wild installation. Added save migration and explicit configurable resource policies.
+
+## 2026-11-08 - Companion system v0.6
+
+Exact ten-card definitions and relationships; Item-slot Carriers; departure-only Stray transfer; eating before fear; permanent linked Ghost Twins; existing card integration, save migration and updated inspectors. No individual Companion powers added. See COMPANION_IMPLEMENTATION_v0.6.md for policies and validation.
+
 ## 2026-11-07 ? Secret achievements v0.5
 
 - Replace all 15 Secret definitions with structured current-state achievements, preserving IDs.

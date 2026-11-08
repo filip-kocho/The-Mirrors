@@ -2,7 +2,8 @@ import { z } from "zod";
 import { colors } from "../cards/catalog";
 export const physicalSigilSchema = z.object({
   id: z.string(),
-  color: z.enum(colors),
+  color: z.enum([...colors, "Wild"]),
+  socket: z.number().int().min(0).optional(),
 });
 export type PhysicalSigil = z.infer<typeof physicalSigilSchema>;
 export const spellStateSchema = z

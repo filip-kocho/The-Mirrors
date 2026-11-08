@@ -101,6 +101,7 @@ describe("mirror loop", () => {
           id: "P3",
           name: "C",
         });
+        s.magic.wildStorage.push({id:"WILD-P3",owner:"P3"});
         s.players[1].room = "R01";
         s.players[1].courage = 12;
         const matchingRoom = Object.values(s.rooms).find(
@@ -419,25 +420,25 @@ describe("neutral spatial Kaleidoscope", () => {
     expect(legalCell(a, 11)).toBe(true);
     expect(legalCell(a, 15)).toBe(false);
   });
-  it("adds every matching and different neighbor bonus, ignoring nonadjacent fragments", () => {
+  it("awards one base Courage regardless of neighboring colors", () => {
     const a = Array(35).fill(null);
     expect(placementReward(a, 0, "Scarlet")).toBe(1);
     a[0] = "Scarlet";
-    expect(placementReward(a, 1, "Scarlet")).toBe(2);
-    expect(placementReward(a, 1, "Emerald")).toBe(3);
+    expect(placementReward(a, 1, "Scarlet")).toBe(1);
+    expect(placementReward(a, 1, "Emerald")).toBe(1);
     a[5] = "Emerald";
-    expect(placementReward(a, 1, "Scarlet")).toBe(4);
+    expect(placementReward(a, 1, "Scarlet")).toBe(1);
     a[5] = "Scarlet";
-    expect(placementReward(a, 1, "Scarlet")).toBe(3);
-    expect(placementReward(a, 1, "Amber")).toBe(5);
+    expect(placementReward(a, 1, "Scarlet")).toBe(1);
+    expect(placementReward(a, 1, "Amber")).toBe(1);
     a[34] = "Amber";
-    expect(placementReward(a, 1, "Amber")).toBe(5);
+    expect(placementReward(a, 1, "Amber")).toBe(1);
     a.fill(null);
     a[1] = "Scarlet";
     a[3] = "Emerald";
     a[11] = "Amethyst";
-    expect(placementReward(a, 5, "Scarlet")).toBe(6);
-    expect(placementReward(a, 5, "Amber")).toBe(7);
+    expect(placementReward(a, 5, "Scarlet")).toBe(1);
+    expect(placementReward(a, 5, "Amber")).toBe(1);
   });
   it("can fill all 35 cells from every permitted starting edge without disconnected placements", () => {
     for (const start of kaleidoscopeCells.filter((c) => c.isEdge)) {
@@ -511,7 +512,7 @@ it("runs all 35 real pairs to victory with exact conservation and the final Conf
   }
   expect(s.rage).toBe(35);
   expect(s.outcome).toBe("victory");
-  expect(s.removed).toHaveLength(70);
+  expect(s.removed.filter(t=>t.kind.endsWith("Mirror"))).toHaveLength(70);
   expect(s.players[0].sigils).toHaveLength(35);
   expect(s.players[0].knowledge.every(Boolean)).toBe(true);
 });

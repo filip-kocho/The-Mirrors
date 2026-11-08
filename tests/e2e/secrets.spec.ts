@@ -40,7 +40,7 @@ test("a hidden achievement reveals once, survives reload, and is public after ha
   page,
 }, info) => {
   const s = fixture();
-  hidden(s, "SE-11", "SE-01", "SE-02", "SE-03");
+  hidden(s, "SE-09", "SE-01", "SE-02", "SE-03");
   s.moved = true;
   s.phase = "POST_MOVE_ACTIONS";
   await resume(page, s);
@@ -54,7 +54,7 @@ test("a hidden achievement reveals once, survives reload, and is public after ha
   await expect(
     dialog.getByRole("heading", { name: "Eligible", exact: true }),
   ).toBeVisible();
-  await expect(dialog).toContainText("4/4 unrevealed Secrets");
+  await expect(dialog).toContainText("4/2");
   await page.screenshot({
     path: info.outputPath("eligible-secret.png"),
     fullPage: true,
@@ -68,7 +68,7 @@ test("a hidden achievement reveals once, survives reload, and is public after ha
   await expect(
     dialog.getByRole("button", { name: "Reveal achievement", exact: true }),
   ).toHaveCount(0);
-  expect((await saved(page)).players[0].courage).toBe(23);
+  expect((await saved(page)).players[0].courage).toBe(18);
   await page.keyboard.press("Escape");
   await resume(page);
   expect((await saved(page)).players[0].completedSecrets).toHaveLength(1);
@@ -88,7 +88,7 @@ test("a hidden achievement reveals once, survives reload, and is public after ha
       name: "Inspect Rowan's completed Keeper of Whispers",
     })
     .click();
-  await expect(page.getByRole("dialog")).toContainText("+5 Courage gained");
+  await expect(page.getByRole("dialog")).toContainText("1 Diamond Gem awarded");
   await expect(
     page.getByRole("button", { name: "Reveal achievement" }),
   ).toHaveCount(0);
@@ -98,7 +98,7 @@ test("a room Relic does not count until equipped; claiming caps Courage and keep
   page,
 }, info) => {
   const s = fixture();
-  hidden(s, "SE-07");
+  hidden(s, "SE-14");
   add(s, "IT-24");
   add(s, "IT-21", s.rooms.R01.objects);
   s.players[0].courage = 34;
@@ -110,7 +110,7 @@ test("a room Relic does not count until equipped; claiming caps Courage and keep
   await expect(
     page.getByRole("button", { name: "Reveal achievement" }),
   ).toBeDisabled();
-  await expect(page.getByRole("dialog")).toContainText("1/2 equipped Relics");
+  await expect(page.getByRole("dialog")).toContainText("1/2");
   await page.keyboard.press("Escape");
   await page
     .getByRole("button", { name: `Take ${byId["IT-21"].name}`, exact: true })
@@ -118,7 +118,7 @@ test("a room Relic does not count until equipped; claiming caps Courage and keep
   expect((await saved(page)).players[0].completedSecrets).toEqual([]);
   await page.getByRole("button", { name: "Inspect private Secret 1" }).click();
   await expect(page.getByRole("dialog")).toContainText(
-    "+1 Courage (+4 reward, capped at 35)",
+    "+1 Courage (+5 reward, capped at 35)",
   );
   await page.getByRole("button", { name: "Reveal achievement" }).click();
   expect((await saved(page)).players[0].courage).toBe(35);
@@ -140,40 +140,38 @@ test("a room Relic does not count until equipped; claiming caps Courage and keep
     fullPage: true,
   });
 });
-test("Master Craftsman counts local Tools without activating them, and loses access after moving", async ({
+test("Craftsman requires carried Equipment and Tool rather than room objects", async ({
   page,
 }) => {
   const s = fixture();
-  hidden(s, "SE-06");
+  hidden(s, "SE-05");
   add(s, "IT-11");
-  add(s, "IT-12", s.rooms.R01.objects);
-  add(s, "IT-13", s.rooms.R01.objects);
+  add(s, "IT-01", s.rooms.R01.objects);
   await resume(page, s);
   await page.getByRole("button", { name: "Inspect private Secret 1" }).click();
-  await expect(page.getByRole("dialog")).toContainText("3/3 accessible Tools");
-  await expect(
-    page.getByRole("button", { name: "Reveal achievement" }),
-  ).toBeEnabled();
-  await page.keyboard.press("Escape");
-  await page
-    .getByRole("button", { name: /^Hall explored reachable$/ })
-    .press("Enter");
-  await page.getByRole("button", { name: "Move here" }).click();
-  await page.getByRole("button", { name: "Inspect private Secret 1" }).click();
-  await expect(page.getByRole("dialog")).toContainText("1/3 accessible Tools");
   await expect(
     page.getByRole("button", { name: "Reveal achievement" }),
   ).toBeDisabled();
+  await page.keyboard.press("Escape");
+  await page
+    .getByRole("button", { name: "Take " + byId["IT-01"].name, exact: true })
+    .click();
+  await page.getByRole("button", { name: "Inspect private Secret 1" }).click();
+  await page.getByRole("button", { name: "Reveal achievement" }).click();
+  expect(
+    (await saved(page)).magic.gems.find((g) => g.secret === "SE-05")?.location,
+  ).toBe("PLAYER_STORAGE");
 });
-test("three learned Advanced Spells give the printed +6 reward despite a carried discount", async ({
+
+test("four learned Spells give +5 Courage with all Knowledge slots unlocked", async ({
   page,
 }) => {
   const s = fixture();
-  hidden(s, "SE-09");
+  hidden(s, "SE-15");
   add(s, "IT-10");
   cards
     .filter((c) => c.family === "Spell" && c.subtype === "Advanced")
-    .slice(0, 3)
+    .slice(0, 4)
     .forEach((c, i) => {
       add(s, c.id);
       s.players[0].knowledge[i] = true;
@@ -181,10 +179,10 @@ test("three learned Advanced Spells give the printed +6 reward despite a carried
     });
   await resume(page, s);
   await page.getByRole("button", { name: "Inspect private Secret 1" }).click();
-  await expect(page.getByRole("dialog")).toContainText("Advanced: 3/3");
+  await expect(page.getByRole("dialog")).toContainText("4/4");
   await page.getByRole("button", { name: "Reveal achievement" }).click();
-  expect((await saved(page)).players[0].courage).toBe(24);
+  expect((await saved(page)).players[0].courage).toBe(23);
   expect((await saved(page)).players[0].completedSecrets[0].tier).toBe(
-    "Advanced",
+    undefined,
   );
 });

@@ -30,11 +30,11 @@ describe("signature interactions", () => {
     fireEvent.click(screen.getByRole("button", { name: "Cell 2 legal" }));
     expect(screen.queryByRole("combobox")).toBeNull();
     expect(
-      screen.getByRole("list", { name: "Adjacent fragment bonuses" }).children,
-    ).toHaveLength(2);
+      screen.queryByRole("list", { name: "Adjacent fragment bonuses" }),
+    ).toBeNull();
     expect(container.querySelectorAll(".bonus-neighbor")).toHaveLength(2);
     fireEvent.click(
-      screen.getByRole("button", { name: "Confirm placement · +4 Courage" }),
+      screen.getByRole("button", { name: "Confirm placement · +1 Courage" }),
     );
     expect(dispatch).toHaveBeenCalledWith({
       type: "PLACE",

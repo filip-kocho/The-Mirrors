@@ -1,3 +1,4 @@
+import { companionById } from "./companions";
 import revisedSpells from "./spells-v04.json";
 import { z } from "zod";
 import source from "../../../reference/The_Mirrors_Conceptual_Card_Catalog_v0.2.json";
@@ -53,6 +54,7 @@ export const cards = z.array(cardSchema).parse(
           ...card,
           ...(blackMirrorById[card.id] ?? {}),
           ...(itemById[card.id] ?? {}),
+          ...(companionById[card.id] ? { ...companionById[card.id], subtype: "Companion", conflict: undefined } : {}),
         },
     ),
 );

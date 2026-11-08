@@ -1,3 +1,5 @@
+import { refreshGems } from "./magicResources";
+import { companionDeparture, leaveCompanion } from "./companions";
 import { portalSupply, assignPortals } from "./portals";
 import { discardBoundSigils, returnQuickSigils } from "./sigils";
 import {
@@ -75,24 +77,9 @@ export function visitRoom(
     origin = hero.room,
     room = s.rooms[destination],
     discovered = room.explored;
-  if (s.items.restrictions[hero.id]?.companions !== origin) {
-    // Strays follow the first departing hero, including when attached to a different hero here.
-    const roomStrays = s.rooms[origin].objects.filter(
-      (t) => t.kind === "Companion" && t.behavior === "STRAY",
-    );
-    s.rooms[origin].objects = s.rooms[origin].objects.filter(
-      (t) => !roomStrays.includes(t),
-    );
-    hero.companions.push(...roomStrays);
-    for (const other of s.players.filter(
-      (p) => p.id !== hero.id && p.room === origin,
-    )) {
-      const strays = other.companions.filter((t) => t.behavior === "STRAY");
-      other.companions = other.companions.filter((t) => !strays.includes(t));
-      hero.companions.push(...strays);
-    }
-  }
+  if (destination !== origin) companionDeparture(s, hero);
   delete s.items.restrictions[hero.id];
+  delete s.magic.movement[hero.id];
   hero.room = destination;
   const remaining = s.players.find((p) => p.room === origin && !p.dead);
   if (remaining) resolveCompanionConflicts(s, remaining);
@@ -155,6 +142,7 @@ export function updateTurnSpellOffer(s: State) {
       : null;
 }
 export function beginHeroTurn(s: State) {
+  refreshGems(s);
   returnQuickSigils(s, s.players[s.active].id);
   const hero = s.players[s.active],
     status = mutableStatus(s, hero.id);
@@ -353,7 +341,7 @@ export function advanceEffects(
                 id ? (s.blackMirror.bindings[id] ?? []) : [],
               )
             : []),
-        ];
+        ].filter((color) => color !== "Wild");
         const amount =
           typeof effect.amount === "number"
             ? effect.amount
@@ -517,10 +505,13 @@ export function advanceEffects(
           hasSpell(s, "COMPANION_IMMUNITY", hero.id)
         )
           break;
-        s.rooms[hero.room].objects.push(...hero.companions);
+        const abandoned = [...hero.companions];
+        for (const t of abandoned)
+          if (hero.companions.some((x) => x.id === t.id))
+            leaveCompanion(s, t, hero.room);
         event(
           s,
-          `${hero.name} leaves ${hero.companions.length} Companion(s) in ${hero.room}.`,
+          `${hero.name} leaves ${abandoned.length} Companion(s) in ${hero.room}.`,
         );
         hero.companions = [];
         break;

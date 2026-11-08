@@ -51,6 +51,7 @@ export function curseFixture(card = "BM-01", rich = true) {
       r.objects = structuredClone(r.findings);
     }
   s.players[0].room = "R01";
+  s.decks.Companion = ["CO-01", ...s.decks.Companion.filter(id=>id!=="CO-01")];
   relocate(s, "WM-01", s.rooms.R01.objects);
   relocate(s, card, s.rooms.R01.objects);
   s = reduce(s, {
@@ -300,7 +301,8 @@ describe("token lifecycles, topology and safety", () => {
     s.players[0].companions[0].behavior = "LOYAL";
     s.players[0].companions[0].discoverer = "P1";
     const loyal = s.players[0].companions[0].id;
-    const strayId = s.decks.Companion.shift()!;
+    const strayId = "CO-03";
+    s.decks.Companion = s.decks.Companion.filter(id=>id!==strayId);
     s.players[0].companions.push({
       id: strayId,
       card: strayId,

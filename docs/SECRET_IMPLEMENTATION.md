@@ -1,3 +1,7 @@
+# Superseded by v0.6
+
+See [Secrets, Diamond Gems and Wild Sigils v0.6](SECRETS_GEMS_IMPLEMENTATION_v0.6.md) for current definitions and rewards. The v0.5 report below is historical.
+
 # Secret achievements v0.5
 
 Implemented 2026-11-07 from [the supplied specification](../reference/Secret_Achievements_v0.5.md). All SE-01 through SE-15 definitions replace the old Secret effects at import. The original 155-card source JSON remains intact. The canonical subtype is `SECRET_ACHIEVEMENT`, using the specification's fundamental rule; the card face reads “Secret achievement.”

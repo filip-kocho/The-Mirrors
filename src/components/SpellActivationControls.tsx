@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { createPortal } from "react-dom";
 import { useState } from "react";
 import type { Command, State } from "../game/domain/engine";
@@ -83,7 +83,11 @@ function SpellMode({
   const valid =
     !!plan &&
     selected.every((id, i) =>
-      free.some((t) => t.id === id && t.color === mode.sigil_slots[i]),
+      free.some(
+        (t) =>
+          t.id === id &&
+          (t.color === mode.sigil_slots[i] || t.color === "Wild"),
+      ),
     ) &&
     new Set(selected).size === selected.length &&
     targets.length >= plan.min &&
@@ -109,8 +113,8 @@ function SpellMode({
             {quick
               ? "Awaiting your next turn"
               : activePermanent(s, s.players[s.active].id, spell)
-                ? "Active · bound"
-                : "Bound · suppressed"}
+                ? "Active Â· bound"
+                : "Bound Â· suppressed"}
           </small>
         )}
       </h3>
@@ -123,6 +127,9 @@ function SpellMode({
       <div className="spell-sockets">
         {mode.sigil_slots.map((color, i) => {
           const chosen = free.find((t) => t.id === selected[i]);
+          const assignedHere = quick
+            ? assigned.find((t, j) => (t.socket ?? j) === i)
+            : assigned[i];
           return (
             <button
               key={i}
@@ -130,24 +137,33 @@ function SpellMode({
               aria-label={`${mode.name} ${color} socket ${i + 1}`}
               aria-pressed={!!chosen}
               disabled={!plan || !!assigned.length}
-              title={`${color}: ${free.filter((t) => t.color === color && !selected.includes(t.id)).length} unassigned available`}
+              title={`${color}: ${free.filter((t) => (t.color === color || t.color === "Wild") && !selected.includes(t.id)).length} unassigned available`}
               onClick={() =>
                 setSelected((old) =>
                   old.map((id, j) =>
                     j !== i
                       ? id
-                      : id
-                        ? null
-                        : (free.find(
-                            (t) => t.color === color && !old.includes(t.id),
-                          )?.id ?? null),
+                      : (() => {
+                          const options = free.filter(
+                            (t) =>
+                              (t.color === color || t.color === "Wild") &&
+                              (!old.includes(t.id) || t.id === id),
+                          );
+                          const at = options.findIndex((t) => t.id === id);
+                          return options[at + 1]?.id ?? null;
+                        })(),
                   ),
                 )
               }
             >
               <GameIcon name={color} />
+              {(chosen?.color === "Wild" || assignedHere?.color === "Wild") && (
+                <span title="Wild Sigil assigned">
+                  <GameIcon name="Wild" />
+                </span>
+              )}
               <small aria-hidden="true">
-                {assigned[i] ? "\u25c6" : chosen ? "\u2713" : "+"}
+                {assignedHere ? "\u25c6" : chosen ? "\u2713" : "+"}
               </small>
             </button>
           );

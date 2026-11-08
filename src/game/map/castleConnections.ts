@@ -16,6 +16,10 @@ export function connections(
   const normal = roomGraph[room].neighbors.filter(
     (id) =>
       (owner && ignoresThreshold(s, owner)) ||
+      (owner &&
+        !s.moved &&
+        s.magic.movement[owner]?.turn === s.turn &&
+        s.magic.movement[owner]?.passage === connectionId(room, id)) ||
       !blocked.has(connectionId(room, id)),
   );
   const pairs = portalPairs(s);

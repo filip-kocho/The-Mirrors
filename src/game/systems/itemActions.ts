@@ -1,3 +1,4 @@
+import { leaveCompanion } from "./companions";
 import { hasSpell, roomActionsBlocked } from "./spellModifiers";
 import { availableSigils, takeSigils, discardSigils } from "./sigils";
 import { spellActivationPlan, activateSpell } from "./spellActivation";
@@ -64,7 +65,7 @@ export function itemActionPlan(s: State, id: string, extraUse = false) {
       );
       break;
     case "SIGIL":
-      options = hero.sigils.map((color, i) => ({
+      options = availableSigils(s).map(({color}, i) => ({
         id: `sigil:${i}`,
         label: color,
       }));
@@ -90,7 +91,7 @@ export function itemActionPlan(s: State, id: string, extraUse = false) {
         .map((r) => ({ id: r.id, label: r.id }));
       break;
     case "SACRIFICE_COMPANION":
-      options = fromTokens(hero.companions);
+      options = fromTokens(hero.companions.filter((t) => !t.linkedGroupId));
       break;
   }
   if (options.length < min)
@@ -166,7 +167,9 @@ export function applyItemAction(
       s.removed.push({ id: ids[0], card: ids[0], kind: "Secret" });
       break;
     case "LEAVE_COMPANIONS":
-      room.objects.push(...hero.companions);
+      for (const t of [...hero.companions])
+        if (hero.companions.some((x) => x.id === t.id))
+          leaveCompanion(s, t, hero.room);
       hero.companions = [];
       restriction.companions = hero.room;
       break;
@@ -178,7 +181,7 @@ export function applyItemAction(
       break;
     case "SACRIFICE_COMPANION": {
       const i = hero.companions.findIndex((t) => t.id === ids[0]);
-      s.removed.push(...hero.companions.splice(i, 1));
+      leaveCompanion(s, hero.companions[i], hero.room, true);
       break;
     }
   }
