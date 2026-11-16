@@ -34,7 +34,7 @@ function add(s: State, id: string, carried = true) {
   });
 }
 async function resume(page: Page, s: State) {
-  if(s)normalizeSigilIdentities(s);
+  if (s) normalizeSigilIdentities(s);
   await page.goto("/");
   await page.evaluate(
     (state) =>
@@ -46,6 +46,40 @@ async function resume(page: Page, s: State) {
 }
 const saved = (page: Page): Promise<State> =>
   page.evaluate(() => JSON.parse(localStorage.getItem("the-mirrors-save-v1")!));
+
+test("player-colored glass previews and awards owner adjacency Courage", async ({
+  page,
+}) => {
+  const s = fixture();
+  s.mosaic[0] = "Scarlet";
+  s.mosaicOwners[0] = "P1";
+  s.rooms.R01.restored = s.rooms.R02.restored = true;
+  s.rage = 2;
+  s.pending = { room: "R02", card: "BM-01", stage: "placement", skipped: true };
+  await resume(page, s);
+  const puzzle = page.getByRole("dialog");
+  await expect(
+    puzzle
+      .getByRole("button", { name: "Cell 1 Scarlet", exact: true })
+      .locator(":scope > polygon"),
+  ).toHaveAttribute("fill", "#efc77b");
+  await puzzle
+    .getByRole("button", { name: "Cell 2 legal", exact: true })
+    .click();
+  await expect(puzzle).toContainText(
+    "Placement +1; neighboring tiles of your color +1",
+  );
+  await puzzle
+    .getByRole("button", { name: /Confirm placement.*\+2 Courage/ })
+    .click();
+  const result = await saved(page);
+  expect(result.players[0].courage).toBe(20);
+  expect(result.mosaicOwners[1]).toBe("P1");
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "Resume saved expedition" }),
+  ).toBeVisible();
+});
 
 test("board tokens, paired Portals, party Fear and the five-Sigil hand are interactive", async ({
   page,
@@ -63,7 +97,7 @@ test("board tokens, paired Portals, party Fear and the five-Sigil hand are inter
   assignPortals(s, ["R02", "R34"]);
   add(s, "IT-11");
   const at = s.rooms.Hall.objects.findIndex((t) => t.id === "E-Air-1");
-  s.rooms.R01.objects.push(...s.rooms.Hall.objects.splice(at, 1));
+  s.players[0].inventory.push(...s.rooms.Hall.objects.splice(at, 1));
   await resume(page, s);
   await expect(page.locator('[data-slot="elements"]')).toHaveCount(3);
   await expect(
@@ -147,9 +181,7 @@ test("surrounding gaps makes them ready without automatic installation rewards",
     await puzzle
       .getByRole("button", { name: `Cell ${last + 1} legal`, exact: true })
       .click();
-    await expect(puzzle).toContainText(
-      "+1 Courage",
-    );
+    await expect(puzzle).toContainText("+1 Courage");
     await puzzle
       .getByRole("button", {
         name: new RegExp(`Confirm placement.*\\+${reward} Courage`),

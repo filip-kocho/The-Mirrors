@@ -6,7 +6,9 @@ import type { ReactNode } from "react";
 export const tokenLabel = (t: Token) =>
   t.kind === "Black Mirror"
     ? "Black Mirror"
-    : (t.element ?? byId[t.card!]?.name ?? t.kind);
+    : t.sigilColor
+      ? `${t.sigilColor} Sigil`
+      : (t.element ?? byId[t.card!]?.name ?? t.kind);
 export function TokenIcon({
   token,
   onInspect,
@@ -22,6 +24,7 @@ export function TokenIcon({
 }) {
   const label = tokenLabel(token);
   const name =
+    token.sigilColor ??
     token.element ??
     (token.kind === "Item" ? byId[token.card!]?.subtype : token.kind) ??
     token.kind;

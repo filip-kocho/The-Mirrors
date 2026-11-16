@@ -74,6 +74,18 @@ export function HowToPlay() {
           Item removes its bonus immediately; choose any excess objects to leave
           before continuing.
         </p>
+        <p>
+          Discard means leave the object in your current room, not remove it
+          from the game. It cannot be picked up, relearned or recruited during
+          the remainder of that turn, even after moving or reloading a save.
+          Starting next turn it can be collected normally. Discarded Secrets are
+          public room cards until collected; discarded Sigils go into the
+          collector's Sigil storage. Discarding a Spell ends its Permanent
+          effect and leaves its bound Sigils in the room too. Explicit removal
+          from the game (including "permanently discard") and Elements consumed
+          to learn Spells remain separate. Sigil Sacrifice removes its paid
+          Sigil from play; it does not leave a collectible Sigil in the room.
+        </p>
       </section>
       <section>
         <h3>4. Place a White and Black Mirror</h3>
@@ -151,11 +163,34 @@ export function HowToPlay() {
           piece. Highlighted cells show legal choices; choose one and confirm.
         </p>
         <p>
-          Gain exactly 1 base Courage for each restored fragment. Neighbor colors add no Courage. Existing Item and Spell bonuses still apply.
+          Mark the pentagonal tile beneath your Sigil with your player color.
+          Gain 1 Courage for placement, plus 1 for every edge-adjacent tile
+          already marked with your player color. Corner touches do not count.
+          Only the placing player scores; the Sigil's own color does not
+          determine this bonus. Existing Item and Spell bonuses still apply.
         </p>
-        <p>Enclosing one of the ten diamond gaps makes it ready, without granting a reward. Install a carried Diamond Gem there for +3 Courage. Install one available Wild Sigil in the ready central pentagon for +5 Courage. Each gap rewards installation once.</p>
-        <p>Each hero starts with one Wild Sigil. It fills one colored Spell socket, returns next turn after Quick use, or remains bound for a Permanent Spell. Wilds do not count toward colored Knowledge achievements.</p>
-        <p>Diamond Gems have dedicated storage (one per hero by default). A ready Gem can remove one Paralysis Token, remove one inventory Hexlock, bypass one adjacent blocked corridor for the next movement, or add +1 movement allowance. It then exhausts until its holder's next turn. Exhausted Gems can still be installed. Gems left in rooms remain public and collectible.</p>
+        <p>
+          Enclosing one of the ten diamond gaps makes it ready, without granting
+          a reward. Install a carried Diamond Gem there for +3 Courage. Install
+          one available Wild Sigil in the ready central pentagon for +5 Courage.
+          Each gap rewards installation once.
+        </p>
+        <p>
+          Each hero starts with one Wild Sigil. It fills one colored Spell
+          socket, returns next turn after Quick use, or remains bound for a
+          Permanent Spell. Wilds do not count toward colored Knowledge
+          achievements. A Spell with Permanent Sigils bound can still use its
+          Quick action by paying with separate available Sigils.
+        </p>
+        <p>
+          Diamond Gems have dedicated storage. You may hold multiple Gems and
+          install multiple Gems in a turn, one in each ready, empty diamond gap.
+          Collected Gems cannot be left in rooms. A ready Gem can remove one
+          Paralysis Token, remove one inventory Hexlock, bypass one adjacent
+          blocked corridor for the next movement, or add +1 movement allowance.
+          It then exhausts until its holder's next turn. Exhausted Gems can
+          still be installed. Gems dropped by fallen heroes remain collectible.
+        </p>
       </section>
       <section>
         <h3>7. Unlock Knowledge and learn Spells</h3>
@@ -219,12 +254,24 @@ export function HowToPlay() {
         <p>
           A curse can abandon Companions in a room. Use their up-arrow to
           recruit them. Loyal followers stay with their new holder; Strays
-          follow the first hero leaving. Followers occupy the free Companion area; Carriers occupy an Item slot. If no slot is free, an automatic Carrier discovery or transfer stays behind (provisional). Eating removes prey before fear is resolved. Frightened Companions flee to a connected explored room, or stay detached when none is available (provisional).
+          follow the first hero leaving. Followers occupy the free Companion
+          area; Carriers occupy an Item slot. If no slot is free, an automatic
+          Carrier discovery or transfer stays behind (provisional). Eating
+          removes prey before fear is resolved. Frightened Companions flee to a
+          connected explored room, or stay detached when none is available
+          (provisional).
         </p>
       </section>
       <section>
         <h3>The Ghost Twins</h3>
-        <p>Madison and Mason begin as separate Loyal Followers. When they meet, their reunion waits for the first departing hero to claim both; if they already share an owner, they reunite immediately under the default policy. Reunited Twins are permanently linked Strays. Both cards travel and transfer together. A single-card sacrifice cannot split them.</p>
+        <p>
+          Madison and Mason begin as separate Loyal Followers. When they meet,
+          their reunion waits for the first departing hero to claim both; if
+          they already share an owner, they reunite immediately under the
+          default policy. Reunited Twins are permanently linked Strays. Both
+          cards travel and transfer together. A single-card sacrifice cannot
+          split them.
+        </p>
       </section>
       <section>
         <h3>Items, Tools and Relics</h3>
@@ -247,8 +294,8 @@ export function HowToPlay() {
           Mirror Offering and Farewell Whistle work before movement and prevent
           replacements until departure. The Ring reduces penalties, not
           voluntary costs. The Crown permits any empty Kaleidoscope cell; actual
-          neighbor colors do not add base bonuses. The Amulet rewards newly committed
-          Permanent Sigils, which cannot be freely recovered.
+          neighboring tiles owned by you add 1 Courage each. The Amulet rewards
+          newly committed Permanent Sigils, which cannot be freely recovered.
         </p>
       </section>
       <section>
@@ -280,12 +327,18 @@ export function HowToPlay() {
           Secrets are private, one-time achievements. Click a Secret icon to
           read its condition, reward and current eligibility. Use Reveal
           achievement before or after moving when you qualify. It becomes
-          public, grants its reward and stays in your completed
-          collection. You keep all qualifying objects; several Secrets can use
-          the same collection.
+          public, grants its reward and stays in your completed collection. You
+          keep all qualifying objects; several Secrets can use the same
+          collection.
         </p>
         <p>
-          All conditions use current personal collections, never room resources. Ten Diamond Challenges award one reserved Gem each and no direct Courage. Five Heroic Achievements award +5 Courage each, capped at 35. Keeper of Whispers counts itself among two unrevealed Secrets. Sigil Harmony requires two available actual colors, excluding Wild, Quick-assigned and bound Sigils. Completed Secrets cannot pay Whisper Cipher's cost.
+          All conditions use current personal collections, never room resources.
+          Ten Diamond Challenges award one reserved Gem each and no direct
+          Courage. Five Heroic Achievements award +5 Courage each, capped at 35.
+          Keeper of Whispers counts itself among two unrevealed Secrets. Sigil
+          Harmony requires two available actual colors, excluding Wild,
+          Quick-assigned and bound Sigils. Completed Secrets cannot pay Whisper
+          Cipher's cost.
         </p>
         <p>
           Actions autosave in this browser. Save also records the current
@@ -297,18 +350,27 @@ export function HowToPlay() {
         <p>
           Learning, movement, carrying, placement, collisions, Rage, Sigils and
           victory and all revised Item abilities are playable. Permanent Sigils
-          stay committed until the Spell leaves play. Open a learned Spell and
-          click its matching Sigils, then activate Quick or Permanent using the
-          panel outside the card. Quick Sigils return at the start of their
-          owner's next turn, even after abandoning the Spell. Seals suppress the
-          affected action. All 35 revised Spells have immediate Quick and
-          ongoing Permanent effects. Additional Spell movement does not replace
-          mandatory movement. Some Spell learning remains blocked by obsolete
-          Tool prerequisites; other Companion powers are not yet automated.
-          Secret achievement rewards are playable. Loyal Companions follow their
-          holder; Strays follow the first departing hero. Black Mirror choices
-          and tokens are saved too. Card text shows the designer’s proposed
-          effects, including those still awaiting implementation.
+          stay committed until the Spell leaves play or SP-16 returns them.
+          SP-16 Quick ends one Permanent effect and grants 1 Courage per
+          returned Sigil; its Permanent effect reduces another Permanent
+          activation by one Sigil. Open a learned Spell and click its matching
+          Sigils, then activate Quick or Permanent using the panel outside the
+          card. Quick Sigils return at the start of their owner's next turn,
+          even after abandoning the Spell. Seals suppress the affected action.
+          All 35 revised Spells have immediate Quick and ongoing Permanent
+          effects. Permanent effects belong to their owner and remain active on
+          every player's turn when their triggers apply. SP-32 offers a complete
+          Portal pair at the owner's turn start, with the second room chosen on
+          the map. Additional Spell movement does not replace mandatory
+          movement. Some Spell learning remains blocked by obsolete Tool
+          prerequisites. Rex protects against arrivals and Alexis adds movement.
+          Open Roderick, Madison, Mason, Mara, Mamba, or Clementine to use their
+          revised abilities; Poe and Julia retain proposed powers awaiting
+          implementation. Secret achievement rewards are playable. Loyal
+          Companions follow their holder; Strays follow the first departing
+          hero. Black Mirror choices and tokens are saved too. Card text shows
+          the designer’s proposed effects, including those still awaiting
+          implementation.
         </p>
       </section>
     </article>

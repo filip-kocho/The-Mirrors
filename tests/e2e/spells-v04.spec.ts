@@ -97,12 +97,12 @@ test("SP-24 pays a Tool cost once while bypassing its previous round use", async
     fullPage: true,
   });
   await actions.getByRole("button", { name: "Activate Quick" }).click();
-  expect((await saved(page)).spentElements.map((t) => t.id)).toContain(
+  expect((await saved(page)).rooms.R01.objects.map((t) => t.id)).toContain(
     "E-Fire-1",
   );
   expect((await saved(page)).spells.quick).toHaveLength(1);
 });
-test("SP-32 turn-start Portal persists and consumes only one supply token", async ({
+test("SP-32 turn-start Portal persists and consumes two supply tokens", async ({
   page,
 }) => {
   let s = fixture("SP-32", 1);
@@ -118,9 +118,15 @@ test("SP-32 turn-start Portal persists and consumes only one supply token", asyn
   await resume(page, s);
   const d = page.getByRole("dialog", { name: "Turn-start Portal" });
   await expect(d).toBeVisible();
-  await d.getByRole("button", { name: "Place Portal", exact: true }).click();
+  await d.getByRole("button", { name: /R35/ }).click();
+  await d
+    .getByRole("button", { name: "Place Portal pair", exact: true })
+    .click();
   const after = await saved(page);
   expect(after.blackMirror.rooms.R01.portal).toBe(true);
+  expect(after.blackMirror.rooms.R01.portalPair).toBe(
+    after.blackMirror.rooms.R35.portalPair,
+  );
   expect(after.players[0].sigils).toHaveLength(0);
   expect(after.blackMirror.bindings["SP-32"]).toHaveLength(3);
   await expect(d).not.toBeVisible();

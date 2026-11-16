@@ -1,3 +1,4 @@
+import { hasItemEffect } from "./itemAccess";
 import type { State } from "../domain/engine";
 import { byId } from "../cards/catalog";
 import { blackMirrorById } from "../cards/blackMirrors";
@@ -20,7 +21,8 @@ export function activePermanent(s: State, owner: string, spell: string) {
         (m) => m.name.toUpperCase() === "PERMANENT",
       ) ?? -1;
   const bound = s.blackMirror.bindings[spell] ?? [],
-    cost = byId[spell]?.casting_modes?.[action]?.sigil_slots ?? [];
+    printed = byId[spell]?.casting_modes?.[action]?.sigil_slots ?? [],
+    cost = printed.filter((_, i) => i !== s.spells.permanentWaivers[spell]);
   return (
     !!p &&
     !p.dead &&
@@ -32,7 +34,8 @@ export function activePermanent(s: State, owner: string, spell: string) {
       (h) => h.slot === "knowledge" && h.index === i,
     ) &&
     bound.length === cost.length &&
-    cost.length > 0 &&
+    Object.hasOwn(s.blackMirror.bindings, spell) &&
+    printed.length > 0 &&
     cost.every((c, n) => bound[n] === c || bound[n] === "Wild") &&
     !applicableSpellSeals(s, spell, action).length
   );
@@ -55,7 +58,7 @@ export function hasSpell(
 export function spellMovement(s: State, owner: string, base: number) {
   return (
     Math.max(hasSpell(s, "MOVE_FLOOR", owner) ? 2 : 1, base) +
-    (hasSpell(s, "MOVE_BONUS", owner) ? 1 : 0) +
+    (hasSpell(s, "MOVE_BONUS", owner) ? 2 : 0) +
     (hasSpell(s, "MOVE_BONUS_TWO", owner) ? 2 : 0)
   );
 }
@@ -91,6 +94,7 @@ export function ignoresParalysis(s: State, owner: string) {
 }
 export function ignoresThreshold(s: State, owner: string) {
   return (
+    hasItemEffect(s, "IGNORE_THRESHOLD", owner) ||
     hasSpell(s, "IGNORE_THRESHOLD", owner) ||
     hasSpell(s, "IGNORE_MOVEMENT_TOKENS", owner)
   );

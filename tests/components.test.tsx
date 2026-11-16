@@ -21,6 +21,7 @@ describe("signature interactions", () => {
     const s = initialState(["A", "B"], "adjacency-ui");
     s.mosaic[0] = "Scarlet";
     s.mosaic[5] = "Emerald";
+    s.mosaicOwners[0] = s.mosaicOwners[5] = "P1";
     s.rooms.R01.color = "Scarlet";
     s.pending = { room: "R01", card: "BM-01", stage: "placement" };
     const dispatch = vi.fn();
@@ -34,7 +35,7 @@ describe("signature interactions", () => {
     ).toBeNull();
     expect(container.querySelectorAll(".bonus-neighbor")).toHaveLength(2);
     fireEvent.click(
-      screen.getByRole("button", { name: "Confirm placement · +1 Courage" }),
+      screen.getByRole("button", { name: "Confirm placement · +3 Courage" }),
     );
     expect(dispatch).toHaveBeenCalledWith({
       type: "PLACE",

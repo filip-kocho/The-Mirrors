@@ -60,9 +60,7 @@ export function GemStorage({
   });
   return (
     <section className="gem-storage" aria-label="Diamond Gem storage">
-      <h3>
-        Diamond Gems {gems.length}/{s.rules.gemPolicies.capacity}
-      </h3>
+      <h3>Diamond Gems {gems.length}</h3>
       {gems.map((g) => (
         <button
           key={g.id}
@@ -130,13 +128,6 @@ export function GemStorage({
             dispatch={dispatch}
           >
             Swift Movement +1
-          </MagicButton>
-          <MagicButton
-            s={s}
-            command={command("LEAVE", g.id)}
-            dispatch={dispatch}
-          >
-            Leave Gem in room
           </MagicButton>
           {s.rules.gemPolicies.directTransfer &&
             s.players

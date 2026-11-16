@@ -1,4 +1,5 @@
 ﻿"use client";
+import { SpellModeIcon } from "./SpellModeIcon";
 import { createPortal } from "react-dom";
 import { useState } from "react";
 import type { Command, State } from "../game/domain/engine";
@@ -80,16 +81,23 @@ function SpellMode({
       )
       .flatMap((q) => q.sigils);
   const assigned = quick ? waiting : bound;
+  const waived = quick
+    ? -1
+    : (s.spells.permanentWaivers[spell] ?? plan?.waived ?? -1);
+  const isBound = !quick && Object.hasOwn(s.blackMirror.bindings, spell);
   const valid =
     !!plan &&
-    selected.every((id, i) =>
-      free.some(
-        (t) =>
-          t.id === id &&
-          (t.color === mode.sigil_slots[i] || t.color === "Wild"),
-      ),
+    selected.every(
+      (id, i) =>
+        i === waived ||
+        free.some(
+          (t) =>
+            t.id === id &&
+            (t.color === mode.sigil_slots[i] || t.color === "Wild"),
+        ),
     ) &&
-    new Set(selected).size === selected.length &&
+    new Set(selected.filter((_, i) => i !== waived)).size ===
+      selected.filter((_, i) => i !== waived).length &&
     targets.length >= plan.min &&
     targets.length <= plan.max;
   let targetsValid = false;
@@ -103,12 +111,11 @@ function SpellMode({
   };
   return (
     <section
-      className={`card-casting-mode ${plan ? (quick ? "quick-ready" : "permanent-ready") : ""}`}
+      className={`card-casting-mode mode-${mode.name.toLowerCase()} ${plan ? (quick ? "quick-ready" : "permanent-ready") : ""}`}
       aria-label={`${mode.name} Sigil sockets`}
     >
       <h3>
-        {mode.name}{" "}
-        {assigned.length > 0 && (
+        {(assigned.length > 0 || isBound) && (
           <small>
             {quick
               ? "Awaiting your next turn"
@@ -118,26 +125,32 @@ function SpellMode({
           </small>
         )}
       </h3>
-      <p>{mode.effect}</p>
+
       {!!applicableSpellSeals(s, spell, action).length && (
         <small className="sealed-action">
           Sealed x{applicableSpellSeals(s, spell, action).length}
         </small>
       )}
       <div className="spell-sockets">
+        <SpellModeIcon name={mode.name} />
         {mode.sigil_slots.map((color, i) => {
           const chosen = free.find((t) => t.id === selected[i]);
           const assignedHere = quick
             ? assigned.find((t, j) => (t.socket ?? j) === i)
-            : assigned[i];
+            : assigned.find((t) => t.socket === i);
           return (
             <button
               key={i}
               type="button"
               aria-label={`${mode.name} ${color} socket ${i + 1}`}
               aria-pressed={!!chosen}
-              disabled={!plan || !!assigned.length}
-              title={`${color}: ${free.filter((t) => (t.color === color || t.color === "Wild") && !selected.includes(t.id)).length} unassigned available`}
+              disabled={!plan || !!assigned.length || isBound || i === waived}
+              className={i === waived ? "waived-socket" : ""}
+              title={
+                i === waived
+                  ? "SP-16: this Sigil is not required"
+                  : `${color}: ${free.filter((t) => (t.color === color || t.color === "Wild") && !selected.includes(t.id)).length} unassigned available`
+              }
               onClick={() =>
                 setSelected((old) =>
                   old.map((id, j) =>
@@ -163,12 +176,20 @@ function SpellMode({
                 </span>
               )}
               <small aria-hidden="true">
-                {assignedHere ? "\u25c6" : chosen ? "\u2713" : "+"}
+                {i === waived
+                  ? "\u2212"
+                  : assignedHere
+                    ? "\u25c6"
+                    : chosen
+                      ? "\u2713"
+                      : "+"}
               </small>
             </button>
           );
         })}
       </div>
+      <p>{mode.effect}</p>
+
       {actionHost &&
         createPortal(
           <section
@@ -209,7 +230,9 @@ function SpellMode({
                       playerId: s.players[s.active].id,
                       spellId: spell,
                       action,
-                      sigilIds: selected as string[],
+                      sigilIds: selected.filter(
+                        (_, i) => i !== waived,
+                      ) as string[],
                       targets,
                     }) !== false
                   )

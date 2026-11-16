@@ -41,6 +41,8 @@ export function placementReward(
   color: string,
   freePlacement = false,
   awarded: string[] = [],
+  owners: (string | null)[] = [],
+  playerId?: string,
 ) {
   if (!legalCell(placed, id, freePlacement))
     throw Error(
@@ -48,19 +50,27 @@ export function placementReward(
         ? "Every new fragment must share an edge with an existing fragment."
         : "Place the first fragment on an empty outer-edge cell.",
     );
-  return 1;
+  return (
+    1 +
+    placementBonuses(placed, id, color, owners, playerId).reduce(
+      (total, neighbor) => total + neighbor.bonus,
+      0,
+    )
+  );
 }
 
 export function placementBonuses(
   placed: (string | null)[],
   id: number,
   color: string,
+  owners: (string | null)[] = [],
+  playerId?: string,
 ) {
   return kaleidoscopeCells[id].neighbors
     .filter((n) => placed[n])
     .map((n) => ({
       id: n,
       color: placed[n]!,
-      bonus: 0,
+      bonus: playerId && owners[n] === playerId ? 1 : 0,
     }));
 }

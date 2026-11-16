@@ -59,3 +59,40 @@ CONFIRMED: exact physical Sigils, owner-next-turn Quick return, permanent bindin
 ## Spell catalog v0.4 (2026-11-08)
 
 CONFIRMED: all 35 revised Spell cards and 70 configurations are implemented. Quick resolves immediately; Permanent hooks are persistent and Seal-aware. Discarded Spell-cost objects are left in the current room. Unresolved legacy Tool prerequisites remain blocked. PROVISIONAL: Portal supply 10, alternative-mode policy, one Quick per Spell/turn, additional movement does not replace mandatory movement. Full report: SPELL_IMPLEMENTATION_v0.4.md.
+
+## Confirmed update — 2026-11-15
+This supersedes earlier single-Gem storage and exclusive Spell-mode defaults.
+- CONFIRMED: collected Diamond Gems cannot be voluntarily left in rooms.
+- CONFIRMED: players may hold multiple Gems (storage accommodates the full ten-Gem supply), and install multiple Gems in one turn when distinct gaps are ready and empty.
+- CONFIRMED: a Spell may retain its Permanent binding and activate Quick using separate free Sigils. Bound Sigils remain unavailable as payment.
+- Existing elimination recovery remains unchanged: fallen heroes drop Gems so surviving heroes can recover them.
+- Saved games normalize the obsolete capacity and mode settings when loaded.
+
+## BM-34 Portal correction — 2026-11-15
+CONFIRMED: BM-34 creates a matching pair with one endpoint in the current room and another chosen room, then summons Occuldor with punishment only for the acting hero.
+Implementation interpretation: eligible destinations include explored and unexplored rooms without Portals, excluding the Hall and current room.
+PROVISIONAL: if a complete pair cannot be placed (two tokens unavailable, current endpoint occupied, or no destination), place neither endpoint and still resolve the summon. This preserves existing pairs and prevents lone tokens.
+
+## Latest card revision — 2026-11-16
+
+CONFIRMED and implemented: all requested card changes listed in [the revision checklist](CARD_REVISIONS_2026_11_16.md), including owner-only Permanent effects on every turn and SP-16 returning bound Sigils rather than curse Seals. These supersede older per-card descriptions above. Quick and Permanent modes may coexist with separate assignments.
+
+PROVISIONAL: discount socket selection and Companion action timing details are recorded in OPEN_DESIGN_DECISIONS.md. NOT IMPLEMENTED: CO-03/CO-10 proposed special powers remain outside this revision; unresolved obsolete Spell Tool prerequisites remain blocked.
+
+## 2026-11-16 — Player-owned Kaleidoscope scoring
+
+CONFIRMED: placing a Sigil marks its pentagonal tile with the placing player's color and awards +1 Courage, plus +1 for every occupied edge-adjacent tile owned by that player. Corner touches and other players' tiles award no adjacency bonus. Sigil color does not affect this bonus. Only the placing player scores; existing Item/Spell modifiers and resource installation rewards remain in force.
+
+Ownership persists in saves and follows a fragment relocated by SP-28; relocation grants no placement reward. Older saves lack tile ownership, so their existing fragments remain neutral rather than being assigned an invented owner. New placements record ownership normally.
+
+## 2026-11-16 — Discard leaves objects in the room
+
+CONFIRMED: discarding means placing the physical object in the current room. It cannot be collected again during the remainder of that turn. Pickup, Spell learning, Companion recruitment and Spell exchanges enforce the same saved turn marker; moving does not clear it. The next turn releases it for normal collection. Voluntary leaving and forced abandonment use the same protection.
+
+Implemented for Item discard costs, Spell leave costs, Black Mirror abandonment and normal leaving. Discarded Secrets become public room cards and return to the collecting player's Secret collection. Discarded Sigils retain physical identities and go to the collecting player's Sigil storage. Discarding a Spell ends its Permanent effect and leaves its bound Sigils in the room, blocked until next turn; this supersedes the older provisional removed-pool policy. Explicit removal (e.g. Companion's Bargain), consumed learning Elements and spent banishment Sigils remain distinct from discarding. Diamond Gems still cannot be voluntarily left.
+
+Old saves receive an empty pickup-block ledger; already removed objects are not resurrected because the original discard turn/location cannot be recovered reliably.
+
+## 2026-11-16 — Clarification: permanent discard means removal
+
+CONFIRMED: discard leaves the object in the current room with pickup blocked for that turn. Remove and permanently discard both remove the object from play. IT-15 Sigil Sacrifice therefore removes its paid free Sigil permanently; its card now uses the unambiguous word Remove. Ordinary Spell abandonment still discards its bound Sigils into the room; permanently bound describes their assignment, not permanent disposal. This clarification supersedes the previous inclusion of IT-15 among recoverable room discards.

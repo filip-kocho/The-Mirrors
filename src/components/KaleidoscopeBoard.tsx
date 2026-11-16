@@ -19,8 +19,13 @@ import {
   placementReward,
   placementBonuses,
 } from "../game/map/kaleidoscopeCells";
+const colors = ["#efc77b", "#84c5da", "#d69ed7", "#9acf9e", "#f19b87"];
+export function tileOwnerColors(s: State) {
+  return s.mosaicOwners.map((id) =>
+    id ? colors[s.players.findIndex((p) => p.id === id)] : undefined,
+  );
+}
 export function gemOwnerColors(s: State) {
-  const colors = ["#efc77b", "#84c5da", "#d69ed7", "#9acf9e", "#f19b87"];
   return Object.fromEntries(
     Object.entries(s.gemOwners).map(([gem, id]) => [
       gem,
@@ -50,6 +55,8 @@ export function KaleidoscopeArt({
   labels = true,
   freePlacement = false,
   gemColors = {},
+  tileColors = [],
+  bonusCells = [],
   allowedCells,
   onSelectGap,
 }: {
@@ -60,6 +67,8 @@ export function KaleidoscopeArt({
   labels?: boolean;
   freePlacement?: boolean;
   gemColors?: Record<string, string>;
+  tileColors?: (string | undefined)[];
+  bonusCells?: number[];
   allowedCells?: number[];
   onSelectGap?: (id: string) => void;
 }) {
@@ -170,7 +179,7 @@ export function KaleidoscopeArt({
                 : undefined
             }
             aria-pressed={onSelect ? selected === c.id : undefined}
-            className={`glass-cell ${legal ? "legal" : ""} ${selected === c.id ? "selected" : ""} ${near ? "neighbor" : ""} ${near ? "bonus-neighbor" : ""}`}
+            className={`glass-cell ${legal ? "legal" : ""} ${selected === c.id ? "selected" : ""} ${near ? "neighbor" : ""} ${near && bonusCells.includes(c.id) ? "bonus-neighbor" : ""}`}
             onClick={() => {
               if (legal) onSelect?.(c.id);
             }}
@@ -184,7 +193,7 @@ export function KaleidoscopeArt({
             <title>{`Cell ${c.id + 1} · ${color ?? (c.isEdge ? "outer edge" : "inner cell")}`}</title>
             <polygon
               points={c.points.map((p) => p.join(",")).join(" ")}
-              fill={color ? glassColors[color] : "#385d9c"}
+              fill={color ? (tileColors[c.id] ?? "#b9a780") : "#385d9c"}
               stroke="#172c4c"
               strokeWidth="2"
             />
@@ -228,7 +237,13 @@ export function KaleidoscopeBoard({
   }, []);
   const bonuses =
     cell !== null && pending
-      ? placementBonuses(s.mosaic, cell, s.rooms[pending.room].color!)
+      ? placementBonuses(
+          s.mosaic,
+          cell,
+          s.rooms[pending.room].color!,
+          s.mosaicOwners,
+          p.id,
+        )
       : [];
   let reward: number | null = null;
   if (cell !== null && pending)
@@ -240,6 +255,8 @@ export function KaleidoscopeBoard({
           s.rooms[pending.room].color!,
           hasItemEffect(s, "FREE_FRAGMENT") || hasSpell(s, "FREE_GLASS"),
           Object.keys(s.gemOwners),
+          s.mosaicOwners,
+          p.id,
         ) +
         rewardFor(s, "FRAGMENT") +
         spellFragmentBonus(
@@ -302,6 +319,8 @@ export function KaleidoscopeBoard({
                   hasItemEffect(s, "FREE_FRAGMENT") || hasSpell(s, "FREE_GLASS")
                 }
                 mosaic={s.mosaic}
+                tileColors={tileOwnerColors(s)}
+                bonusCells={bonuses.filter((n) => n.bonus > 0).map((n) => n.id)}
                 gemColors={gemOwnerColors(s)}
                 active={!!pending}
                 selected={cell}
@@ -336,6 +355,14 @@ export function KaleidoscopeBoard({
                   ? "Select a cell to preview Courage."
                   : `+${p.dead ? 0 : reward} Courage`}
               </p>
+              {reward !== null && (
+                <p>
+                  Placement +1; neighboring tiles of your color +
+                  {bonuses.reduce((sum, n) => sum + n.bonus, 0)}.
+                  {reward > 1 + bonuses.reduce((sum, n) => sum + n.bonus, 0) &&
+                    " Additional Item or Spell bonuses included."}
+                </p>
+              )}
               <button
                 className="primary wide"
                 disabled={reward === null}
@@ -400,19 +427,48 @@ export function KaleidoscopeBoard({
             </>
           )}
           <div className="puzzle-rules">
+            <div aria-label="Tile ownership colors">
+              {s.players.map((hero, i) => (
+                <span
+                  key={hero.id}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    marginRight: 12,
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      width: 12,
+                      height: 12,
+                      background: colors[i],
+                      clipPath:
+                        "polygon(50% 0,100% 38%,80% 100%,20% 100%,0 38%)",
+                    }}
+                  />
+                  {hero.name}
+                </span>
+              ))}
+            </div>
             <p>
               First fragment: outer edge. Every later fragment: share an edge
               with an existing piece.
             </p>
-            <p>+1 Courage for placing glass.</p>
+            <p>
+              +1 Courage for placing glass, plus +1 for every edge-adjacent tile
+              marked with your player color. Corner touches do not count. Only
+              the placing player scores.
+            </p>
             <p>
               Install a Diamond Gem in a ready diamond gap: +3 Courage. Install
               an available Wild Sigil in the ready central pentagon: +5 Courage.
               Each gap pays once, only on installation.
             </p>
             <small>
-              Neighbor colors grant no additional Courage. Item and Spell
-              bonuses still apply.
+              Tile backgrounds show their player's color; Sigils retain their
+              own color. Item and Spell bonuses still apply.
             </small>
           </div>
         </aside>

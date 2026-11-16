@@ -1,3 +1,5 @@
+import { SpellModeIcon } from "./SpellModeIcon";
+import { boundSigils } from "../game/systems/sigils";
 import { spellActivationPlan } from "../game/systems/spellActivation";
 import { activePermanent } from "../game/systems/spellModifiers";
 import { CurseTokenIcon } from "./CurseTokenIcon";
@@ -7,7 +9,7 @@ import type { State } from "../game/domain/engine";
 import { spellSeals } from "../game/systems/blackMirrorRuntime";
 
 function readiness(s: State, id: string, index: number) {
-  if (index === 1 && s.blackMirror.bindings[id]?.length)
+  if (index === 1 && Object.hasOwn(s.blackMirror.bindings, id))
     return activePermanent(s, s.players[s.active].id, id)
       ? "Active"
       : "Suppressed";
@@ -45,7 +47,7 @@ export function SpellCastGuide({ spellId, s }: { spellId: string; s?: State }) {
                 : ""
             }
           >
-            {mode.name}
+            <SpellModeIcon name={mode.name} />
             {s && readiness(s, spellId, index) === "Active" ? " ? active" : ""}
           </small>
           {s && spellSeals(s, spellId, index).length > 0 && (
@@ -65,7 +67,7 @@ export function SpellCastGuide({ spellId, s }: { spellId: string; s?: State }) {
                 className={
                   s &&
                   (index === 1
-                    ? (s.blackMirror.bindings[spellId]?.length ?? 0) > i
+                    ? boundSigils(s, spellId).some((t) => t.socket === i)
                     : s.spells.quick.some(
                         (q) =>
                           q.owner === s.players[s.active].id &&
@@ -81,7 +83,7 @@ export function SpellCastGuide({ spellId, s }: { spellId: string; s?: State }) {
                 <GameIcon name={color} />
                 {s &&
                   (index === 1
-                    ? s.blackMirror.bindings[spellId]?.[i]
+                    ? boundSigils(s, spellId).find((t) => t.socket === i)?.color
                     : s.spells.quick
                         .find(
                           (q) =>

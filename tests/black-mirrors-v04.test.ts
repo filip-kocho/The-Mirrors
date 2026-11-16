@@ -51,7 +51,10 @@ export function curseFixture(card = "BM-01", rich = true) {
       r.objects = structuredClone(r.findings);
     }
   s.players[0].room = "R01";
-  s.decks.Companion = ["CO-01", ...s.decks.Companion.filter(id=>id!=="CO-01")];
+  s.decks.Companion = [
+    "CO-01",
+    ...s.decks.Companion.filter((id) => id !== "CO-01"),
+  ];
   relocate(s, "WM-01", s.rooms.R01.objects);
   relocate(s, card, s.rooms.R01.objects);
   s = reduce(s, {
@@ -115,6 +118,72 @@ function apply(s: State) {
   );
 }
 describe("Black Mirror 0.4 catalog and every curse", () => {
+  it("BM-34 chooses and saves a complete matching pair without revealing its destination", () => {
+    let s = reduce(curseFixture("BM-34", false), {
+      type: "COLLIDE",
+      playerId: "P1",
+    });
+    s = reduce(s, {
+      type: "CONTINUE_COLLISION",
+      playerId: "P1",
+      penalty: "apply",
+    });
+    const choice = s.blackMirror.resolution!.choice!;
+    expect(choice.kind).toBe("rooms");
+    expect(choice.options.some((o) => o.id === "R35")).toBe(true);
+    expect(choice.options.some((o) => ["Hall", "R01"].includes(o.id))).toBe(
+      false,
+    );
+    expect(
+      Object.values(s.blackMirror.rooms).filter((r) => r.portal),
+    ).toHaveLength(0);
+    s = loadSave(JSON.stringify(s));
+    advanceEffects(s, { choiceId: choice.id, ids: ["R35"] });
+    const rooms = s.blackMirror.rooms;
+    expect(rooms.R01.portal).toBe(true);
+    expect(rooms.R35.portalPair).toBe(rooms.R01.portalPair);
+    expect(Object.values(rooms).filter((r) => r.portal)).toHaveLength(2);
+    expect(s.rooms.R35.explored).toBe(false);
+    expect(connections(s, "R01")).toContain("R35");
+    expect(s.occuldor).toBe("R01");
+  });
+  it.each([0, 1])(
+    "BM-34 with %i tokens never creates a lone Portal but still summons",
+    (supply) => {
+      const s = curseFixture("BM-34", false);
+      s.rules.spellPolicies.portalTokenSupply = supply;
+      beginEffects(s, "BM-34", "immediate");
+      advanceEffects(s);
+      expect(
+        Object.values(s.blackMirror.rooms).filter((r) => r.portal),
+      ).toHaveLength(0);
+      expect(s.occuldor).toBe("R01");
+      expect(s.players[0].courage).toBe(
+        s.players[0].companions.some((t) => t.card === "CO-01") ? 30 : 29,
+      );
+    },
+  );
+  it("BM-34 preserves existing Portals instead of breaking their pair", () => {
+    const s = curseFixture("BM-34", false);
+    s.blackMirror.rooms.R01 = {
+      portal: true,
+      darkness: 0,
+      portalPair: "existing",
+    };
+    s.blackMirror.rooms.R02 = {
+      portal: true,
+      darkness: 0,
+      portalPair: "existing",
+    };
+    beginEffects(s, "BM-34", "immediate");
+    advanceEffects(s);
+    expect(
+      Object.values(s.blackMirror.rooms).filter((r) => r.portal),
+    ).toHaveLength(2);
+    expect(s.blackMirror.rooms.R01.portalPair).toBe("existing");
+    expect(s.occuldor).toBe("R01");
+  });
+
   it("has 35 unique reviewed typed cards with seven per family", () => {
     expect(blackMirrors.map((c) => c.id)).toEqual(
       Array.from(
@@ -166,7 +235,7 @@ describe("Black Mirror 0.4 catalog and every curse", () => {
         ).toHaveLength(n - 7);
       if (n === 17 || n === 18) expect(state.fear).toHaveLength(n - 16);
       if (n >= 19 && n <= 21)
-        expect(s.blackMirror.thresholds).toHaveLength(n - 18);
+        expect(s.blackMirror.thresholds).toHaveLength(n === 19 ? 2 : n - 18);
       if (n === 22 || n === 24) expect(s.players[0].companions).toHaveLength(0);
       if ([23, 25, 27].includes(n)) expect(s.blackMirror.seals).toHaveLength(2);
       if (n === 26) {
@@ -189,7 +258,13 @@ describe("Black Mirror 0.4 catalog and every curse", () => {
         ).toHaveLength(2);
       if (n >= 34) {
         expect(s.occuldor).toBe("R01");
-        expect(s.players[0].courage).toBe(n === 34 ? 29 : 28);
+        expect(s.players[0].courage).toBe(
+          s.players[0].companions.some((t) => t.card === "CO-01")
+            ? 30
+            : n === 34
+              ? 29
+              : 28,
+        );
       }
       s = answerAll(
         reduce(s, {
@@ -302,7 +377,7 @@ describe("token lifecycles, topology and safety", () => {
     s.players[0].companions[0].discoverer = "P1";
     const loyal = s.players[0].companions[0].id;
     const strayId = "CO-03";
-    s.decks.Companion = s.decks.Companion.filter(id=>id!==strayId);
+    s.decks.Companion = s.decks.Companion.filter((id) => id !== strayId);
     s.players[0].companions.push({
       id: strayId,
       card: strayId,
@@ -317,6 +392,10 @@ describe("token lifecycles, topology and safety", () => {
     ).toHaveLength(2);
     s.active = 1;
     s.players[1].room = "R01";
+    expect(() =>
+      reduce(s, { type: "RECRUIT", playerId: "P2", tokenId: loyal }),
+    ).toThrow("next turn");
+    s.turn++;
     s = reduce(s, { type: "RECRUIT", playerId: "P2", tokenId: loyal });
     expect(s.players[1].companions[0].discoverer).toBe("P2");
     s.active = 0;
@@ -331,6 +410,8 @@ describe("token lifecycles, topology and safety", () => {
     let s = apply(curseFixture("BM-26"));
     s = reduce(s, { type: "PLACE", playerId: "P1", cell: 0 });
     expect(s.players[0].knowledge).toEqual([true, true, true, true]);
+    expect(() => automaticLearningPlan(s, "SP-01")).toThrow("next turn");
+    s.turn++;
     expect(automaticLearningPlan(s, "SP-01").slot).toBe(2);
     s.players[0].knowledge = [true, true, false, false];
     expect(() => automaticLearningPlan(s, "SP-01")).toThrow("unlocked");
@@ -365,8 +446,19 @@ describe("token lifecycles, topology and safety", () => {
         const before = s.players[1].courage;
         beginEffects(s, card, "immediate");
         advanceEffects(s);
+        if (s.blackMirror.resolution?.choice) {
+          const c = s.blackMirror.resolution.choice;
+          advanceEffects(s, { choiceId: c.id, ids: [c.options[0].id] });
+        }
         expect(s.players[0].courage).toBe(
-          30 - (Math.floor(rage / 7) + 1) * (card === "BM-35" ? 2 : 1),
+          30 -
+            Math.max(
+              0,
+              Math.floor(rage / 7) +
+                1 -
+                Number(s.players[0].companions.some((t) => t.card === "CO-01")),
+            ) *
+              (card === "BM-35" ? 2 : 1),
         );
         expect(s.players[1].courage).toBe(before);
         expect(s.rage).toBe(rage);
@@ -501,14 +593,24 @@ describe("token lifecycles, topology and safety", () => {
   });
   it("Portals form a chosen one-step network and Seals preserve connectivity", () => {
     let s = curseFixture();
-    s.blackMirror.rooms.R01 = { darkness: 0, portal: true,portalPair:"pair-a" };
+    s.blackMirror.rooms.R01 = {
+      darkness: 0,
+      portal: true,
+      portalPair: "pair-a",
+    };
     expect(connections(s, "R01")).not.toContain("R35");
-    s.blackMirror.rooms.R35 = { darkness: 0, portal: true,portalPair:"pair-a" };
-    s.blackMirror.rooms.R34 = { darkness: 0, portal: true,portalPair:"pair-b" };
-    expect(connections(s, "R01")).toEqual(
-      expect.arrayContaining(["R35"]),
-    );
-    expect(connections(s,"R01")).not.toContain("R34");
+    s.blackMirror.rooms.R35 = {
+      darkness: 0,
+      portal: true,
+      portalPair: "pair-a",
+    };
+    s.blackMirror.rooms.R34 = {
+      darkness: 0,
+      portal: true,
+      portalPair: "pair-b",
+    };
+    expect(connections(s, "R01")).toEqual(expect.arrayContaining(["R35"]));
+    expect(connections(s, "R01")).not.toContain("R34");
     expect(castlePath(s, "R01", "R35")).toEqual(["R01", "R35"]);
     s = reduce(s, { type: "MOVE", playerId: "P1", path: ["R01", "R35"] });
     expect(s.rooms.R35.explored).toBe(true);
@@ -531,7 +633,11 @@ describe("token lifecycles, topology and safety", () => {
     expect(spellSeals(s, "SP-01", 1)).toHaveLength(1);
     s = reduce(s, { type: "PLACE", playerId: "P1", cell: 0 });
     s = reduce(s, { type: "LEAVE_SPELL", playerId: "P1", spellId: "SP-01" });
-    expect(s.blackMirror.spentSigils).toEqual(["Scarlet", "Emerald"]);
+    expect(
+      s.rooms.R01.objects
+        .filter((t) => t.kind === "Sigil")
+        .map((t) => t.sigilColor),
+    ).toEqual(["Scarlet", "Emerald"]);
     expect(s.blackMirror.bindings["SP-01"]).toBeUndefined();
     expect(s.blackMirror.seals.some((seal) => seal.spell === "SP-01")).toBe(
       true,

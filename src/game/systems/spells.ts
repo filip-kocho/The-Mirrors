@@ -1,4 +1,5 @@
 import { roomActionsBlocked } from "./spellModifiers";
+import { assertCanCollect } from "./discard";
 import { accessibleItems } from "./itemAccess";
 import { byId } from "../cards/catalog";
 import type { State } from "../domain/engine";
@@ -71,6 +72,7 @@ export function planLearning(
   elementIds: string[],
   discount?: Element,
 ) {
+  assertCanCollect(s, spellId);
   const p = s.players[s.active],
     room = s.rooms[p.room],
     card = byId[spellId];

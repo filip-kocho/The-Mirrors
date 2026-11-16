@@ -55,3 +55,14 @@ Designer confirmed obsolete Tool requirements stay blocked and discard means lea
 ## Secrets, Gems and Kaleidoscope v0.6
 
 See [current resource policies](SECRETS_GEMS_IMPLEMENTATION_v0.6.md). Diamond capacity defaults to one; direct hero transfer is disabled; installation is permitted in ordinary action windows; only an adjacent selected Corridor Block is bypassed for the next movement; removing Paralysis retains existing turn immobilization; relocation must preserve support for filled gaps. Wilds do not unlock Knowledge milestones. Victory still requires the 35 fragments only. Old adjacency and automatic closure rewards are superseded.
+
+## BM-34 complete-pair fallback
+The approved pair replaces the former single Portal. Pending designer review, an unavailable complete pair is skipped as a unit while Occuldor is still summoned. A current-room Portal is not replaced or re-paired. Other Portal-producing cards retain their existing rules.
+
+## Card revision interpretations — 2026-11-16
+
+- IT-11/13 require carried payment objects because their vacated personal slots receive Hexlocks. Their existing disposal rules remain; SP-08/13 explicitly leave payment in the room.
+- CO-04 prepares permission for one selected adjacent blocked corridor before mandatory movement. Selecting it consumes its once-per-round use; the corridor remains blocked for everyone else.
+- CO-05/06/09 may repeat in legal action windows: no frequency limit was specified. CO-04/07/08 retain the explicitly requested once-per-round limit, attached to the physical Companion.
+- SP-16 automatically waives one affordable printed socket (preferring the last when several choices work). It never discounts itself. The reduced payment stays valid after the discount source ends because the benefit changes activation cost, not upkeep.
+- SP-32 creates a complete pair atomically, never a lone Portal; the selected destination excludes the Hall under the existing room-target convention.

@@ -3,7 +3,11 @@ import { portalPairs, portalColor } from "../game/systems/portals";
 import { movement, publicRoom, State } from "../game/domain/engine";
 import { roomGraph, Node } from "../game/map/roomGraph";
 import { useId } from "react";
-import { KaleidoscopeArt, gemOwnerColors } from "./KaleidoscopeBoard";
+import {
+  KaleidoscopeArt,
+  gemOwnerColors,
+  tileOwnerColors,
+} from "./KaleidoscopeBoard";
 import { BoardIcon } from "./GameIcon";
 import { CastleBackdrop } from "./CastleBackdrop";
 import { BoardFigurine, PlacedMirrors } from "./BoardFigurine";
@@ -292,7 +296,13 @@ export function CastleBoard({
                 </g>
               )}
               <RoomParty s={s} roomId={n.id} />
-              {s.magic.gems.some(g=>g.location==="ROOM"&&g.room===n.id) && <g aria-label="Diamond Gem in room"><BoardIcon name="Diamond" x={-9} y={20} size={18}/></g>}
+              {s.magic.gems.some(
+                (g) => g.location === "ROOM" && g.room === n.id,
+              ) && (
+                <g aria-label="Diamond Gem in room">
+                  <BoardIcon name="Diamond" x={-9} y={20} size={18} />
+                </g>
+              )}
               {r.objects.length > 0 && (
                 <g
                   className="room-object-markers"
@@ -314,6 +324,7 @@ export function CastleBoard({
                       <BoardIcon
                         key={token.id}
                         name={
+                          token.sigilColor ??
                           token.element ??
                           (token.kind === "Item"
                             ? byId[token.card!]?.subtype
@@ -374,6 +385,7 @@ export function CastleBoard({
         >
           <KaleidoscopeArt
             gemColors={gemOwnerColors(s)}
+            tileColors={tileOwnerColors(s)}
             mosaic={s.mosaic}
             labels={false}
           />

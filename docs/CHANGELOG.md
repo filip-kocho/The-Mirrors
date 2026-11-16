@@ -202,3 +202,132 @@ Replaced all 35 Spell definitions with v0.4 and implemented all 70 effects, incl
 - Add ten distinct gothic Companion portraits.
 - Position Spell resolution beside the card on desktop, preserving clickable sockets.
 - Add exact relationship and encounter regressions plus browser layout checks.
+
+## Item card artwork
+
+- Add distinct gothic portraits for all 25 Items, mapped by stable ID from a locally bundled atlas.
+- Preserve existing Item mechanics and inventory icons.
+- Verify every card's illustration in the browser.
+
+## Spell card artwork
+
+- Add distinct gothic magical scenes for all 35 Spells using a local atlas mapped by stable card ID.
+- Preserve learning costs, clickable Sigils and external activation controls.
+- Add browser coverage for all Spell illustration positions.
+
+## Secret and Mirror artwork
+
+- Add 15 distinct Secret achievement illustrations.
+- Use one shared light-and-shadow illustration across White and Black Mirrors, preserving oval layouts and rules.
+
+- Mirror artwork correction: separate luminous White and shadowy Black portraits, with the mirrors upright rather than horizontal.
+## Consistent card formats and frames
+
+- Both Mirror families use a 360 x 760 desktop format; Items, Spells, Companions and Secrets use 360 x 700. Width contracts on narrow screens; heights stay fixed within each group.
+- Unified dark layered frames and readable ivory text, with silver White Mirrors, amethyst Black Mirrors, amber Items, blue Spells, green Companions and rose Secrets.
+- Artwork files are unchanged. Long rules scroll inside a keyboard-focusable region, preserving all descriptions and interactive controls without stretching the card.
+- Verified every one of the 155 cards for exact desktop dimensions and overflow, all six families on mobile, existing gameplay interactions, 395 unit/component tests and production build.
+
+## Parchment frame refinement
+
+- Restore the earlier warm parchment and dark ink presentation, with antique metal borders and engraved corner flourishes.
+- Preserve the six approved type colors, fixed card dimensions, all existing artwork and scrollable rules.
+- Browser validation covers every card dimension, mobile layouts and clickable Spell activation.
+
+## Standard card proportions
+
+- Shorten all card faces to the standard 63:88 aspect ratio (360 x approximately 503 pixels on desktop), retaining oval Mirrors and rectangular other cards.
+- Scale artwork windows and spacing to fit while preserving artwork files, parchment frames and type colors. Longer rules remain scrollable and keyboard accessible.
+
+## Cards without internal scrolling
+
+- Keep the 63:88 parchment card faces and artwork, removing internal scrollbars.
+- Put full Spell effects and assignment explanations beside the card; keep Quick/Permanent Sigil sockets directly on the card in two columns.
+- Put inactive proposed Companion abilities and Secret progress/reveal details in an adjacent reference panel. Companion relationships, Item abilities and buttons, Mirror discoveries and curses remain on the card.
+- Stack reference panels below cards on narrow screens. No rules text is truncated or discarded.
+- Verify all 155 catalog card faces fit without overflow, six representative mobile faces, and gameplay interactions.
+
+## Catalog preview navigation
+
+- Add Previous/Next arrows and position count to card previews, following the selected family and search results.
+- Support Left/Right keyboard arrows, disabled list boundaries, and preserved filters when returning to the collection.
+- Keep navigation within the public catalog; gameplay inspectors are unchanged.
+
+## Full printed text and illustrated Mirror cards
+
+- Remove repeated footer IDs/names and return full Spell/Companion rules to their cards.
+- Put Spell costs beside titles, give Spells a taller format, enlarge Item/Secret artwork, and move Item timing to the bottom.
+- Render Mirror contents on transparent illustrated frames.
+- Add six fantasy backs to catalog thumbnails and a View back/front preview control.
+- Keep card faces free of internal scrollbars; preserve the rules engine.
+
+## Gothic card refinement ï¿½ 2026-11-15
+
+- Centered Black Mirror curse copy within the glass without changing White Mirror fronts.
+- Replaced ornate reverse artwork with restrained, dark gothic SVG designs; Mirror reverses have oval silhouettes.
+- Spell faces use rolled parchment edges, centered learning Elements within the title's cost area, and retain full printed casting rules.
+- Companion relationship rows use distinct icons alongside readable Dread, Hunt, Predator, and Prey labels.
+- Validation: all 155 faces passed desktop fit checks and representative mobile checks; three spell/gameplay checks, back navigation and Companion browser checks passed (7 total). Production build passed.
+
+## Dark gothic finish ï¿½ 2026-11-15
+- Lowered Black Mirror text by 18px on desktop and 14px on narrow screens.
+- Added dark textured card surfaces, warm ivory lettering, subdued metallic borders, and dark rolled Spell parchment; retained existing illustrations and family colors.
+- Refined six gothic reverses with velvet grain, beveled metal, cathedral arches, and distinct family emblems. Mirror backs remain oval.
+- Validation: all 155 card faces and representative mobile layouts passed fitting checks; six-family back preview/navigation passed.
+
+## Light family-tinted fronts ï¿½ 2026-11-15
+- Replaced midnight front surfaces with light parchment and subtle card-family color washes: amber Items, blue Spells, green Companions, and rose Secrets.
+- Restored dark readable lettering and softened engraved details and shadows. Spell scrolls use pale parchment rolls with muted blue accents.
+- Kept existing illustrations, Mirror glass, card sizes, and dark card backs.
+
+## Mirror landing page ï¿½ 2026-11-15
+- Introduced the game using the same White and Black Mirror frame artwork as the cards, a prominent The Mirrors title, and a short Drunken Pony / Occuldor story.
+- Renamed Browse to Catalog and moved it beside How to play in the top navigation.
+- Updated browser selectors for the new label. Landing, mobile overflow, rules, and catalog navigation checks passed (2 browser tests).
+
+## Current hero movement badge ï¿½ 2026-11-15
+- Added +X and a footsteps icon beside the active hero's name in the turn banner, character board, and party tracker.
+- Uses the engine movement allowance including active bonuses; immobilized or fallen heroes show zero. This is the turn allowance, not a decrementing steps counter.
+- Validation: TypeScript and all six exploration/spell interaction browser checks passed.
+
+## Confirmed Gem storage and simultaneous Spell modes ï¿½ 2026-11-15
+- Collected Diamond Gems cannot be voluntarily left in rooms. The command validator rejects LEAVE and the player UI no longer offers it.
+- A hero can store all ten physical Gems; multiple legal gap installations are allowed during the same turn, each consuming a distinct Gem and granting its own reward.
+- Permanent binding does not prevent Quick activation on the same Spell. Quick still pays separate available Sigils and obeys its per-turn limit, seals, and target conditions.
+- Older saved storage capacity and exclusive-mode settings normalize to these confirmed rules. Existing room Gems remain recoverable; fallen heroes still drop Gems under the existing recovery policy.
+- Validation: 398 unit/component tests, TypeScript, and five Gem/Spell browser checks passed.
+
+## BM-34 matching Portal pair — 2026-11-15
+- Occuldor's Invitation now places a matched Portal pair: the acting hero's room and one other chosen Portal-free room, explored or unexplored, excluding the Hall.
+- Destination selection uses the existing room-map choice flow and survives save/load. Neither Portal is placed before the choice; hidden destinations stay unexplored.
+- Occuldor is then summoned; only the acting hero suffers the existing Rage-based arrival consequence once.
+- Provisional unavailable-pair fallback: if the current room already has a Portal, fewer than two tokens remain, or no destination exists, skip the entire pair and still summon Occuldor. Existing pairs are preserved.
+- Unit validation: all 402 tests pass, including paired travel, saved choice, shortage, and existing-pair preservation.
+
+## 2026-11-16 — Card rules and presentation revisions
+
+Implemented the latest Mirror, Item, Spell and Companion changes, including exact paid-slot Hexlocks, SP-16 binding returns and discounts, SP-32 paired Portals, and interactive Companion powers. Added individual White Mirror titles and revised Spell faces. Owner Permanent effects remain active across turns when triggered. See [complete checklist](CARD_REVISIONS_2026_11_16.md).
+
+## 2026-11-16 — More compact Spell cards
+
+Reduced Spell faces and backs from the 360:570 format to 360:530. Reduced illustration height slightly while preserving rules text size, clickable Sigils and the external action panel. All 155 card faces pass overflow checks, representative mobile cards fit, and the three card-revision interaction scenarios pass (4 browser tests total).
+
+## 2026-11-16 — Character board layout
+
+Moved the active hero's Fear tier and Courage value/meter directly beneath their name. Moved Followers and private Secrets into a separate panel below the character board. Removed the Relic capacity and redundant Courage/movement explanation. TypeScript and seven inventory, Companion and responsive browser scenarios pass.
+
+## 2026-11-16 — Player-colored Kaleidoscope tiles
+
+Added persistent ownership per pentagonal tile, player-color backgrounds beneath unchanged Sigil icons, an ownership legend, and +1 Courage per same-owner edge neighbor on placement. The preview and engine share the scoring calculation. Updated rules, validation, legacy-save handling and SP-28 relocation. Verified 423 unit/component tests and eight browser scenarios, including scoring, color rendering, saves and normal collision completion.
+
+## 2026-11-16 — Recoverable discards and turn-based pickup blocking
+
+Replaced Item discard removal with physical room drops, including Elements, Items, Spells, Secrets and Sigils. Added persistent pickup restrictions through the current turn across inventory transfer, learning, recruitment and Spell exchanges. Preserved physical Sigil identities, room Secret supply validation and explicit removal/consumption semantics. Updated controls, printed Item wording and tutorial. Verification: 425 unit/component tests and 19 browser scenarios passed.
+
+## 2026-11-16 — Discard terminology clarification
+
+Restored IT-15 Sigil Sacrifice's permanent removal and changed its printed cost/effect to Remove. Ordinary discard remains a room drop blocked from pickup until next turn; remove/permanently discard remain unrecoverable. Updated regressions for direct use and SP-24 Tool activation.
+
+## 2026-11-16 — Release validation
+
+Verified the accumulated card art/presentation, gameplay revisions, player board layout, Kaleidoscope ownership scoring and corrected discard/removal semantics: 425 unit/component tests, all 51 browser tests, and production build passed. The build passed on retry after Next.js displayed a security-upgrade advisory for the installed version; a dependency upgrade remains outstanding.

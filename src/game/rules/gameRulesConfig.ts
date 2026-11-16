@@ -3,7 +3,12 @@ import { z } from "zod";
 export const rulesSchema = z.object({
   gemPolicies: z
     .object({
-      capacity: z.number().int().min(1).default(1),
+      capacity: z
+        .number()
+        .int()
+        .min(1)
+        .transform(() => 10)
+        .default(10),
       victory: z
         .enum(["FRAGMENTS_ONLY", "ALL_INLAYS"])
         .default("FRAGMENTS_ONLY"),
@@ -16,7 +21,7 @@ export const rulesSchema = z.object({
         .default("PRESERVE_SUPPORT"),
     })
     .default(() => ({
-      capacity: 1,
+      capacity: 10,
       victory: "FRAGMENTS_ONLY" as const,
       adjacentPassageOnly: true,
       directTransfer: false,
@@ -44,14 +49,15 @@ export const rulesSchema = z.object({
       oneQuickPerSpellPerTurn: z.boolean().default(true),
       modePolicy: z
         .enum(["EXCLUSIVE_ACTIVE_MODE", "BOTH_ALLOWED"])
-        .default("EXCLUSIVE_ACTIVE_MODE"),
+        .transform(() => "BOTH_ALLOWED" as const)
+        .default("BOTH_ALLOWED"),
       quickOnDeath: z.literal("DISCARD").default("DISCARD"),
     })
     .default(() => ({
       portalTokenSupply: 10,
       unresolvedTools: "BLOCK" as const,
       oneQuickPerSpellPerTurn: true,
-      modePolicy: "EXCLUSIVE_ACTIVE_MODE" as const,
+      modePolicy: "BOTH_ALLOWED" as const,
       quickOnDeath: "DISCARD" as const,
     })),
   itemPolicies: itemRulesSchema.default(defaultItemRules),
@@ -112,7 +118,7 @@ export const rulesSchema = z.object({
 export type GameRulesConfig = z.infer<typeof rulesSchema>;
 export const defaultRules: GameRulesConfig = {
   gemPolicies: {
-    capacity: 1,
+    capacity: 10,
     victory: "FRAGMENTS_ONLY" as const,
     adjacentPassageOnly: true,
     directTransfer: false,
@@ -129,7 +135,7 @@ export const defaultRules: GameRulesConfig = {
     portalTokenSupply: 10,
     unresolvedTools: "BLOCK",
     oneQuickPerSpellPerTurn: true,
-    modePolicy: "EXCLUSIVE_ACTIVE_MODE",
+    modePolicy: "BOTH_ALLOWED",
     quickOnDeath: "DISCARD",
   },
   itemPolicies: defaultItemRules,

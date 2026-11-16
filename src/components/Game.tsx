@@ -1,4 +1,7 @@
 "use client";
+import { CompanionControls } from "./CompanionControls";
+import { MovementBadge } from "./MovementBadge";
+import { CardBack } from "./CardBack";
 import { GemStorage, RoomGems } from "./GemStorage";
 import { isCarrier, carrierRoom } from "../game/systems/companions";
 import { roomActionsBlocked } from "../game/systems/spellModifiers";
@@ -15,7 +18,7 @@ import { CastleBoard } from "./CastleBoard";
 import { KaleidoscopeBoard } from "./KaleidoscopeBoard";
 import { GameIcon } from "./GameIcon";
 import { TokenIcon, tokenLabel } from "./TokenIcon";
-import { CardCatalog } from "./CardCatalog";
+import { CardCatalog, catalogCards } from "./CardCatalog";
 import { HowToPlay } from "./HowToPlay";
 import { SpellActivationControls } from "./SpellActivationControls";
 import { SpellCastGuide } from "./SpellCastGuide";
@@ -24,6 +27,7 @@ import { MirrorPlacementDialog } from "./MirrorPlacementDialog";
 import { MirrorActionIcon } from "./MirrorActionIcon";
 import { SecretControls } from "./SecretControls";
 import { CompletedSecrets } from "./CompletedSecrets";
+import { pickupBlocked } from "../game/systems/discard";
 import { PlayerCollection, PlayerSigils } from "./PlayerCollection";
 import { SpellAction } from "./SpellAction";
 import { ActionIcon } from "./ActionIcon";
@@ -80,6 +84,10 @@ export function Game() {
     [puzzleOpen, setPuzzleOpen] = useState(false),
     [placementOpen, setPlacementOpen] = useState(false),
     [search, setSearch] = useState("");
+  const [catalogBack, setCatalogBack] = useState(false);
+  useEffect(() => {
+    setCatalogBack(false);
+  }, [inspected?.id, catalog]);
   const [spellActionHost, setSpellActionHost] = useState<HTMLDivElement | null>(
     null,
   );
@@ -114,6 +122,16 @@ export function Game() {
     setInspectedToken(null);
     setPlacementOpen(false);
   };
+  const previewCards = catalogCards(catalogFamily, search);
+  const previewIndex = inspected
+    ? previewCards.findIndex((card) => card.id === inspected.id)
+    : -1;
+  const stepPreview = (direction: number) => {
+    const next = previewCards[previewIndex + direction];
+    if (!catalog || previewIndex < 0 || !next) return;
+    setInspected(next);
+    dialog.current?.scrollTo({ top: 0 });
+  };
   const overlay = (
     <dialog
       ref={dialog}
@@ -128,6 +146,25 @@ export function Game() {
       }
       aria-label={inspected ? `${inspected.name} card inspector` : undefined}
       onCancel={close}
+      onKeyDown={(event) => {
+        if (
+          !catalog ||
+          !inspected ||
+          event.altKey ||
+          event.ctrlKey ||
+          event.metaKey
+        )
+          return;
+        const target = event.target as HTMLElement;
+        if (target.closest('input, textarea, select, [contenteditable="true"]'))
+          return;
+        const direction =
+          event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+        if (direction) {
+          event.preventDefault();
+          stepPreview(direction);
+        }
+      }}
     >
       <button className="close" onClick={close} aria-label="Close dialog">
         ×
@@ -137,65 +174,125 @@ export function Game() {
       ) : inspectedToken ? (
         <>
           <p className="eyebrow">{inspectedToken.kind}</p>
-          <h2>{inspectedToken.element}</h2>
+          <h2>{inspectedToken.sigilColor ?? inspectedToken.element}</h2>
           <div className="card-art">
-            <GameIcon name={inspectedToken.element ?? inspectedToken.kind} />
+            <GameIcon
+              name={
+                inspectedToken.sigilColor ??
+                inspectedToken.element ??
+                inspectedToken.kind
+              }
+            />
           </div>
           <p>
-            A physical Element used to learn Spells. It can be carried or left
-            in a room for another hero.
+            {inspectedToken.kind === "Sigil"
+              ? "A physical Sigil used to activate Spells. Discarded Sigils can be collected starting next turn."
+              : "A physical Element used to learn Spells. Discarded objects can be collected starting next turn."}
           </p>
         </>
       ) : inspected ? (
         <>
           {catalog && (
-            <button className="catalog-back" onClick={() => setInspected(null)}>
-              Back to collection
-            </button>
+            <nav
+              className="catalog-preview-nav"
+              aria-label="Card preview navigation"
+            >
+              <button
+                className="catalog-back"
+                onClick={() => setInspected(null)}
+              >
+                Back to collection
+              </button>
+              <button
+                onClick={() => setCatalogBack((value) => !value)}
+                aria-pressed={catalogBack}
+              >
+                {catalogBack ? "View front" : "View back"}
+              </button>
+              <div className="catalog-preview-steps">
+                <button
+                  aria-label="Previous card"
+                  title="Previous card (Left arrow)"
+                  disabled={previewIndex <= 0}
+                  onClick={() => stepPreview(-1)}
+                >
+                  &#8592;
+                </button>
+                <span role="status" aria-live="polite" aria-atomic="true">
+                  {previewIndex + 1} / {previewCards.length}
+                </span>
+                <button
+                  aria-label="Next card"
+                  title="Next card (Right arrow)"
+                  disabled={
+                    previewIndex < 0 || previewIndex >= previewCards.length - 1
+                  }
+                  onClick={() => stepPreview(1)}
+                >
+                  &#8594;
+                </button>
+              </div>
+            </nav>
           )}
-          <CardFace
-            card={inspected}
-            state={s ?? undefined}
-            spellActions={
-              s &&
-              !catalog &&
-              inspected.family === "Spell" &&
-              s.players[s.active].spellSlots.includes(inspected.id) ? (
-                <SpellActivationControls
-                  key={inspected.id}
-                  s={s}
-                  spell={inspected.id}
-                  actionHost={spellActionHost}
-                  dispatch={dispatch}
-                />
-              ) : undefined
-            }
-            controls={
-              s && inspected.family === "Item" ? (
-                <ItemControls
-                  key={inspected.id}
-                  s={s}
-                  id={inspected.id}
-                  dispatch={dispatch}
-                />
-              ) : s && !catalog && inspected.family === "Secret" ? (
-                <SecretControls
-                  key={inspected.id}
-                  s={s}
-                  id={inspected.id}
-                  dispatch={dispatch}
-                />
-              ) : undefined
-            }
-            action={
-              s &&
-              !s.privacy &&
-              inspected.family === "Spell" &&
-              !s.players[s.active].spellSlots.includes(inspected.id) ? (
-                <SpellAction s={s} spellId={inspected.id} dispatch={dispatch} />
-              ) : undefined
-            }
-          />
+          {catalog && catalogBack ? (
+            <CardBack card={inspected} />
+          ) : (
+            <CardFace
+              card={inspected}
+              state={s ?? undefined}
+              spellActions={
+                s &&
+                !catalog &&
+                inspected.family === "Spell" &&
+                s.players[s.active].spellSlots.includes(inspected.id) ? (
+                  <SpellActivationControls
+                    key={inspected.id}
+                    s={s}
+                    spell={inspected.id}
+                    actionHost={spellActionHost}
+                    dispatch={dispatch}
+                  />
+                ) : undefined
+              }
+              controls={
+                s && inspected.family === "Item" ? (
+                  <ItemControls
+                    key={inspected.id}
+                    s={s}
+                    id={inspected.id}
+                    dispatch={dispatch}
+                  />
+                ) : s && !catalog && inspected.family === "Secret" ? (
+                  <SecretControls
+                    key={inspected.id}
+                    s={s}
+                    id={inspected.id}
+                    dispatch={dispatch}
+                  />
+                ) : undefined
+              }
+              action={
+                s &&
+                !s.privacy &&
+                inspected.family === "Spell" &&
+                !s.players[s.active].spellSlots.includes(inspected.id) ? (
+                  <SpellAction
+                    s={s}
+                    spellId={inspected.id}
+                    dispatch={dispatch}
+                  />
+                ) : undefined
+              }
+            />
+          )}
+          {s && !catalog && inspected.family === "Companion" && (
+            <CompanionControls
+              key={inspected.id}
+              s={s}
+              card={inspected.id}
+              dispatch={dispatch}
+            />
+          )}
           {s &&
             !catalog &&
             inspected.family === "Spell" &&
@@ -207,21 +304,24 @@ export function Game() {
               />
             )}
 
-          {!["White Mirror", "Item", "Secret"].includes(inspected.family) && (
-            <p className="callout">
-              {inspected.family === "White Mirror"
-                ? "All discoveries appear when you confirm placement. Companions join you; Secrets are private."
-                : cardEffects[inspected.id].kind === "curse"
-                  ? "On Collide, resolve this curse and choose its targets before receiving the Sigil. Deferred effects follow fragment placement."
-                  : inspected.family === "Item"
-                    ? "Item abilities are automated while carried or accessible in your current room. Tools require confirmation and can be used once per hero per round."
-                    : inspected.family === "Spell"
-                      ? "Learn in an unlocked Knowledge slot, then assign matching Sigils to activate Quick or Permanent abilities. Unavailable effects explain their missing requirements."
-                      : inspected.family === "Companion"
-                        ? "Loyal Companions follow their holder; Strays follow the first departing hero. Carriers need an Item slot. Eating resolves before fear. Reunited Ghost Twins travel together. Individual printed abilities are not activated by this framework."
-                        : "This proposed ability is not yet automated."}
-            </p>
-          )}
+          {!catalogBack &&
+            !["White Mirror", "Item", "Secret", "Companion", "Spell"].includes(
+              inspected.family,
+            ) && (
+              <p className="callout">
+                {inspected.family === "White Mirror"
+                  ? "All discoveries appear when you confirm placement. Companions join you; Secrets are private."
+                  : cardEffects[inspected.id].kind === "curse"
+                    ? "On Collide, resolve this curse and choose its targets before receiving the Sigil. Deferred effects follow fragment placement."
+                    : inspected.family === "Item"
+                      ? "Item abilities are automated while carried or accessible in your current room. Tools require confirmation and can be used once per hero per round."
+                      : inspected.family === "Spell"
+                        ? "Learn in an unlocked Knowledge slot, then assign matching Sigils to activate Quick or Permanent abilities. Unavailable effects explain their missing requirements."
+                        : inspected.family === "Companion"
+                          ? "Loyal Companions follow their holder; Strays follow the first departing hero. Carriers need an Item slot. Eating resolves before fear. Reunited Ghost Twins travel together. Individual printed abilities are not activated by this framework."
+                          : "This proposed ability is not yet automated."}
+              </p>
+            )}
         </>
       ) : catalog ? (
         <CardCatalog
@@ -239,34 +339,32 @@ export function Game() {
       <main className="landing mirror-landing">
         <nav>
           <span className="brand">✧ THE MIRRORS</span>
-          <button onClick={() => setHelp(true)}>How to play</button>
+          <div className="landing-navigation">
+            <button onClick={() => setHelp(true)}>How to play</button>
+            <button onClick={() => setCatalog(true)}>Catalog</button>
+          </div>
         </nav>
         <section className="intro">
           <div className="mirror-duet" aria-hidden="true">
             <div className="landing-mirror light-mirror">
-              <GameIcon name="White Mirror" />
               <span>THE GIFT</span>
             </div>
             <div className="mirror-duet-sigil">
               <GameIcon name="Amethyst" />
             </div>
             <div className="landing-mirror dark-mirror">
-              <GameIcon name="Black Mirror" />
               <span>THE CURSE</span>
             </div>
           </div>
           <p className="eyebrow">
             A competitive cooperative tabletop adventure
           </p>
-          <h1>
-            Every mirror
-            <br />
-            holds <em>two fates.</em>
-          </h1>
+          <h1>The Mirrors</h1>
           <p>
-            The White Mirror offers a gift. The Black Mirror demands a price.
-            Enter Occuldor's castle, brave its secrets, and piece together the
-            prison you broke.
+            A dare at the Drunken Pony leads you into the Mirror Castle, where a
+            shattered prison releases Occuldor. Seek the White Mirrors' gifts,
+            brave the Black Mirrors' curses, and restore the Kaleidoscope before
+            fear claims you all.
           </p>
           <div className="intro-tags">
             <span>2–5 local heroes</span>
@@ -330,13 +428,14 @@ export function Game() {
         </section>
         <footer>
           <span>THE MIRRORS · LOCAL PLAYTEST</span>
-          <button onClick={() => setCatalog(true)}>
-            Browse the original 155-card catalog ↗
-          </button>
         </footer>
         {overlay}
       </main>
     );
+  const currentMovement =
+    s.players[s.active].dead || isImmobilized(s, s.players[s.active].id)
+      ? 0
+      : movement(s);
   const p = s.players[s.active],
     room = publicRoom(s, selected),
     current = s.rooms[p.room],
@@ -388,7 +487,7 @@ export function Game() {
   const showToken = (t: Token) => {
     setInspectedToken(null);
     setInspected(null);
-    if (t.kind === "Element") setInspectedToken(t);
+    if (t.kind === "Element" || t.kind === "Sigil") setInspectedToken(t);
     else if (t.card) setInspected(byId[t.card]);
   };
   const objectAction = (t: Token, carry: boolean) => {
@@ -399,8 +498,13 @@ export function Game() {
       return (
         <button
           aria-label={`Recruit ${label(t)}`}
-          title="Recruit Companion"
+          title={
+            pickupBlocked(s, t.id)
+              ? "Discarded objects cannot be taken again until the next turn."
+              : "Recruit Companion"
+          }
           disabled={
+            pickupBlocked(s, t.id) ||
             (isCarrier(t) && carrierRoom(s, p) < 1) ||
             s.items.restrictions[p.id]?.companions === p.room ||
             !!s.pending ||
@@ -416,7 +520,7 @@ export function Game() {
           <ActionIcon name="take" />
         </button>
       );
-    if (["Companion", "Secret"].includes(t.kind)) return null;
+    if (t.kind === "Companion" || (carry && t.kind === "Secret")) return null;
     let reason = "";
     try {
       planTransfer(s, t.id, carry ? "leave" : "take");
@@ -498,7 +602,10 @@ export function Game() {
           <span className="turn-number">{String(s.turn).padStart(2, "0")}</span>
           <div>
             <small>ACTIVE HERO</small>
-            <strong style={{ color: heroColors[s.active] }}>{p.name}</strong>
+            <strong style={{ color: heroColors[s.active] }}>
+              {p.name}
+              <MovementBadge steps={currentMovement} />
+            </strong>
           </div>
         </div>
         <p>
@@ -526,260 +633,267 @@ export function Game() {
       )}
 
       <div className="table-grid">
-        <aside className="character panel">
-          <p className="eyebrow">Your character board</p>
-          <h2>{p.name}</h2>
-          <button
-            className="primary wide end-turn"
-            disabled={
-              (!s.moved && !p.dead && !isImmobilized(s, p.id)) ||
-              !!s.pending ||
-              !!s.blackMirror.resolution ||
-              s.outcome !== "playing"
-            }
-            onClick={() => {
-              close();
-              act({ type: "END", playerId: p.id });
-            }}
-          >
-            End turn →
-          </button>
-          <div className="elements-area">
-            <small>
-              ELEMENTS ·{" "}
-              {p.inventory.filter((t) => t.kind === "Element").length}/
-              {cap.elements}
-            </small>
-            <div className="slots">
-              <InventorySlots
-                s={s}
-                slot="elements"
-                tokens={p.inventory.filter((t) => t.kind === "Element")}
-                icon="Empty"
-                context="element slot"
-                onInspect={showToken}
-                action={(t) => objectAction(t, true)}
-              />
+        <div className="character-column">
+          <aside className="character panel">
+            <p className="eyebrow">Your character board</p>
+            <h2>
+              {p.name}
+              <MovementBadge steps={currentMovement} />
+            </h2>
+            <div className="courage character-fear">
+              <div>
+                <span>{tier(p.courage)}</span>
+                <strong>
+                  {p.courage}
+                  <small> / 35</small>
+                </strong>
+              </div>
+              <meter min={0} max={35} value={p.courage} aria-label="Courage" />
             </div>
-          </div>
-          <div className="portrait-row">
-            <div className="side-slots">
-              <small>MIRRORS</small>
-              <InventorySlots
-                s={s}
-                slot="mirrors"
-                tokens={p.inventory.filter((t) => t.kind.endsWith("Mirror"))}
-                icon="White Mirror"
-                context="mirror slot"
-                onInspect={showToken}
-                action={(t) => objectAction(t, true)}
-              />
-              <button
-                className={`mirror-placement-button primary${canCollide ? " collide-ready" : ""}`}
-                aria-label={unguardedPair ? "Collide" : "Place"}
-                disabled={unguardedPair ? !canCollide : !canPlaceMirrors}
-                onClick={() =>
-                  unguardedPair
-                    ? dispatch({ type: "COLLIDE", playerId: p.id })
-                    : setPlacementOpen(true)
-                }
-                title={
-                  current.restored
-                    ? "This room's Sigil has already been restored"
-                    : current.pair.length && s.occuldor === current.id
-                      ? "Occuldor blocks this pair"
-                      : unguardedPair
-                        ? "Collide: flip the Black Mirror and receive the room's Sigil"
-                        : "Place: choose a White and Black Mirror from your hand or this room"
-                }
-              >
-                <MirrorActionIcon
-                  action={unguardedPair ? "collide" : "place"}
-                />
-              </button>
-            </div>
-            <div className="portrait" style={{ color: heroColors[s.active] }}>
-              {(statusOf(s, p.id).paralysis.length > 0 ||
-                statusOf(s, p.id).immobilized) && (
-                <span
-                  className="portrait-paralysis"
-                  role="img"
-                  aria-label="Paralysis on character"
-                  title={
-                    isImmobilized(s, p.id)
-                      ? "Paralysis prevents movement"
-                      : "Brooch suppresses Paralysis"
-                  }
-                >
-                  <CurseTokenIcon type="PARALYSIS" size={48} />
-                  <b>{statusOf(s, p.id).paralysis.length || 1}</b>
-                </span>
-              )}
-              <svg
-                className="hero-portrait-art"
-                viewBox="0 0 100 120"
-                aria-label="Hooded adventurer"
-              >
-                <path
-                  d="M18 110Q14 45 50 12Q86 45 82 110L65 92L50 104L35 92Z"
-                  fill="currentColor"
-                  opacity=".3"
-                />
-                <path
-                  d="M30 66Q32 32 50 25Q68 32 70 66L62 90L50 99L38 90Z"
-                  fill="#171c24"
-                  stroke="currentColor"
-                />
-                <path
-                  d="M37 63L45 67M55 67L63 63M43 83Q50 88 57 83"
-                  fill="none"
-                  stroke="currentColor"
-                />
-              </svg>
-              <div className="relic-fields">
+            <button
+              className="primary wide end-turn"
+              disabled={
+                (!s.moved && !p.dead && !isImmobilized(s, p.id)) ||
+                !!s.pending ||
+                !!s.blackMirror.resolution ||
+                s.outcome !== "playing"
+              }
+              onClick={() => {
+                close();
+                act({ type: "END", playerId: p.id });
+              }}
+            >
+              End turn →
+            </button>
+            <div className="elements-area">
+              <small>
+                ELEMENTS ·{" "}
+                {p.inventory.filter((t) => t.kind === "Element").length}/
+                {cap.elements}
+              </small>
+              <div className="slots">
                 <InventorySlots
                   s={s}
-                  slot="relics"
-                  tokens={p.inventory.filter(
-                    (t) => t.card && byId[t.card]?.subtype === "Relic",
-                  )}
-                  icon="Relic"
-                  context="relic slot"
+                  slot="elements"
+                  tokens={p.inventory.filter((t) => t.kind === "Element")}
+                  icon="Empty"
+                  context="element slot"
                   onInspect={showToken}
                   action={(t) => objectAction(t, true)}
                 />
               </div>
             </div>
-            <div className="side-slots">
-              <small>ITEMS</small>
-              <InventorySlots
-                s={s}
-                slot="items"
-                tokens={[
-                  ...p.inventory.filter(
-                    (t) =>
-                      t.kind === "Item" && byId[t.card!]?.subtype !== "Relic",
-                  ),
-                  ...p.companions.filter(isCarrier),
-                ]}
-                icon="Item"
-                context="item slot"
-                onInspect={showToken}
-                action={(t) => objectAction(t, true)}
-              />
-            </div>
-          </div>
-          <div className="courage">
-            <div>
-              <span>{tier(p.courage)}</span>
-              <strong>
-                {p.courage}
-                <small> / 35</small>
-              </strong>
-            </div>
-            <meter min={0} max={35} value={p.courage} aria-label="Courage" />
-            <small>Relic capacity: {cap.relics}.</small>
-            <small>Courage determines movement · {movement(s)} steps</small>
-          </div>
-          <CurseStatus s={s} />
-          <PlayerSigils player={p} state={s} />
-          <GemStorage s={s} dispatch={dispatch} openPuzzle={()=>setPuzzleOpen(true)}/>
-          {visibleSpellColors(s).length > 0 && (
-            <details>
-              <summary>Private fragment visions</summary>
-              {visibleSpellColors(s).map((id) => (
-                <p key={id}>
-                  {id}: {s.rooms[id].color}
-                </p>
-              ))}
-            </details>
-          )}
-          <h3>Spell Knowledge</h3>
-          <div className="knowledge">
-            {["1 Sigil", "3 colors", "3 matching", "5 colors"].map(
-              (text, i) => (
-                <div
-                  key={text}
-                  className={`knowledge-slot${knowledgeSealed(s, p.id, i) ? " hexlocked-slot" : p.knowledge[i] ? " unlocked-slot" : ""}`}
-                  aria-label={`Spell slot ${i + 1}: ${knowledgeSealed(s, p.id, i) ? "Hexlocked" : p.spellSlots[i] ? "learned" : p.knowledge[i] ? "unlocked, empty" : "locked"}`}
+            <div className="portrait-row">
+              <div className="side-slots">
+                <small>MIRRORS</small>
+                <InventorySlots
+                  s={s}
+                  slot="mirrors"
+                  tokens={p.inventory.filter((t) => t.kind.endsWith("Mirror"))}
+                  icon="White Mirror"
+                  context="mirror slot"
+                  onInspect={showToken}
+                  action={(t) => objectAction(t, true)}
+                />
+                <button
+                  className={`mirror-placement-button primary${canCollide ? " collide-ready" : ""}`}
+                  aria-label={unguardedPair ? "Collide" : "Place"}
+                  disabled={unguardedPair ? !canCollide : !canPlaceMirrors}
+                  onClick={() =>
+                    unguardedPair
+                      ? dispatch({ type: "COLLIDE", playerId: p.id })
+                      : setPlacementOpen(true)
+                  }
+                  title={
+                    current.restored
+                      ? "This room's Sigil has already been restored"
+                      : current.pair.length && s.occuldor === current.id
+                        ? "Occuldor blocks this pair"
+                        : unguardedPair
+                          ? "Collide: flip the Black Mirror and receive the room's Sigil"
+                          : "Place: choose a White and Black Mirror from your hand or this room"
+                  }
                 >
-                  {!p.knowledge[i] && !knowledgeSealed(s, p.id, i) && (
-                    <span className="slot-state" title="Locked">
-                      <ActionIcon name="locked" />
-                    </span>
-                  )}
-                  {knowledgeSealed(s, p.id, i) && (
-                    <HexlockOverlay
-                      count={
-                        statusOf(s, p.id).hexlocks.filter(
-                          (h) => h.slot === "knowledge" && h.index === i,
-                        ).length
-                      }
-                    />
-                  )}
-                  <div className="spell-space">
-                    {p.spellSlots[i] ? (
-                      <TokenIcon
-                        token={p.inventory.find(
-                          (t) => t.id === p.spellSlots[i],
-                        )!}
-                        onInspect={showToken}
-                        context="knowledge slot"
-                        action={
-                          <SpellAction
-                            s={s}
-                            spellId={p.spellSlots[i]!}
-                            dispatch={dispatch}
-                          />
+                  <MirrorActionIcon
+                    action={unguardedPair ? "collide" : "place"}
+                  />
+                </button>
+              </div>
+              <div className="portrait" style={{ color: heroColors[s.active] }}>
+                {(statusOf(s, p.id).paralysis.length > 0 ||
+                  statusOf(s, p.id).immobilized) && (
+                  <span
+                    className="portrait-paralysis"
+                    role="img"
+                    aria-label="Paralysis on character"
+                    title={
+                      isImmobilized(s, p.id)
+                        ? "Paralysis prevents movement"
+                        : "Brooch suppresses Paralysis"
+                    }
+                  >
+                    <CurseTokenIcon type="PARALYSIS" size={48} />
+                    <b>{statusOf(s, p.id).paralysis.length || 1}</b>
+                  </span>
+                )}
+                <svg
+                  className="hero-portrait-art"
+                  viewBox="0 0 100 120"
+                  aria-label="Hooded adventurer"
+                >
+                  <path
+                    d="M18 110Q14 45 50 12Q86 45 82 110L65 92L50 104L35 92Z"
+                    fill="currentColor"
+                    opacity=".3"
+                  />
+                  <path
+                    d="M30 66Q32 32 50 25Q68 32 70 66L62 90L50 99L38 90Z"
+                    fill="#171c24"
+                    stroke="currentColor"
+                  />
+                  <path
+                    d="M37 63L45 67M55 67L63 63M43 83Q50 88 57 83"
+                    fill="none"
+                    stroke="currentColor"
+                  />
+                </svg>
+                <div className="relic-fields">
+                  <InventorySlots
+                    s={s}
+                    slot="relics"
+                    tokens={p.inventory.filter(
+                      (t) => t.card && byId[t.card]?.subtype === "Relic",
+                    )}
+                    icon="Relic"
+                    context="relic slot"
+                    onInspect={showToken}
+                    action={(t) => objectAction(t, true)}
+                  />
+                </div>
+              </div>
+              <div className="side-slots">
+                <small>ITEMS</small>
+                <InventorySlots
+                  s={s}
+                  slot="items"
+                  tokens={[
+                    ...p.inventory.filter(
+                      (t) =>
+                        t.kind === "Item" && byId[t.card!]?.subtype !== "Relic",
+                    ),
+                    ...p.companions.filter(isCarrier),
+                  ]}
+                  icon="Item"
+                  context="item slot"
+                  onInspect={showToken}
+                  action={(t) => objectAction(t, true)}
+                />
+              </div>
+            </div>
+            <CurseStatus s={s} />
+            <PlayerCollection player={p} onInspect={showToken} state={s} />
+            <PlayerSigils player={p} state={s} />
+            <GemStorage
+              s={s}
+              dispatch={dispatch}
+              openPuzzle={() => setPuzzleOpen(true)}
+            />
+            {visibleSpellColors(s).length > 0 && (
+              <details>
+                <summary>Private fragment visions</summary>
+                {visibleSpellColors(s).map((id) => (
+                  <p key={id}>
+                    {id}: {s.rooms[id].color}
+                  </p>
+                ))}
+              </details>
+            )}
+            <h3>Spell Knowledge</h3>
+            <div className="knowledge">
+              {["1 Sigil", "3 colors", "3 matching", "5 colors"].map(
+                (text, i) => (
+                  <div
+                    key={text}
+                    className={`knowledge-slot${knowledgeSealed(s, p.id, i) ? " hexlocked-slot" : p.knowledge[i] ? " unlocked-slot" : ""}`}
+                    aria-label={`Spell slot ${i + 1}: ${knowledgeSealed(s, p.id, i) ? "Hexlocked" : p.spellSlots[i] ? "learned" : p.knowledge[i] ? "unlocked, empty" : "locked"}`}
+                  >
+                    {!p.knowledge[i] && !knowledgeSealed(s, p.id, i) && (
+                      <span className="slot-state" title="Locked">
+                        <ActionIcon name="locked" />
+                      </span>
+                    )}
+                    {knowledgeSealed(s, p.id, i) && (
+                      <HexlockOverlay
+                        count={
+                          statusOf(s, p.id).hexlocks.filter(
+                            (h) => h.slot === "knowledge" && h.index === i,
+                          ).length
                         }
                       />
+                    )}
+                    <div className="spell-space">
+                      {p.spellSlots[i] ? (
+                        <TokenIcon
+                          token={p.inventory.find(
+                            (t) => t.id === p.spellSlots[i],
+                          )!}
+                          onInspect={showToken}
+                          context="knowledge slot"
+                          action={
+                            <SpellAction
+                              s={s}
+                              spellId={p.spellSlots[i]!}
+                              dispatch={dispatch}
+                            />
+                          }
+                        />
+                      ) : (
+                        <span className="vacant-spell-space" />
+                      )}
+                    </div>
+                    {p.spellSlots[i] ? (
+                      <SpellCastGuide s={s} spellId={p.spellSlots[i]!} />
                     ) : (
-                      <span className="vacant-spell-space" />
+                      <>
+                        <small>{text}</small>
+                        <b>
+                          {knowledgeSealed(s, p.id, i)
+                            ? "Hexlocked"
+                            : p.knowledge[i]
+                              ? "Unlocked"
+                              : "Locked"}
+                        </b>
+                      </>
+                    )}
+                    {i === 3 && (
+                      <button
+                        className="banish-hand"
+                        aria-label="Banish Occuldor"
+                        title={
+                          banishReason ||
+                          "Spend five different Sigils to send Occuldor to the Hall"
+                        }
+                        disabled={!!banishReason}
+                        onClick={() =>
+                          dispatch({ type: "BANISH_OCCULDOR", playerId: p.id })
+                        }
+                      >
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                          <path
+                            d="M19 55 10 35q-2-6 3-6l9 10V14q0-7 5-5v23V7q3-6 6 0v25V10q4-5 6 1v22-16q5-4 6 2v25l-9 11Z"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                          />
+                        </svg>
+                      </button>
                     )}
                   </div>
-                  {p.spellSlots[i] ? (
-                    <SpellCastGuide s={s} spellId={p.spellSlots[i]!} />
-                  ) : (
-                    <>
-                      <small>{text}</small>
-                      <b>
-                        {knowledgeSealed(s, p.id, i)
-                          ? "Hexlocked"
-                          : p.knowledge[i]
-                            ? "Unlocked"
-                            : "Locked"}
-                      </b>
-                    </>
-                  )}
-                  {i === 3 && (
-                    <button
-                      className="banish-hand"
-                      aria-label="Banish Occuldor"
-                      title={
-                        banishReason ||
-                        "Spend five different Sigils to send Occuldor to the Hall"
-                      }
-                      disabled={!!banishReason}
-                      onClick={() =>
-                        dispatch({ type: "BANISH_OCCULDOR", playerId: p.id })
-                      }
-                    >
-                      <svg viewBox="0 0 64 64" aria-hidden="true">
-                        <path
-                          d="M19 55 10 35q-2-6 3-6l9 10V14q0-7 5-5v23V7q3-6 6 0v25V10q4-5 6 1v22-16q5-4 6 2v25l-9 11Z"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="3"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-              ),
-            )}
-          </div>
-          <PlayerCollection player={p} onInspect={showToken} state={s} />
-        </aside>
+                ),
+              )}
+            </div>
+          </aside>
+        </div>
         <div className="castle-column">
           <section className="map-panel panel">
             <section className="panel room-inspector">
@@ -906,7 +1020,7 @@ export function Game() {
                   </>
                 )}
                 <h3>Room findings</h3>
-                <RoomGems s={s} room={room.id} dispatch={dispatch}/>
+                <RoomGems s={s} room={room.id} dispatch={dispatch} />
                 {room.objects.length ? (
                   <div className="token-grid">
                     {room.objects.map((t) => tokenRow(t))}
@@ -1020,17 +1134,21 @@ export function Game() {
               <div className="party-fear-row" key={hero.id}>
                 <strong style={{ color: heroColors[i] }}>
                   {hero.name}{" "}
-                  <small title="Movement from Courage level">
-                    +
-                    {hero.dead
-                      ? 0
-                      : s.rules.movement[
-                          Math.max(
-                            0,
-                            Math.min(4, Math.floor((hero.courage - 1) / 7)),
-                          )
-                        ]}
-                  </small>
+                  {i === s.active ? (
+                    <MovementBadge steps={currentMovement} />
+                  ) : (
+                    <small title="Movement from Courage level">
+                      +
+                      {hero.dead
+                        ? 0
+                        : s.rules.movement[
+                            Math.max(
+                              0,
+                              Math.min(4, Math.floor((hero.courage - 1) / 7)),
+                            )
+                          ]}
+                    </small>
+                  )}
                   {hero.dead ? " - Fallen" : ""}
                 </strong>
                 <span>

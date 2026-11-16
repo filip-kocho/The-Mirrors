@@ -1,3 +1,5 @@
+import { assertCanCollect, discardToRoom } from "../systems/discard";
+import { hasCompanion, useCompanion } from "../systems/companionAbilities";
 import {
   applyMagic,
   victoryReady,
@@ -33,6 +35,7 @@ import {
   takeSigils,
   discardSigils,
   grantSigil,
+  giveSigils,
   settleDeadQuickSigils,
 } from "../systems/sigils";
 import { activateSpell } from "../systems/spellActivation";
@@ -97,8 +100,10 @@ const tokenSchema = z.object({
     "Spell",
     "Companion",
     "Secret",
+    "Sigil",
   ]),
   element: z.enum(elements).optional(),
+  sigilColor: z.enum([...colors, "Wild"]).optional(),
   card: z.string().optional(),
   behavior: z.enum(["LOYAL", "STRAY"]).optional(),
   discoverer: z.string().optional(),
@@ -174,6 +179,13 @@ export const gameSchema = stateSchema.extend({
   removed: z.array(tokenSchema).default([]),
   spentElements: z.array(tokenSchema).default([]),
   gemOwners: z.record(z.string(), z.string()).default({}),
+  discardedThisTurn: z
+    .record(z.string(), z.number().int().nonnegative())
+    .default({}),
+  mosaicOwners: z
+    .array(z.string().nullable())
+    .length(35)
+    .default(Array(35).fill(null)),
   mosaic: z
     .array(z.enum(colors).nullable())
     .length(35)
@@ -196,10 +208,11 @@ export const gameSchema = stateSchema.extend({
 export type State = z.infer<typeof gameSchema>;
 export type Token = z.infer<typeof tokenSchema>;
 export type Command =
+  | { type: "USE_COMPANION"; playerId: string; card: string; ids: string[] }
   | MagicCommand
   | { type: "PLACE_WHITE"; playerId: string; roomId: string; whiteId: string }
   | { type: "SPELL_CONSENT"; playerId: string; accept: boolean }
-  | { type: "SPELL_PORTAL"; playerId: string; accept: boolean }
+  | { type: "SPELL_PORTAL"; playerId: string; accept: boolean; roomId?: string }
   | {
       type: "CAST_SPELL";
       playerId: string;
@@ -263,6 +276,12 @@ export type Command =
   | { type: "PLACE"; playerId: string; cell: number };
 export const commandSchema = z.discriminatedUnion("type", [
   z.object({
+    type: z.literal("USE_COMPANION"),
+    playerId: z.string(),
+    card: z.string(),
+    ids: z.array(z.string()),
+  }),
+  z.object({
     type: z.literal("MAGIC"),
     playerId: z.string(),
     action: z.enum([
@@ -294,6 +313,7 @@ export const commandSchema = z.discriminatedUnion("type", [
     type: z.literal("SPELL_PORTAL"),
     playerId: z.string(),
     accept: z.boolean(),
+    roomId: z.string().optional(),
   }),
   z.object({
     type: z.literal("CAST_SPELL"),
@@ -507,6 +527,8 @@ export function initialState(
     removed: [],
     spentElements: [],
     gemOwners: {},
+    discardedThisTurn: {},
+    mosaicOwners: Array(35).fill(null),
     mosaic: Array(35).fill(null),
     pending: null,
     outcome: "playing",
@@ -514,6 +536,7 @@ export function initialState(
   };
 }
 export const movement = (s: State) =>
+  (hasCompanion(s, s.players[s.active].id, "CO-02") ? 1 : 0) +
   gemMovement(s) +
   itemMovement(s) +
   spellMovement(
@@ -572,6 +595,7 @@ export function planTransfer(
   const index = from.findIndex((token) => token.id === tokenId);
   if (index < 0) throw Error("That object is not accessible here.");
   const token = from[index];
+  if (direction === "take") assertCanCollect(s, tokenId);
   if (
     direction === "take" &&
     token.kind.endsWith("Mirror") &&
@@ -580,10 +604,11 @@ export function planTransfer(
     throw Error(
       "Mirror Offering prevents taking mirrors until you leave this room.",
     );
-  if (["Spell", "Secret", "Companion"].includes(token.kind))
+  if (["Spell", "Companion"].includes(token.kind))
     throw Error("This card requires its dedicated action.");
   from.splice(index, 1);
-  to.push(token);
+  if (direction !== "take" || !["Secret", "Sigil"].includes(token.kind))
+    to.push(token);
   if (direction === "take")
     checkCapacity(
       inventory,
@@ -766,10 +791,15 @@ export function reduce(state: State, command: Command): State {
       if (
         !hasSpell(s, "TURN_PORTAL") ||
         s.blackMirror.rooms[p.room]?.portal ||
-        portalSupply(s) < 1
+        portalSupply(s) < 2 ||
+        !command.roomId ||
+        !s.rooms[command.roomId] ||
+        command.roomId === "Hall" ||
+        command.roomId === p.room ||
+        s.blackMirror.rooms[command.roomId]?.portal
       )
         throw Error("Portal placement is no longer available.");
-      assignPortals(s, [p.room]);
+      assignPortals(s, [p.room, command.roomId!]);
     }
     s.spells.portalOffer = null;
   } else if (command.type === "CAST_SPELL") {
@@ -782,6 +812,17 @@ export function reduce(state: State, command: Command): State {
     );
     s.spells.afterCurse = null;
     deaths();
+    if (
+      !s.spells.consent &&
+      !p.dead &&
+      ["SP-16", "SP-24"].includes(command.spellId)
+    ) {
+      beginEffects(s, command.spellId, "inventory", [{ op: "CAPACITY" }]);
+      advanceEffects(s);
+      finishEffects();
+    }
+  } else if (command.type === "USE_COMPANION") {
+    useCompanion(s, command.card, command.ids);
   } else if (command.type === "MAGIC") {
     applyMagic(s, command);
     if (victoryReady(s)) s.outcome = "victory";
@@ -837,6 +878,7 @@ export function reduce(state: State, command: Command): State {
     );
     deaths();
   } else if (command.type === "RECRUIT") {
+    assertCanCollect(s, command.tokenId);
     if (s.items.restrictions[p.id]?.companions === p.room)
       throw Error("Farewell Whistle prevents recruiting until departure.");
     const i = r.objects.findIndex(
@@ -894,8 +936,15 @@ export function reduce(state: State, command: Command): State {
     );
     p.inventory = inventory;
     r.objects = objects;
+    if (command.direction === "take" && token.kind === "Secret")
+      p.secrets.push(token.card!);
+    if (command.direction === "take" && token.kind === "Sigil") {
+      giveSigils(s, p.id, [{ id: token.id, color: token.sigilColor! }]);
+      unlockKnowledge(p, s.rules.orderedKnowledge);
+    }
     if (token.kind === "Item") resolveCompanionConflicts(s, p);
     if (command.direction === "leave") {
+      s.discardedThisTurn[token.id] = s.turn;
       beginEffects(
         s,
         token.kind === "Item" ? token.card! : "INVENTORY",
@@ -1039,6 +1088,8 @@ export function reduce(state: State, command: Command): State {
           color,
           hasItemEffect(s, "FREE_FRAGMENT") || hasSpell(s, "FREE_GLASS"),
           Object.keys(s.gemOwners),
+          s.mosaicOwners,
+          p.id,
         ) +
         rewardFor(s, "FRAGMENT") +
         spellFragmentBonus(
@@ -1049,6 +1100,7 @@ export function reduce(state: State, command: Command): State {
           ),
         );
     s.mosaic[command.cell] = color;
+    s.mosaicOwners[command.cell] = p.id;
     gainCourage(s, p.id, reward);
     log(
       `${p.name} places ${color} in cell ${command.cell + 1}: ${p.dead ? "no Courage awarded to an eliminated hero" : `+${reward} Courage`}.`,
@@ -1095,6 +1147,21 @@ export function assertState(s: State) {
   assertSecretState(s);
   assertBlackMirrorState(s);
   const heroIds = new Set(s.players.map((p) => p.id));
+  if (Object.values(s.discardedThisTurn).some((turn) => turn > s.turn))
+    throw Error("Invalid discard turn.");
+  if (
+    Object.values(s.rooms).some((room) =>
+      room.objects.some((t) => t.kind === "Sigil" && !t.sigilColor),
+    )
+  )
+    throw Error("A room Sigil must retain its color.");
+  if (
+    s.mosaicOwners.some(
+      (owner, cell) =>
+        owner !== null && (!heroIds.has(owner) || !s.mosaic[cell]),
+    )
+  )
+    throw Error("Invalid Kaleidoscope tile ownership.");
   for (const [hero, uses] of Object.entries(s.items.used))
     if (
       !heroIds.has(hero) ||

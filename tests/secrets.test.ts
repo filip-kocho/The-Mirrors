@@ -209,7 +209,7 @@ describe("Secret v0.6", () => {
     s = claim(s, "SE-09");
     expect(s.players[0].secrets).toEqual(["SE-15"]);
     expect(s.magic.gems.find((g) => g.secret === "SE-09")?.location).toBe(
-      "ROOM",
+      "PLAYER_STORAGE",
     );
   });
   it("privacy and ownership block reveals without altering the original state", () => {

@@ -1,9 +1,11 @@
+import { hexlockPaidSlot } from "./paidSlotHexlocks";
+import { discardToRoom, assertCanCollect, pickupBlocked } from "./discard";
 import { supportsFilledGaps } from "./magicResources";
 import { attachCompanion } from "./companions";
 import type { State, Token } from "../domain/engine";
 import { byId } from "../cards/catalog";
 import { spellAdapters } from "../cards/spellEffects";
-import { availableSigils, takeSigils, giveSigils } from "./sigils";
+import { availableSigils, takeSigils, giveSigils, boundSigils } from "./sigils";
 import {
   applicableSpellSeals,
   hasSpell,
@@ -68,15 +70,9 @@ export function spellActivationPlan(
   if (applicableSpellSeals(s, spell, action).length)
     throw Error("This action is sealed by Sigil Seals.");
   const quick = mode.name.toUpperCase() === "QUICK";
-  if (!quick && s.blackMirror.bindings[spell]?.length)
+  if (!quick && Object.hasOwn(s.blackMirror.bindings, spell))
     throw Error("Permanent Sigils are already bound.");
-  if (
-    s.rules.spellPolicies.modePolicy === "EXCLUSIVE_ACTIVE_MODE" &&
-    (quick
-      ? s.blackMirror.bindings[spell]?.length
-      : s.spells.quick.some((q) => q.owner === p.id && q.spell === spell))
-  )
-    throw Error("This Spell already has the alternative mode assigned.");
+
   if (
     quick &&
     s.rules.spellPolicies.oneQuickPerSpellPerTurn &&
@@ -94,14 +90,39 @@ export function spellActivationPlan(
     ].includes(op)
   )
     throw Error("Clear Darkness before activating this Spell.");
-  const free = [...availableSigils(s)],
-    selected: string[] = [];
-  for (const color of mode.sigil_slots) {
-    let i = free.findIndex((t) => t.color === color);
-    if (i < 0) i = free.findIndex((t) => t.color === "Wild");
-    if (i < 0) throw Error(`Missing available ${color} Sigil(s).`);
-    selected.push(free.splice(i, 1)[0].id);
+  const discount =
+    !quick && spell !== "SP-16" && hasSpell(s, "PERMANENT_DISCOUNT", p.id);
+  const candidates = discount
+    ? mode.sigil_slots.map((_, i) => i).reverse()
+    : [-1];
+  let selected: string[] = [],
+    waived = -1,
+    paymentFound = false;
+  for (const skip of candidates) {
+    const free = [...availableSigils(s)],
+      attempt: string[] = [];
+    let valid = true;
+    for (const [i, color] of mode.sigil_slots.entries()) {
+      if (i === skip) continue;
+      let index = free.findIndex((t) => t.color === color);
+      if (index < 0) index = free.findIndex((t) => t.color === "Wild");
+      if (index < 0) {
+        valid = false;
+        break;
+      }
+      attempt.push(free.splice(index, 1)[0].id);
+    }
+    if (valid) {
+      selected = attempt;
+      waived = skip;
+      paymentFound = true;
+      break;
+    }
   }
+  if (!paymentFound) throw Error("Missing available matching Sigil(s).");
+  const paymentSockets = mode.sigil_slots
+    .map((color, index) => ({ color, index }))
+    .filter((x) => x.index !== waived);
   let choices: SpellChoice[] = [],
     min = 0,
     max = 0;
@@ -162,11 +183,18 @@ export function spellActivationPlan(
         min = 1;
         max = 2;
         break;
-      case "REMOVE_SEAL":
+      case "RETURN_PERMANENT":
+        choices = p.spellSlots
+          .filter(
+            (id): id is string => !!id && !!s.blackMirror.bindings[id]?.length,
+          )
+          .map((id) => ({ id, label: byId[id].name }));
+        min = max = 1;
+        break;
       case "REMOVE_TWO_SEALS":
         choices = eligibleSeals;
         min = 1;
-        max = op === "REMOVE_SEAL" ? 1 : 2;
+        max = 2;
         break;
       case "CLEANSE_HERO":
         choices = s.players
@@ -325,7 +353,9 @@ export function spellActivationPlan(
           .filter((r) => r.id !== p.room)
           .flatMap((r) =>
             objects(
-              r.objects.filter((t) => t.kind === "Element"),
+              r.objects.filter(
+                (t) => t.kind === "Element" && !pickupBlocked(s, t.id),
+              ),
               r.id,
             ),
           );
@@ -352,7 +382,9 @@ export function spellActivationPlan(
           ),
           ...explored.flatMap((r) =>
             objects(
-              r.objects.filter((t) => t.kind === "Element"),
+              r.objects.filter(
+                (t) => t.kind === "Element" && !pickupBlocked(s, t.id),
+              ),
               r.id,
               "roomElement",
             ),
@@ -492,6 +524,8 @@ export function spellActivationPlan(
     adapter,
     quick,
     selected,
+    waived,
+    paymentSockets,
     choices,
     min,
     max,
@@ -588,14 +622,14 @@ export function activateSpell(
     available = availableSigils(s),
     op = plan.adapter.operation;
   if (
-    ids.length !== plan.mode.sigil_slots.length ||
+    ids.length !== plan.paymentSockets.length ||
     new Set(ids).size !== ids.length ||
     ids.some(
       (id, i) =>
         !available.some(
           (t) =>
             t.id === id &&
-            (t.color === plan.mode.sigil_slots[i] || t.color === "Wild"),
+            (t.color === plan.paymentSockets[i].color || t.color === "Wild"),
         ),
     )
   )
@@ -618,7 +652,7 @@ export function activateSpell(
   }
   const paid = takeSigils(s, p.id, ids).map((token, socket) => ({
     ...token,
-    socket,
+    socket: plan.paymentSockets[socket].index,
   }));
   let assignment: State["spells"]["quick"][number] | undefined;
   if (plan.quick) {
@@ -635,12 +669,8 @@ export function activateSpell(
   } else {
     s.blackMirror.bindings[spell] = paid.map((t) => t.color);
     s.spells.permanentIds[spell] = paid.map((t) => t.id);
-    itemReward(
-      s,
-      p.id,
-      "PERMANENT_SIGIL",
-      s.rules.itemPolicies.permanentReward === "SIGIL" ? paid.length : 1,
-    );
+    if (plan.waived >= 0) s.spells.permanentWaivers[spell] = plan.waived;
+    itemReward(s, p.id, "PERMANENT_SIGIL", paid.length);
     if (op === "PARALYSIS_IMMUNITY") {
       const status = mutableStatus(s, p.id);
       status.paralysis = [];
@@ -694,7 +724,15 @@ export function activateSpell(
       case "CLEANSE_TWO":
         removeTokens();
         break;
-      case "REMOVE_SEAL":
+      case "RETURN_PERMANENT": {
+        const returned = boundSigils(s, targets[0]);
+        delete s.blackMirror.bindings[targets[0]];
+        delete s.spells.permanentIds[targets[0]];
+        delete s.spells.permanentWaivers[targets[0]];
+        giveSigils(s, p.id, returned);
+        gainCourage(s, p.id, returned.length);
+        break;
+      }
       case "REMOVE_TWO_SEALS":
         s.blackMirror.seals = s.blackMirror.seals.filter(
           (t) => !targets.includes(t.id),
@@ -748,16 +786,25 @@ export function activateSpell(
         placeSingleWhite(s, choice("room").id, choice("white").id);
         break;
       case "BURN_ELEMENT":
-        s.rooms[p.room].objects.push(extract(targets[0]));
-        gainCourage(s, p.id, 3);
+        hexlockPaidSlot(
+          s,
+          p.inventory.find((t) => t.id === targets[0])!,
+        );
+        discardToRoom(s, p.room, [extract(targets[0])]);
+        gainCourage(s, p.id, 1);
         break;
       case "BURN_MIRROR": {
+        hexlockPaidSlot(
+          s,
+          p.inventory.find((t) => t.id === targets[0])!,
+        );
         const t = extract(targets[0]);
-        s.rooms[p.room].objects.push(t);
-        gainCourage(s, p.id, 3);
+        discardToRoom(s, p.room, [t]);
+        gainCourage(s, p.id, 1);
         break;
       }
       case "EXCHANGE": {
+        assertCanCollect(s, choice("roomElement").id);
         const a = choice("carried"),
           b = choice("roomElement"),
           carried = extract(a.id),
@@ -802,6 +849,8 @@ export function activateSpell(
         const [a, b] = targets[0].split(":").map(Number);
         s.mosaic[b] = s.mosaic[a];
         s.mosaic[a] = null;
+        s.mosaicOwners[b] = s.mosaicOwners[a];
+        s.mosaicOwners[a] = null;
         break;
       }
       case "TOOL":

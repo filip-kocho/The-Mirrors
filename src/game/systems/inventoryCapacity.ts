@@ -41,3 +41,17 @@ export function carryingSlot(
             : "items"
           : null;
 }
+/** Stable explicit Hexlock positions, with legacy locks filled from the final slots. */
+export function blockedSlotIndices(base: number, locks: { index?: number }[]) {
+  const result = new Set<number>();
+  for (const lock of locks)
+    if (lock.index !== undefined && lock.index >= 0 && lock.index < base)
+      result.add(lock.index);
+  for (
+    let i = base - 1;
+    result.size < Math.min(base, locks.length) && i >= 0;
+    i--
+  )
+    result.add(i);
+  return result;
+}

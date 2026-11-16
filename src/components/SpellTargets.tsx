@@ -3,7 +3,11 @@ import { useState } from "react";
 import type { State } from "../game/domain/engine";
 import type { SpellChoice } from "../game/systems/spellActivation";
 import { CastleBoard } from "./CastleBoard";
-import { KaleidoscopeArt, gemOwnerColors } from "./KaleidoscopeBoard";
+import {
+  KaleidoscopeArt,
+  gemOwnerColors,
+  tileOwnerColors,
+} from "./KaleidoscopeBoard";
 export function SpellTargets({
   s,
   choices,
@@ -51,6 +55,7 @@ export function SpellTargets({
         <KaleidoscopeArt
           mosaic={s.mosaic}
           gemColors={gemOwnerColors(s)}
+          tileColors={tileOwnerColors(s)}
           active
           allowedCells={allowed}
           selected={

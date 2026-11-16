@@ -1,6 +1,7 @@
 export const companionDefinitions = [
   {
     id: "CO-01",
+    effect: "When Occuldor enters your room, prevent 1 Courage loss.",
     name: "Rex the Dog",
     movementType: "LOYAL",
     followingType: "FOLLOWER",
@@ -11,6 +12,7 @@ export const companionDefinitions = [
   },
   {
     id: "CO-02",
+    effect: "Increase your maximum movement allowance by 1 room.",
     name: "Alexis the Cat",
     movementType: "STRAY",
     followingType: "FOLLOWER",
@@ -31,6 +33,8 @@ export const companionDefinitions = [
   },
   {
     id: "CO-04",
+    effect:
+      "Once per round, cross one blocked corridor, ignoring its blockage.",
     name: "Roderick the Rat",
     movementType: "STRAY",
     followingType: "FOLLOWER",
@@ -41,6 +45,8 @@ export const companionDefinitions = [
   },
   {
     id: "CO-05",
+    effect:
+      "Move one White Mirror from an adjacent room into your current room. STRAY with Mason.",
     name: "Madison the Ghost Sister Twin",
     movementType: "LOYAL",
     followingType: "FOLLOWER",
@@ -51,6 +57,8 @@ export const companionDefinitions = [
   },
   {
     id: "CO-06",
+    effect:
+      "Move one Black Mirror from an adjacent room into your current room. STRAY with Madison.",
     name: "Mason the Ghost Brother Twin",
     movementType: "LOYAL",
     followingType: "FOLLOWER",
@@ -61,6 +69,7 @@ export const companionDefinitions = [
   },
   {
     id: "CO-07",
+    effect: "Once per round, remove one Fear or Paralysis Token.",
     name: "Mad Mara",
     movementType: "STRAY",
     followingType: "FOLLOWER",
@@ -71,6 +80,7 @@ export const companionDefinitions = [
   },
   {
     id: "CO-08",
+    effect: "Once per round, remove one Hexlock Token.",
     name: "Mamba the Snake",
     movementType: "STRAY",
     followingType: "CARRIER",
@@ -81,6 +91,8 @@ export const companionDefinitions = [
   },
   {
     id: "CO-09",
+    effect:
+      "Move one Item or up to two Elements from any discovered room into your current room.",
     name: "Clementine the Spider",
     movementType: "STRAY",
     followingType: "CARRIER",

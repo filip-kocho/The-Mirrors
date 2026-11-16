@@ -1,3 +1,4 @@
+import { hasCompanion } from "./companionAbilities";
 import type { State } from "../domain/engine";
 import { itemEffects, rewardFor } from "./itemAccess";
 import { occuldorArrivalLoss } from "../rules/gameRulesConfig";
@@ -25,7 +26,7 @@ export function penaltyAmount(
           0,
         );
   const remaining=Math.max(0, amount + extra - reduction);
-  return remaining-spellLossReduction(s,heroId,remaining,options,consume);
+  return Math.max(0, remaining-spellLossReduction(s,heroId,remaining,options,consume) - (options.occuldor && hasCompanion(s,heroId,"CO-01") ? 1 : 0));
 }
 export function loseCourage(
   s: State,

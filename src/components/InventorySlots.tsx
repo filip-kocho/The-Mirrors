@@ -1,3 +1,4 @@
+import { blockedSlotIndices } from "../game/systems/inventoryCapacity";
 import type { State, Token } from "../game/domain/engine";
 import { capacities } from "../game/domain/engine";
 import { statusOf } from "../game/systems/blackMirrorRuntime";
@@ -48,12 +49,14 @@ export function InventorySlots({
   const p = s.players[s.active],
     base = capacities(p.inventory, [], [], s, p.id)[slot],
     locks = statusOf(s, p.id).hexlocks.filter((h) => h.slot === slot),
-    usable = Math.max(0, base - locks.length);
+    blockedIndices = blockedSlotIndices(base,locks),
+    freeIndices = Array.from({length:base},(_,i)=>i).filter(i=>!blockedIndices.has(i)),
+    tokenSlots = [...freeIndices, ...Array.from({length:Math.max(0,tokens.length-freeIndices.length)},(_,i)=>base+i)];
   return (
     <>
-      {Array.from({ length: Math.max(base, tokens.length) }, (_, i) => {
-        const blocked = i >= usable && i < base,
-          token = tokens[i];
+      {Array.from({ length: Math.max(base, ...tokenSlots.map(i=>i+1)) }, (_, i) => {
+        const blocked = blockedIndices.has(i),
+          token = tokens[tokenSlots.indexOf(i)];
         return (
           <div
             key={i}

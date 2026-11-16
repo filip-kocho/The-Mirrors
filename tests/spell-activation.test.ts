@@ -1,4 +1,4 @@
-import {takeSigils,discardSigils} from "../src/game/systems/sigils";
+import { takeSigils, discardSigils } from "../src/game/systems/sigils";
 import { describe, it, expect } from "vitest";
 import {
   initialState,
@@ -60,7 +60,7 @@ const near = roomGraph.R01.neighbors.find((id) => id !== "Hall")!;
 function fixture(id = "SP-01", action = 0) {
   const s = initialState(["Rowan", "Elara", "Morgan"], "spells-v04");
   // These existing effect tests isolate colored payment; Wild lifecycle has dedicated v0.6 tests.
-  discardSigils(s,takeSigils(s,"P1",["WILD-P1"]));
+  discardSigils(s, takeSigils(s, "P1", ["WILD-P1"]));
   const all = Object.values(s.rooms).flatMap((r) => r.findings);
   for (const r of Object.values(s.rooms)) {
     r.explored = true;
@@ -182,7 +182,7 @@ function prepare(i: number) {
     physical(s, "E-Water-1", s.rooms.R35.objects);
     targets = ["E-Fire-1", "E-Water-1"];
   }
-  if ([16, 25].includes(i)) {
+  if (i === 25) {
     equip(s, "SP-02");
     s.blackMirror.seals = [
       { id: "seal-a", owner: "P1", spell: "SP-02", scope: "ALL" },
@@ -190,6 +190,18 @@ function prepare(i: number) {
     ];
     targets = ["seal-a"];
     if (i === 25) targets.push("seal-b");
+  }
+  if (i === 16) {
+    equip(s, "SP-02");
+    fund(s, "SP-02", 1);
+    const paid = takeSigils(
+      s,
+      "P1",
+      spellActivationPlan(s, "SP-02", 1).selected,
+    );
+    s.blackMirror.bindings["SP-02"] = paid.map((t) => t.color);
+    s.spells.permanentIds["SP-02"] = paid.map((t) => t.id);
+    targets = ["SP-02"];
   }
   if ([2, 19, 20, 21, 27, 30, 35].includes(i)) {
     targets = [near];
@@ -267,7 +279,7 @@ describe("all 35 v0.4 Spells", () => {
       expect(() => cast(next, id, 0, targets)).toThrow();
       if ([1, 4].includes(i)) expect(next.players[0].courage).toBe(19);
       if ([8, 13].includes(i)) {
-        expect(next.players[0].courage).toBe(21);
+        expect(next.players[0].courage).toBe(19);
         expect(next.rooms.R01.objects.some((t) => t.id === targets[0])).toBe(
           true,
         );
@@ -306,7 +318,12 @@ describe("all 35 v0.4 Spells", () => {
           true,
         );
       }
-      if (i === 16) expect(next.blackMirror.seals).toHaveLength(1);
+      if (i === 16) {
+        expect(next.blackMirror.bindings["SP-02"]).toBeUndefined();
+        expect(next.players[0].courage).toBe(
+          18 + byId["SP-02"].casting_modes![1].sigil_slots.length,
+        );
+      }
       if (i === 25) expect(next.blackMirror.seals).toHaveLength(0);
       if ([23, 33].includes(i)) {
         expect(next.players[0].companions[0].id).toBe("CO-01");
@@ -314,7 +331,9 @@ describe("all 35 v0.4 Spells", () => {
         expect(next.players[0].companions[0].discoverer).toBe("P1");
       }
       if (i === 24) {
-        expect(next.spentElements.some((t) => t.id === "E-Fire-1")).toBe(true);
+        expect(next.rooms.R01.objects.some((t) => t.id === "E-Fire-1")).toBe(
+          true,
+        );
         expect(next.players[0].courage).toBeGreaterThan(18);
       }
       if (i === 28) {
@@ -361,7 +380,10 @@ describe("all 35 v0.4 Spells", () => {
       expect(loadSave(JSON.stringify(s))).toEqual(s);
       abandonSpell(s, s.players[0], id);
       expect(activePermanent(s, "P1", id)).toBe(false);
-      expect(s.spells.spentIds).toEqual(["WILD-P1",...ids]);
+      expect(s.spells.spentIds).toEqual(["WILD-P1"]);
+      expect(
+        s.rooms.R01.objects.filter((t) => t.kind === "Sigil").map((t) => t.id),
+      ).toEqual(ids);
       assertState(s);
     });
   }
@@ -437,23 +459,43 @@ describe("all 35 v0.4 Spells", () => {
     returnQuickSigils(s, "P1");
     expect(s.players[0].sigils).toHaveLength(1);
   });
-  it("mode alternatives remain exclusive until Quick assignment returns", () => {
+  it("Quick and Permanent coexist with separate physical Sigils", () => {
     const { s, id, targets } = prepare(1);
     let next = cast(s, id, 0, targets);
     fund(next, id, 1);
-    expect(() => cast(next, id, 1)).toThrow("alternative");
-    next.rules.spellPolicies.modePolicy = "BOTH_ALLOWED";
+
     next = cast(next, id, 1);
     expect(next.spells.quick).toHaveLength(1);
     expect(activePermanent(next, "P1", id)).toBe(true);
   });
+  it("Quick stays usable after Permanent binding without reusing bound Sigils", () => {
+    let s = permanent("SP-01");
+    const ids = [...s.spells.permanentIds["SP-01"]];
+    mutableStatus(s, "P1").fear = [{ id: "fear-new", origin: near }];
+    expect(() => spellActivationPlan(s, "SP-01", 0, ["fear-new"])).toThrow(
+      "Missing available",
+    );
+    fund(s, "SP-01", 0);
+    s = cast(s, "SP-01", 0, ["fear-new"]);
+    expect(activePermanent(s, "P1", "SP-01")).toBe(true);
+    expect(s.spells.permanentIds["SP-01"]).toEqual(ids);
+    expect(s.spells.quick[0].sigils.every((t) => !ids.includes(t.id))).toBe(
+      true,
+    );
+    expect(loadSave(JSON.stringify(s))).toEqual(s);
+  });
   it("SP-32 optional turn-start Portal uses a finite shared supply without extra Sigils", () => {
     let s = permanent("SP-32");
-    s.rules.spellPolicies.portalTokenSupply = 1;
+    s.rules.spellPolicies.portalTokenSupply = 2;
     s.turn = 4;
     beginHeroTurn(s);
     expect(s.spells.portalOffer?.owner).toBe("P1");
-    s = reduce(s, { type: "SPELL_PORTAL", playerId: "P1", accept: true });
+    s = reduce(s, {
+      type: "SPELL_PORTAL",
+      playerId: "P1",
+      accept: true,
+      roomId: near,
+    });
     expect(portalSupply(s)).toBe(0);
     expect(s.blackMirror.bindings["SP-32"]).toHaveLength(3);
     s.players[0].room = near;
@@ -491,7 +533,7 @@ describe("all 35 v0.4 Spells", () => {
   });
   it("SP-02/SP-27 increase movement and SP-09 provides a Fear-only floor", () => {
     for (const [id, expected] of [
-      ["SP-02", 2],
+      ["SP-02", 3],
       ["SP-27", 3],
       ["SP-09", 2],
     ] as const) {
@@ -570,9 +612,9 @@ describe("all 35 v0.4 Spells", () => {
       );
     }
   });
-  it("SP-16 prevents all new Seals; SP-25 prevents exactly one per effect", () => {
+  it("SP-16 discount grants no Seal immunity; SP-25 prevents exactly one per effect", () => {
     for (const [id, count] of [
-      ["SP-16", 0],
+      ["SP-16", 2],
       ["SP-25", 1],
     ] as const) {
       const s = permanent(id);
@@ -732,6 +774,7 @@ describe("all 35 v0.4 Spells", () => {
     const token = availableSigils(s).at(-1)!;
     s = cast(s, "SP-24", 0, ["IT-15", `cost:physical:${token.id}`]);
     expect(s.spells.spentIds).toContain(token.id);
+    expect(s.rooms.R01.objects.some((t) => t.id === token.id)).toBe(false);
     expect(s.spells.quick[0].sigils).toHaveLength(2);
     expect(s.players[0].sigils).toHaveLength(0);
   });
@@ -745,5 +788,18 @@ describe("all 35 v0.4 Spells", () => {
       placementReward(mosaic, last, "Scarlet", true, []) -
         placementReward(mosaic, last, "Scarlet", true, [gem.id]),
     ).toBe(0);
+  });
+  it("SP-28 relocates ownership with the fragment without awarding placement Courage", () => {
+    let s = fixture("SP-28");
+    s.mosaic[0] = "Scarlet";
+    s.mosaicOwners[0] = "P2";
+    s.rooms.R01.restored = true;
+    s.rage = 1;
+    const target = spellActivationPlan(s, "SP-28", 0).choices[0].id;
+    const [from, to] = target.split(":").map(Number);
+    s = cast(s, "SP-28", 0, [target]);
+    expect(s.mosaicOwners[from]).toBeNull();
+    expect(s.mosaicOwners[to]).toBe("P2");
+    expect(s.players[0].courage).toBe(18);
   });
 });

@@ -1,3 +1,4 @@
+import { whiteMirrorNames } from "./whiteMirrorNames";
 import { companionById } from "./companions";
 import revisedSpells from "./spells-v04.json";
 import { z } from "zod";
@@ -52,9 +53,18 @@ export const cards = z.array(cardSchema).parse(
         secretById[card.id] ??
         revisedSpells.find((spell) => spell.id === card.id) ?? {
           ...card,
+          ...(whiteMirrorNames[card.id]
+            ? { name: whiteMirrorNames[card.id] }
+            : {}),
           ...(blackMirrorById[card.id] ?? {}),
           ...(itemById[card.id] ?? {}),
-          ...(companionById[card.id] ? { ...companionById[card.id], subtype: "Companion", conflict: undefined } : {}),
+          ...(companionById[card.id]
+            ? {
+                ...companionById[card.id],
+                subtype: "Companion",
+                conflict: undefined,
+              }
+            : {}),
         },
     ),
 );

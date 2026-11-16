@@ -1,4 +1,5 @@
 import type { State, Token } from "../domain/engine";
+import { assertCanCollect, discardToRoom, pickupBlocked } from "./discard";
 import { companionById } from "../cards/companions";
 import { inventoryCapacities, carryingSlot } from "./inventoryCapacity";
 import { hasSpell } from "./spellModifiers";
@@ -68,9 +69,11 @@ export function attachCompanion(
   t: Token,
   discovery = false,
 ) {
+  assertCanCollect(s, t.id);
   if (s.removed.some((x) => x.id === t.id))
     throw Error("Removed Companions cannot return.");
   const members = group(s, t);
+  members.forEach((member) => assertCanCollect(s, member.id));
   const extra = members.filter(
     (x) => isCarrier(x) && !p.companions.some((a) => a.id === x.id),
   ).length;
@@ -103,7 +106,8 @@ export function leaveCompanion(
 ) {
   for (const member of group(s, t)) {
     detach(s, member);
-    (removed ? s.removed : s.rooms[room].objects).push(member);
+    if (removed) s.removed.push(member);
+    else discardToRoom(s, room, [member]);
   }
 }
 function twinsIn(s: State, room: string) {
@@ -127,7 +131,12 @@ export function companionDeparture(s: State, p: Hero) {
   for (const t of p.companions) delete t.fearEncounter;
   const twins = twinsIn(s, p.room);
   if (s.items.restrictions[p.id]?.companions === p.room) return;
-  if (twins.length && !twins[0].token.linkedGroupId) reunite(s, p, twins);
+  if (
+    twins.length &&
+    !twins[0].token.linkedGroupId &&
+    !twins.some((x) => pickupBlocked(s, x.token.id))
+  )
+    reunite(s, p, twins);
   const handled = new Set<string>();
   for (const x of companionLocations(s).filter((x) => x.room === p.room)) {
     if (
@@ -138,6 +147,7 @@ export function companionDeparture(s: State, p: Hero) {
       continue;
     const members = group(s, x.token);
     members.forEach((t) => handled.add(t.id));
+    if (members.some((t) => pickupBlocked(s, t.id))) continue;
     if (
       members.some(isCarrier) &&
       carrierRoom(s, p) < members.filter(isCarrier).length
@@ -248,11 +258,16 @@ export function assertCompanions(s: State) {
     ];
   if (new Set(all.map((t) => t.id)).size !== all.length)
     throw Error("Duplicate physical Companion.");
-  if (all.some(t => !companionById[t.card!] || t.id !== t.card))
+  if (all.some((t) => !companionById[t.card!] || t.id !== t.card))
     throw Error("Unknown Companion identity.");
   const deck = s.decks.Companion;
-  if (new Set(deck).size !== deck.length || deck.some(id => !companionById[id] || all.some(t => t.id === id)))
-    throw Error("A Companion cannot be in the deck and in play simultaneously.");
+  if (
+    new Set(deck).size !== deck.length ||
+    deck.some((id) => !companionById[id] || all.some((t) => t.id === id))
+  )
+    throw Error(
+      "A Companion cannot be in the deck and in play simultaneously.",
+    );
   const linked = all.filter((t) => t.linkedGroupId);
   if (linked.length) {
     if (

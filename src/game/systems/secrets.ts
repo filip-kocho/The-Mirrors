@@ -162,6 +162,9 @@ export function assertSecretState(s: State) {
       ...p.completedSecrets.map((c) => c.id),
     ]),
     ...s.removed.filter((t) => t.kind === "Secret").map((t) => t.card!),
+    ...Object.values(s.rooms).flatMap((r) =>
+      r.objects.filter((t) => t.kind === "Secret").map((t) => t.card!),
+    ),
   ];
   if (
     ids.length !== 15 ||
@@ -169,12 +172,7 @@ export function assertSecretState(s: State) {
     ids.some((id) => !secretById[id])
   )
     throw Error("Secret supply or ownership corrupted.");
-  if (
-    Object.values(s.rooms).some((r) =>
-      r.objects.some((t) => t.kind === "Secret"),
-    ) ||
-    s.players.some((p) => p.inventory.some((t) => t.kind === "Secret"))
-  )
+  if (s.players.some((p) => p.inventory.some((t) => t.kind === "Secret")))
     throw Error("Secrets belong in private or completed collections.");
   for (const p of s.players)
     for (const c of p.completedSecrets)

@@ -77,7 +77,7 @@ test("keyboard room selection, catalog and dialog dismissal", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: /Browse the original/ }).click();
+  await page.getByRole("button", { name: "Catalog" }).click();
   await page.getByRole("textbox", { name: "Search cards" }).fill("SP-01");
   await page.getByRole("button", { name: /SP-01/ }).click();
   await expect(

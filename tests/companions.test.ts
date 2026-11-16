@@ -264,6 +264,14 @@ describe("Ghost Twin linked group", () => {
     expect(s.players[1].companions).toHaveLength(2);
     leaveCompanion(s, s.players[1].companions[0], "R01");
     expect(s.rooms.R01.objects.filter((t) => t.linkedGroupId)).toHaveLength(2);
+    expect(() =>
+      attachCompanion(
+        s,
+        s.players[0],
+        s.rooms.R01.objects.find((t) => t.linkedGroupId)!,
+      ),
+    ).toThrow("next turn");
+    s.turn++;
     attachCompanion(
       s,
       s.players[0],

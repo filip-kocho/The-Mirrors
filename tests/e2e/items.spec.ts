@@ -28,7 +28,7 @@ function element(s: State, id: string) {
   s.rooms.R01.objects.push(...s.rooms.Hall.objects.splice(index, 1));
 }
 async function resume(page: Page, s?: State) {
-  if(s)normalizeSigilIdentities(s);
+  if (s) normalizeSigilIdentities(s);
   await page.goto("/");
   if (s)
     await page.evaluate(
@@ -57,6 +57,7 @@ test("Tool costs are selected, consumed once, and usage survives reload", async 
   add(s, "IT-11");
   element(s, "E-Air-1");
   element(s, "E-Water-1");
+  s.players[0].inventory.push(...s.rooms.R01.objects.splice(0));
   await resume(page, s);
   let dialog = await inspect(page, "IT-11");
   await dialog
@@ -68,13 +69,20 @@ test("Tool costs are selected, consumed once, and usage survives reload", async 
   await dialog.getByRole("radio", { name: "Air", exact: true }).check();
   await page.screenshot({ path: "test-results/item-tool-cost.png" });
   await dialog.getByRole("button", { name: /Confirm Elemental/ }).click();
-  expect((await saved(page)).players[0].courage).toBe(20);
-  expect((await saved(page)).spentElements.map((t) => t.id)).toEqual([
+  expect((await saved(page)).players[0].courage).toBe(19);
+  expect((await saved(page)).rooms.R01.objects.map((t) => t.id)).toEqual([
     "E-Air-1",
   ]);
   await expect(
     dialog.getByRole("button", { name: "Use Elemental Crucible", exact: true }),
   ).toBeDisabled();
+  await page.keyboard.press("Escape");
+  await expect(
+    page.getByRole("button", { name: "Take Air", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Take Air", exact: true }),
+  ).toHaveAttribute("title", /next turn/);
   await resume(page);
   dialog = await inspect(page, "IT-11");
   await expect(dialog).toContainText("Used this round");
@@ -149,13 +157,19 @@ test("Amulet rewards one permanent commitment with visible binding and no repeat
   const dialog = page.getByRole("dialog", {
     name: spell.name + " card inspector",
   });
-  for(let i=0;i<colors.length;i++) await dialog.getByRole("button",{name:`Permanent ${colors[i]} socket ${i+1}`,exact:false}).click();
+  for (let i = 0; i < colors.length; i++)
+    await dialog
+      .getByRole("button", {
+        name: `Permanent ${colors[i]} socket ${i + 1}`,
+        exact: false,
+      })
+      .click();
   await dialog.getByRole("button", { name: "Bind Permanently" }).click();
   await expect(
     dialog.getByRole("button", { name: "Bind Permanently" }),
   ).toBeDisabled();
   expect((await saved(page)).players[0].courage).toBe(
-    Math.min(35, 18 + colors.length * 3),
+    Math.min(35, 18 + colors.length),
   );
   await expect(dialog).toContainText("Active");
 });

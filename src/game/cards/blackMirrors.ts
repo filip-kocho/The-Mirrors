@@ -32,6 +32,7 @@ export type CurseEffect =
       amount: number;
       target: "UNDISCOVERED" | "UNVISITED" | "CURRENT";
     }
+  | { op: "PORTAL_PAIR" }
   | { op: "SUMMON"; punishments: number }
   | { op: "CAPACITY" }
   | { op: "REMOVE"; token: "HEXLOCK" | "SIGIL_SEAL" };
@@ -69,6 +70,7 @@ export const curseEffectSchema: z.ZodType<CurseEffect> = z.lazy(() =>
       ),
     }),
     z.object({ op: z.literal("TOLL") }),
+    z.object({ op: z.literal("PORTAL_PAIR") }),
     z.object({
       op: z.literal("MOVE"),
       destination: z.enum(["ADJACENT", "INNER"]),
@@ -134,7 +136,7 @@ const rows: [string, string, CurseEffect[], CurseEffect[]?][] = [
   ],
   [
     "The Coward in Glass",
-    "Lose 1 Courage per different Mirror Sigil color you possess, without a maximum. Gain 1 Paralysis Token.",
+    "Lose 1 Courage per different Mirror Sigil color you possess. Gain 1 Paralysis Token.",
     [loss("COLORS"), paralysis()],
   ],
   [
@@ -164,8 +166,8 @@ const rows: [string, string, CurseEffect[], CurseEffect[]?][] = [
   ],
   [
     "Empty Pockets",
-    "Leave 1 carried Element in this room. Gain 1 Element Hexlock, even if no Element is available.",
-    [drop("ELEMENT", 1, 1)],
+    "Leave 1 carried Element in this room. Gain 1 Element Hexlock, even if no Element is available. Add 1 Paralysis Token.",
+    [drop("ELEMENT", 1, 1), paralysis()],
   ],
   [
     "The Scattered Pouch",
@@ -247,12 +249,12 @@ const rows: [string, string, CurseEffect[], CurseEffect[]?][] = [
   ],
   [
     "Sealed Threshold",
-    "Place 1 permanent Corridor Block on a legal corridor touching this room.",
-    [{ op: "THRESHOLD", count: 1, adjacent: true }],
+    "Place 2 permanent Corridor Blocks on legal corridors touching this room.",
+    [{ op: "THRESHOLD", count: 2, adjacent: true }],
   ],
   [
     "Warded Passages",
-    "Seal one legal corridor touching this room, then one other legal corridor anywhere. Seals are permanent.",
+    "Block one legal corridor touching this room, then one other legal corridor anywhere. Blocks are permanent.",
     [
       { op: "THRESHOLD", count: 1, adjacent: true },
       { op: "THRESHOLD", count: 1, adjacent: false },
@@ -339,8 +341,8 @@ const rows: [string, string, CurseEffect[], CurseEffect[]?][] = [
   ],
   [
     "Occuldor's Invitation",
-    "Place a Portal here and summon Occuldor. Only you suffer his normal Rage-based punishment once.",
-    [room("PORTAL", 1, 1, "CURRENT"), { op: "SUMMON", punishments: 1 }],
+    "Place a Portal here and its matching Portal in another room of your choice without a Portal (explored or unexplored; not the Hall). Summon Occuldor here. Only you suffer his normal Rage-based punishment once.",
+    [{ op: "PORTAL_PAIR" }, { op: "SUMMON", punishments: 1 }],
   ],
   [
     "Face the Master",

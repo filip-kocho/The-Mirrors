@@ -12,7 +12,7 @@ test("mirror landing, tabbed catalog, card return and detailed rules work on des
     path: "test-results/mirror-landing.png",
     fullPage: true,
   });
-  await page.getByRole("button", { name: /Browse the original/ }).click();
+  await page.getByRole("button", { name: "Catalog" }).click();
   const dialog = page.getByRole("dialog");
   for (const [name, count] of [
     ["White Mirror", 35],
@@ -55,7 +55,7 @@ test("mirror landing, tabbed catalog, card return and detailed rules work on des
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "How to play" }).click();
   await expect(dialog.getByRole("heading", { level: 3 })).toHaveCount(12);
-  await expect(dialog.getByText(/Neighbor colors add no Courage/)).toBeVisible();
+  await expect(dialog.getByText(/Corner touches do not count/)).toBeVisible();
   await expect(
     dialog.getByText(/Open the Spell to click matching Sigils/),
   ).toBeVisible();
@@ -70,7 +70,7 @@ test("mirror landing, tabbed catalog, card return and detailed rules work on des
     path: "test-results/mirror-landing-mobile.png",
     fullPage: true,
   });
-  await page.getByRole("button", { name: /Browse the original/ }).click();
+  await page.getByRole("button", { name: "Catalog" }).click();
   await dialog.getByRole("textbox", { name: "Search cards" }).fill("");
   await expect(dialog.getByRole("tabpanel")).toBeVisible();
   expect(

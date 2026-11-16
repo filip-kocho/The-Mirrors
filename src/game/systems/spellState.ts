@@ -28,6 +28,7 @@ export const spellStateSchema = z
     identityReady: z.boolean().default(false),
     nextId: z.number().int().positive().default(1),
     availableIds: z.record(z.string(), z.array(z.string())).default({}),
+    permanentWaivers: z.record(z.string(), z.number().int().min(0)).default({}),
     permanentIds: z.record(z.string(), z.array(z.string())).default({}),
     spentIds: z.array(z.string()).default([]),
     quick: z
@@ -70,6 +71,7 @@ export const spellStateSchema = z
     nextId: 1,
     availableIds: {},
     permanentIds: {},
+    permanentWaivers: {},
     spentIds: [],
     quick: [],
     usage: {},

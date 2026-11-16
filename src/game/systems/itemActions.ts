@@ -1,3 +1,5 @@
+import { hexlockPaidSlot } from "./paidSlotHexlocks";
+import { discardToRoom } from "./discard";
 import { leaveCompanion } from "./companions";
 import { hasSpell, roomActionsBlocked } from "./spellModifiers";
 import { availableSigils, takeSigils, discardSigils } from "./sigils";
@@ -42,7 +44,7 @@ export function itemActionPlan(s: State, id: string, extraUse = false) {
     tokens.map((t) => ({ id: t.id, label: label(t) }));
   switch (effect.action) {
     case "ELEMENT":
-      options = fromTokens(accessible.filter((t) => t.kind === "Element"));
+      options = fromTokens(hero.inventory.filter((t) => t.kind === "Element"));
       break;
     case "MIRRORS":
       options = fromTokens(
@@ -52,7 +54,7 @@ export function itemActionPlan(s: State, id: string, extraUse = false) {
       break;
     case "ITEM":
       options = fromTokens(
-        accessible.filter(
+        hero.inventory.filter(
           (t) =>
             t.kind === "Item" &&
             (s.rules.itemPolicies.allowSelfDiscard || t.card !== id),
@@ -65,7 +67,7 @@ export function itemActionPlan(s: State, id: string, extraUse = false) {
       );
       break;
     case "SIGIL":
-      options = availableSigils(s).map(({color}, i) => ({
+      options = availableSigils(s).map(({ color }, i) => ({
         id: `sigil:${i}`,
         label: color,
       }));
@@ -131,28 +133,36 @@ export function applyItemAction(
   const extract = (tokenId: string) => {
     for (const pool of [hero.inventory, room.objects]) {
       const i = pool.findIndex((t) => t.id === tokenId);
-      if (i >= 0) return pool.splice(i, 1)[0];
+      if (i >= 0) {
+        if (
+          pool === hero.inventory &&
+          ["ELEMENT", "MIRRORS", "ITEM"].includes(plan.effect.action)
+        )
+          hexlockPaidSlot(s, pool[i]);
+        return pool.splice(i, 1)[0];
+      }
     }
     throw Error("Object is no longer accessible.");
   };
   const restriction = (s.items.restrictions[hero.id] ??= {});
+
   switch (plan.effect.action) {
     case "ELEMENT":
-      s.spentElements.push(extract(ids[0]));
+      discardToRoom(s, hero.room, [extract(ids[0])]);
       break;
     case "MIRRORS":
-      room.objects.push(...ids.map(extract));
-      restriction.mirrors = hero.room;
+      discardToRoom(s, hero.room, ids.map(extract));
+
       break;
     case "ITEM":
-      s.removed.push(extract(ids[0]));
+      discardToRoom(s, hero.room, [extract(ids[0])]);
       break;
     case "SPELL":
-      abandonSpell(s, hero, ids[0]);
-      s.removed.push(extract(ids[0]));
-      s.blackMirror.seals = s.blackMirror.seals.filter(
-        (seal) => seal.spell !== ids[0],
+      hexlockPaidSlot(
+        s,
+        hero.inventory.find((t) => t.id === ids[0])!,
       );
+      abandonSpell(s, hero, ids[0]);
       break;
     case "SIGIL":
       discardSigils(
@@ -164,7 +174,9 @@ export function applyItemAction(
       break;
     case "SECRET":
       hero.secrets = hero.secrets.filter((secret) => secret !== ids[0]);
-      s.removed.push({ id: ids[0], card: ids[0], kind: "Secret" });
+      discardToRoom(s, hero.room, [
+        { id: ids[0], card: ids[0], kind: "Secret" },
+      ]);
       break;
     case "LEAVE_COMPANIONS":
       for (const t of [...hero.companions])

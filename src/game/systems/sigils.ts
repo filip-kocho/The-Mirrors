@@ -1,4 +1,5 @@
 import type { State } from "../domain/engine";
+import { discardToRoom } from "./discard";
 import { byId, colors } from "../cards/catalog";
 import type { PhysicalSigil } from "./spellState";
 
@@ -99,6 +100,11 @@ export function discardSigils(s: State, tokens: PhysicalSigil[]) {
 }
 export function boundSigils(s: State, spell: string): PhysicalSigil[] {
   return (s.blackMirror.bindings[spell] ?? []).map((color, i) => ({
+    socket:
+      s.spells.permanentWaivers[spell] !== undefined &&
+      i >= s.spells.permanentWaivers[spell]
+        ? i + 1
+        : i,
     color,
     id:
       s.spells.permanentIds[spell]?.[i] ??
@@ -106,9 +112,19 @@ export function boundSigils(s: State, spell: string): PhysicalSigil[] {
   }));
 }
 export function discardBoundSigils(s: State, spell: string) {
-  discardSigils(s, boundSigils(s, spell));
+  const owner = s.players.find((p) => p.spellSlots.includes(spell));
+  discardToRoom(
+    s,
+    owner?.room ?? s.players[s.active].room,
+    boundSigils(s, spell).map((t) => ({
+      id: t.id,
+      kind: "Sigil" as const,
+      sigilColor: t.color,
+    })),
+  );
   delete s.blackMirror.bindings[spell];
   delete s.spells.permanentIds[spell];
+  delete s.spells.permanentWaivers[spell];
 }
 export function returnQuickSigils(s: State, owner: string) {
   const due = s.spells.quick.filter(
@@ -138,9 +154,22 @@ export function settleDeadQuickSigils(s: State, owner: string) {
 export function assertSigils(s: State) {
   if (!s.spells.identityReady) return;
   const ids: string[] = [
+    ...Object.values(s.rooms).flatMap((r) =>
+      r.objects.filter((t) => t.kind === "Sigil").map((t) => t.id),
+    ),
     ...s.magic.wildStorage.map((t) => t.id),
     ...(s.magic.pentagon ? [s.magic.pentagon.id] : []),
   ];
+  for (const [spell, index] of Object.entries(s.spells.permanentWaivers)) {
+    const cost = byId[spell]?.casting_modes?.[1]?.sigil_slots;
+    if (
+      !cost ||
+      index >= cost.length ||
+      !Object.hasOwn(s.blackMirror.bindings, spell) ||
+      s.blackMirror.bindings[spell].length !== cost.length - 1
+    )
+      throw Error("Invalid discounted Permanent assignment.");
+  }
   const consent = s.spells.consent;
   if (
     consent &&

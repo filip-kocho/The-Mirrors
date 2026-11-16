@@ -688,6 +688,16 @@ footer button {
 .character h2 {
   font-size: 30px;
 }
+.character-column {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  width: 100%;
+}
+.character .character-fear {
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
 .elements-area {
   text-align: center;
   border-top: 1px solid var(--line);
@@ -1211,7 +1221,7 @@ dialog article {
     order: 0;
     width: 100%;
   }
-  .character {
+  .character-column {
     order: 2;
     width: 100%;
   }
@@ -2282,3 +2292,359 @@ dialog.card-inspector-dialog {
 .card-companion .card-illustration::before, .card-companion .card-illustration::after { display: none; }
 
 .card-companion .card-illustration { height: auto; aspect-ratio: 1; }
+
+/* Stable IT-01..25 positions in the locally bundled Item illustration atlas. */
+.item-portrait { position: absolute; inset: 0; background-image: url('/art/item-portraits.webp'); background-size: 500% 500%; background-repeat: no-repeat; }
+.card-item .card-illustration { height: auto; aspect-ratio: 1; }
+.card-item .card-illustration::before, .card-item .card-illustration::after { display: none; }
+
+/* Spell scenes follow SP-01..35 in seven columns and five rows. */
+.spell-portrait { position: absolute; inset: 0; background-image: url('/art/spell-portraits.webp'); background-size: 700% 500%; background-repeat: no-repeat; }
+.card-spell .card-illustration { height: auto; aspect-ratio: 1; }
+.card-spell .card-illustration::before, .card-spell .card-illustration::after { display: none; }
+
+.secret-portrait { position: absolute; inset: 0; background-image: url('/art/secret-portraits.webp'); background-size: 500% 300%; background-repeat: no-repeat; }
+.card-secret .card-illustration { height: auto; aspect-ratio: 1; }
+.mirror-portrait { position: absolute; inset: 0; background-position: center; background-size: cover; background-repeat: no-repeat; }
+.card-secret .card-illustration::before, .card-secret .card-illustration::after,
+.card-white-mirror .card-illustration::before, .card-white-mirror .card-illustration::after,
+.card-black-mirror .card-illustration::before, .card-black-mirror .card-illustration::after { display: none; }
+
+.card-white-mirror .mirror-portrait { background-image: url('/art/mirror-white.webp'); }
+.card-black-mirror .mirror-portrait { background-image: url('/art/mirror-black.webp'); }
+.card-white-mirror .card-illustration, .card-black-mirror .card-illustration { width: 62%; height: auto; aspect-ratio: 2 / 3; }
+
+/* Two fixed physical formats with one shared dark-fantasy frame system. */
+.game-card {
+  box-sizing: border-box;
+  width: 360px; max-width: 100%; height: 700px; min-height: 700px; max-height: 700px;
+  flex: 0 0 auto; padding: 18px; border: 6px solid #332b25; border-radius: 18px;
+  background: radial-gradient(ellipse at 50% 12%, #fff7df, transparent 65%), radial-gradient(ellipse at bottom, #a47d4540, transparent 65%), repeating-linear-gradient(35deg, #82612908 0 1px, transparent 1px 5px), #e8d7b5;
+  color: #30271f;
+  box-shadow: inset 0 0 0 3px var(--card-accent), inset 0 0 0 5px #68543a, inset 0 0 0 7px #f0dbac, inset 0 0 0 9px color-mix(in srgb, var(--card-accent) 55%, #70502e), inset 0 0 32px #80582455, 0 12px 28px #0008;
+}
+.game-card.card-white-mirror { --card-accent: #d2dfed; --card-aura: #a4c6e0; }
+.game-card.card-black-mirror { --card-accent: #a486ce; --card-aura: #5e368b; }
+.game-card.card-item { --card-accent: #dfa75d; --card-aura: #88582b; }
+.game-card.card-spell { --card-accent: #83a8f5; --card-aura: #385fb0; }
+.game-card.card-companion { --card-accent: #78c7ad; --card-aura: #317961; }
+.game-card.card-secret { --card-accent: #e58da7; --card-aura: #923c60; }
+.game-card::before { inset: 10px; border-color: #96774499; border-radius: 9px; }
+.game-card::after { content: ""; pointer-events: none; position: absolute; inset: 4px; background: color-mix(in srgb, var(--card-accent) 35%, #78512d); mask: url('/art/card-filigree.svg') center / 100% 100% no-repeat; }
+.game-card > .card-family-line { flex: 0 0 20px; }
+.game-card .card-family-line, .game-card .card-imprint { color: #675037; }
+.game-card > .card-title { flex: 0 0 66px; min-height: 0; margin: 6px 0; padding: 5px; display: grid; place-items: center; border-color: #aa8956; background: linear-gradient(90deg, #c6ac7a55, #fff4d8, #c6ac7a55); box-shadow: inset 0 0 0 2px #f8ebcc, inset 0 0 0 3px #ac8b5855; }
+.game-card .card-title h2 { font-size: 21px; line-height: 1.12; color: #39281b; }
+.game-card > .card-illustration { flex: 0 0 220px; height: 220px; width: 220px; max-width: 100%; aspect-ratio: 1; margin-inline: auto; border: 2px solid var(--card-accent); border-radius: 8px; box-shadow: 0 0 0 2px #795d37, 0 0 0 4px #f3dfb6, 0 3px 9px #503a2955; }
+.game-card .card-type-ribbon { flex: 0 0 auto; margin-top: 7px; color: #37291e; background: linear-gradient(90deg, #cfb988, #f8e9c8, #cfb988); border-color: #a48958; font-size: 10px; }
+.game-card > .card-rules { flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #a68b5f #dfcea9; padding: 12px 5px; margin-top: 5px; }
+.game-card > .card-rules:focus-visible { outline: 2px solid var(--card-accent); outline-offset: 2px; }
+.game-card .card-rules h3, .game-card .spell-learning-corner h3 { color: #72502d; }
+.game-card .card-rules p { color: #30271f; font-size: 13px; line-height: 1.5; }
+.game-card .card-casting-mode > small, .game-card .card-tool { color: #68523c; }
+.game-card .sealed-action { color: #8b254e; }
+.game-card > .card-imprint { flex: 0 0 24px; margin-top: 5px; padding-top: 7px; }
+.game-card > .spell-learning-corner { flex: 0 0 auto; margin-bottom: 4px; }
+.game-card.card-white-mirror, .game-card.card-black-mirror {
+  width: 360px; max-width: 100%; height: 760px; min-height: 760px; max-height: 760px;
+  padding: 45px 18px 34px; border-width: 6px; border-radius: 50%; justify-content: flex-start;
+}
+.game-card.card-white-mirror::before, .game-card.card-black-mirror::before { inset: 10px; border-radius: 50%; border-width: 1px; }
+.game-card.card-white-mirror::after, .game-card.card-black-mirror::after { mask-image: url("/art/mirror-filigree.svg"); background: color-mix(in srgb, var(--card-accent) 35%, #78512d); }
+.game-card.card-white-mirror > .card-family-line, .game-card.card-black-mirror > .card-family-line { flex-basis: 30px; }
+.game-card.card-white-mirror > .card-title, .game-card.card-black-mirror > .card-title { flex-basis: 62px; width: 78%; background: none; box-shadow: none; border: 0; }
+.game-card.card-white-mirror .card-title h2, .game-card.card-black-mirror .card-title h2 { font-size: 21px; }
+.game-card.card-white-mirror > .card-illustration, .game-card.card-black-mirror > .card-illustration { flex-basis: 270px; height: 270px; width: 180px; aspect-ratio: 2 / 3; border-radius: 50%; }
+.game-card.card-white-mirror > .card-rules, .game-card.card-black-mirror > .card-rules { width: 76%; flex: 1 1 0; padding: 10px 6px; }
+.game-card.card-white-mirror > .card-imprint, .game-card.card-black-mirror > .card-imprint { width: 52%; flex-basis: 28px; margin-top: 8px; }
+@media(max-width: 600px) {
+  .game-card, .game-card.card-white-mirror, .game-card.card-black-mirror { padding-inline: 14px; }
+  .game-card .card-title h2, .game-card.card-white-mirror .card-title h2, .game-card.card-black-mirror .card-title h2 { font-size: 19px; }
+}
+
+.game-card > .card-family-line { padding-inline: 12px; }
+
+/* Standard 63:88 card proportions; retain the oval silhouette for Mirrors. */
+.game-card, .game-card.card-white-mirror, .game-card.card-black-mirror {
+  width: 360px; max-width: 100%; height: auto; min-height: 0; max-height: none;
+  aspect-ratio: 63 / 88;
+}
+.game-card { padding: 16px; }
+.game-card > .card-family-line { flex-basis: 16px; }
+.game-card > .card-title { flex-basis: 44px; margin-block: 4px; padding-block: 3px; }
+.game-card .card-title h2 { font-size: 19px; }
+.game-card > .card-illustration { flex-basis: 156px; height: 156px; width: 156px; }
+.game-card .card-type-ribbon { margin-top: 5px; padding: 4px; font-size: 9px; }
+.game-card > .card-rules { padding-block: 8px; margin-top: 3px; }
+.game-card > .card-imprint { flex-basis: 18px; margin-top: 3px; padding-top: 4px; }
+.game-card.card-white-mirror, .game-card.card-black-mirror { padding: 26px 16px 22px; }
+.game-card.card-white-mirror > .card-family-line, .game-card.card-black-mirror > .card-family-line { flex-basis: 24px; }
+.game-card.card-white-mirror > .card-title, .game-card.card-black-mirror > .card-title { flex-basis: 42px; margin-block: 3px; }
+.game-card.card-white-mirror .card-title h2, .game-card.card-black-mirror .card-title h2 { font-size: 19px; }
+.game-card.card-white-mirror > .card-illustration, .game-card.card-black-mirror > .card-illustration { flex-basis: 168px; height: 168px; width: 112px; }
+.game-card.card-white-mirror > .card-imprint, .game-card.card-black-mirror > .card-imprint { flex-basis: 20px; margin-top: 3px; }
+@media(max-width:600px) {
+  .game-card > .card-illustration { flex-basis: 130px; height: 130px; width: 130px; }
+  .game-card.card-white-mirror > .card-illustration, .game-card.card-black-mirror > .card-illustration { flex-basis: 144px; height: 144px; width: 96px; }
+  .game-card .card-title h2, .game-card.card-white-mirror .card-title h2, .game-card.card-black-mirror .card-title h2 { font-size: 18px; }
+}
+
+/* No internal scrolling: explanatory text is displayed alongside the face. */
+.game-card > .card-rules { overflow: visible; overscroll-behavior: auto; padding-block: 5px; }
+.game-card .card-rules h3 { margin-bottom: 5px; letter-spacing: 1px; }
+.game-card .card-rules > section + section { margin-top: 7px; padding-top: 7px; }
+.game-card .card-rules p { font-size: 12px; line-height: 1.35; }
+.game-card .companion-characteristics p { margin-block: 3px; }
+.game-card .card-sigil-sockets, .game-card .spell-sockets { margin: 5px 0; gap: 5px; }
+.game-card .spell-sockets button { min-width: 38px; padding: 2px; position: relative; }
+.game-card .spell-sockets .game-icon, .game-card .card-sigil-sockets .game-icon { width: 30px; height: 30px; }
+.game-card .spell-sockets button > span .game-icon { width: 18px; height: 18px; }
+.game-card .spell-sockets button > span { position: absolute; }
+.game-card .card-sigil-sockets > span { width: 32px; height: 32px; }
+.game-card .card-sockets > span { min-width: 46px; padding: 4px; }
+.game-card .card-sockets .game-icon { width: 30px; height: 30px; }
+.card-reference { padding: 20px; border: 1px solid #8e7651; border-radius: 10px; background: #211e25; color: #f0e3cd; min-width: 0; }
+.card-reference h2 { font-size: 21px; margin: 0 0 16px; }
+.card-reference h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #d9ba7f; margin: 0 0 8px; }
+.card-reference p { font-size: 14px; line-height: 1.6; margin: 0 0 8px; }
+.card-reference small { color: #d2c5b3; line-height: 1.5; }
+.card-reference > section + section { border-top: 1px solid #7e6c4644; margin-top: 16px; padding-top: 16px; }
+.card-inspector-dialog:has(> .card-reference)[open] { width: min(1000px, calc(100vw - 24px)); max-width: 1000px; display: grid; grid-template-columns: minmax(0,400px) minmax(0,1fr); gap: 16px; align-items: start; }
+.card-inspector-dialog:has(> .card-reference) > .catalog-back { grid-column: 1/-1; justify-self: start; }
+.card-inspector-dialog:has(> .card-reference) > .game-card { grid-column: 1; grid-row: auto; }
+.card-inspector-dialog > .card-reference { grid-column: 2; }
+.card-inspector-dialog:has(> .card-reference) > .spell-action-panel { grid-column: 2; grid-row: auto; }
+.card-inspector-dialog:has(> .card-reference):has(> .spell-action-panel) > .game-card { grid-row: 1 / span 2; }
+.card-inspector-dialog:has(> .card-reference):has(> .spell-action-panel) > .spell-action-panel { grid-row: 1; }
+.card-inspector-dialog:has(> .card-reference):has(> .spell-action-panel) > .card-reference { grid-row: 2; }
+@media(max-width:700px) {
+ .card-inspector-dialog:has(> .card-reference)[open] { display: block; }
+ .card-reference { margin-top: 16px; }
+ .game-card.card-companion > .card-illustration { flex-basis: 108px; height: 108px; width: 108px; }
+}
+
+.game-card.card-spell > .card-illustration { flex-basis: 120px; height: 120px; width: 120px; }
+.game-card.card-spell .card-rules { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; }
+.game-card.card-spell .spell-activation-controls { display: contents; }
+.game-card.card-spell .card-rules .card-casting-mode { border: 0; margin: 0; padding: 0; }
+.game-card.card-spell .card-casting-mode + .card-casting-mode { border-left: 1px solid #a68b5f66; padding-left: 8px; }
+
+.game-card.card-spell > .card-illustration { flex-basis: 156px; height: 156px; width: 156px; }
+@media(max-width:600px) {
+ .game-card.card-spell > .card-illustration { flex-basis: 112px; height: 112px; width: 112px; }
+ .game-card.card-white-mirror, .game-card.card-black-mirror { padding-block: 20px 18px; }
+ .game-card.card-white-mirror > .card-illustration, .game-card.card-black-mirror > .card-illustration { flex-basis: 108px; height: 108px; width: 72px; }
+ .game-card.card-white-mirror .card-sockets, .game-card.card-black-mirror .card-sockets { margin-block: 3px; }
+}
+
+
+.catalog-preview-nav { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #9e835744; }
+.catalog-preview-nav .catalog-back { margin: 0; }
+.catalog-preview-steps { display: flex; align-items: center; gap: 12px; }
+.catalog-preview-steps button { min-width: 42px; min-height: 42px; padding: 6px 12px; font-size: 22px; }
+.catalog-preview-steps [role="status"] { min-width: 56px; text-align: center; color: #ead9b5; font-variant-numeric: tabular-nums; font-size: 13px; }
+.catalog-preview-steps button:disabled { opacity: .35; }
+
+/* Family-specific printed anatomy: no repeated footer, no hidden rules. */
+.game-card > .card-family-line { flex-basis: 18px; }
+.game-card > .card-title { flex-basis: 44px; }
+.game-card > .card-rules { display: block; overflow: visible; }
+.game-card .card-rules .card-casting-mode { margin: 0; padding: 0; border: 0; }
+.game-card .card-rules .card-casting-mode + .card-casting-mode { border-top: 1px solid #a68b5f66; padding-top: 8px; margin-top: 8px; }
+.game-card.card-spell { aspect-ratio: 36 / 65; }
+.game-card.card-spell > .card-title { display: grid; grid-template-columns: 58px minmax(0,1fr); gap: 5px; text-align: center; flex-basis: 54px; }
+.game-card.card-spell .spell-learning-corner { margin: 0; padding: 0; }
+.game-card.card-spell .learning-cost { justify-content: center; gap: 2px; }
+.game-card.card-spell .learning-cost > span { padding: 0; min-width: 0; border: 0; background: none; }
+.game-card.card-spell .learning-cost .game-icon { width: 24px; height: 24px; }
+.game-card.card-spell > .card-illustration { flex-basis: 150px; height: 150px; width: 150px; }
+.game-card.card-spell .card-rules { display: block; }
+.game-card.card-spell .spell-activation-controls { display: block; }
+.game-card.card-spell .card-tool { font-size: 11px; margin: 0 0 6px; }
+.game-card .card-casting-mode > small { display: block; color: #68523c; font-size: 10.5px; line-height: 1.3; margin-top: 4px; }
+.game-card .card-casting-mode h3 { text-align: left; }
+.game-card .card-sigil-sockets, .game-card .spell-sockets { justify-content: flex-start; margin: 4px 0; }
+.game-card.card-companion > .card-illustration { flex-basis: 132px; height: 132px; width: 132px; }
+.game-card.card-companion .card-type-ribbon { display: none; }
+.game-card.card-companion .card-rules { padding-top: 8px; }
+.game-card.card-companion .companion-characteristics p { font-size: 11.5px; line-height: 1.3; }
+.game-card.card-item > .card-illustration { flex-basis: 240px; height: 240px; width: 240px; }
+.game-card.card-item .card-rules { flex: 1 1 0; }
+.game-card.card-item .card-effect h3 { margin-bottom: 4px; }
+.game-card.card-item .card-effect p { min-height: 46px; font-size: 11.5px; line-height: 1.3; }
+.game-card .card-item-timing { flex: 0 0 auto; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 9px; color: #6d4d2b; border-top: 1px solid #ad9564; padding-top: 5px; }
+.game-card.card-secret > .card-illustration { flex-basis: 208px; height: 208px; width: 208px; }
+.game-card.card-secret .secret-reward { margin-top: 6px; padding-top: 6px; }
+/* Mirrors are illustrated objects, with text and discoveries on the glass. */
+.game-card.card-white-mirror, .game-card.card-black-mirror {
+ border: 0; border-radius: 0; background: transparent; box-shadow: none;
+ padding: 66px 52px 65px; align-items: stretch; position: relative;
+}
+.game-card.card-white-mirror::before, .game-card.card-black-mirror::before,
+.game-card.card-white-mirror::after, .game-card.card-black-mirror::after { display: none; }
+.game-card.card-white-mirror > .card-illustration, .game-card.card-black-mirror > .card-illustration {
+ position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; border: 0; border-radius: 0; box-shadow: none; z-index: -1; margin: 0; background: none;
+}
+.game-card.card-white-mirror .mirror-portrait { background-image: url('/art/mirror-white-frame.webp'); background-size: 100% 100%; }
+.game-card.card-black-mirror .mirror-portrait { background-image: url('/art/mirror-black-frame.webp'); background-size: 100% 100%; }
+.game-card.card-white-mirror .card-art-ornament, .game-card.card-black-mirror .card-art-ornament { display: none; }
+.game-card.card-white-mirror > .card-family-line, .game-card.card-black-mirror > .card-family-line { width: 100%; flex-direction: row; justify-content: center; gap: 8px; flex-basis: 22px; padding: 0; }
+.game-card.card-white-mirror > .card-title, .game-card.card-black-mirror > .card-title { width: 100%; flex-basis: 48px; margin: 5px 0; }
+.game-card.card-white-mirror > .card-type-ribbon, .game-card.card-black-mirror > .card-type-ribbon { width: 100%; background: none; border: 0; margin: 0 0 12px; }
+.game-card.card-white-mirror > .card-rules, .game-card.card-black-mirror > .card-rules { width: 100%; padding: 6px 0; flex: 0 1 auto; }
+.game-card.card-white-mirror .card-rules { color: #251b22; }
+.game-card.card-white-mirror .card-title h2, .game-card.card-white-mirror .card-rules p { color: #251b22; text-shadow: 0 1px 3px #fff; }
+.game-card.card-black-mirror .card-title h2, .game-card.card-black-mirror .card-rules p { color: #fff2dc; text-shadow: 0 1px 3px #000; }
+.game-card.card-black-mirror .card-family-line, .game-card.card-black-mirror .card-type-ribbon, .game-card.card-black-mirror .card-rules h3 { color: #e4caff; }
+.card-back-art { position: absolute; inset: 0; background-image: url('/art/card-backs.webp'); background-size: 300% 200%; background-repeat: no-repeat; border-radius: inherit; }
+.game-card.card-back { padding: 0; border-radius: 14px; overflow: hidden; }
+.game-card.card-back::before, .game-card.card-back::after { display: none; }
+.game-card.card-back.card-white-mirror, .game-card.card-back.card-black-mirror { border-radius: 50%; }
+@media(max-width:600px) {
+ .game-card.card-item > .card-illustration { flex-basis: 180px; height: 180px; width: 180px; }
+ .game-card.card-secret > .card-illustration { flex-basis: 160px; height: 160px; width: 160px; }
+ .game-card.card-companion > .card-illustration { flex-basis: 86px; height: 86px; width: 86px; }
+ .game-card.card-spell > .card-illustration { flex-basis: 104px; height: 104px; width: 104px; }
+ .game-card.card-spell .card-rules p { font-size: 11.5px; }
+ .game-card.card-white-mirror, .game-card.card-black-mirror { padding: 52px 44px 48px; }
+ .game-card.card-white-mirror > .card-title, .game-card.card-black-mirror > .card-title { flex-basis: 42px; }
+ .game-card.card-white-mirror .card-title h2, .game-card.card-black-mirror .card-title h2 { font-size: 17px; }
+}
+
+.game-card.card-white-mirror, .game-card.card-black-mirror { padding-top: 90px; }
+.catalog-preview-nav > button { font-size:12px; padding:8px 10px; }
+.catalog-preview-steps { gap:6px; }
+.catalog-preview-steps button { min-width:36px; padding:6px 8px; }
+.catalog-preview-steps [role='status'] { min-width:42px; }
+@media(max-width:600px) { .game-card.card-white-mirror, .game-card.card-black-mirror { padding-top:76px; } }
+
+.catalog-card-art.catalog-back-art { width: 90px; height: 126px; margin: 12px auto; border-radius: 6px; background-image: url("/art/card-backs.webp"); background-size: 300% 200%; background-repeat: no-repeat; box-shadow: 0 3px 9px #0008; }
+
+/* Glass-centered curses, parchment scrolls, and restrained gothic reverses. */
+.game-card.card-black-mirror:not(.card-back) { padding-inline: 70px; }
+.game-card.card-black-mirror > .card-title { flex-basis: 64px; }
+.game-card.card-black-mirror > .card-rules { text-align: center; margin-top: 10px; }
+.game-card.card-black-mirror .card-effect p { line-height: 1.5; }
+.game-card.card-spell:not(.card-back) {
+ border: 0; border-radius: 18px / 8px; padding: 26px 22px;
+ background: linear-gradient(90deg, #9b794e, #e4cda2 5%, #f6e6c4 15%, #f3e0b9 85%, #d7b987 95%, #8c6a43);
+ box-shadow: inset 0 0 24px #704a3655, 0 10px 22px #0009;
+}
+.game-card.card-spell:not(.card-back)::before,
+.game-card.card-spell:not(.card-back)::after {
+ display: block; position: absolute; inset: 0 3px auto; height: 19px;
+ border: 1px solid #927042; border-radius: 10px; mask: none;
+ background: linear-gradient(#81613f, #ead2a7 24%, #fff0d0 48%, #c5a273 80%, #6a4d32);
+ box-shadow: 0 3px 4px #4a2e2944; content: "";
+}
+.game-card.card-spell:not(.card-back)::after { inset: auto 3px 0; transform: rotate(180deg); }
+.game-card.card-spell > .card-title { grid-template-columns: 58px minmax(0,1fr); align-items: center; }
+.game-card.card-spell .spell-learning-corner { position: static; width: 100%; display: flex; align-items: center; justify-content: center; align-self: stretch; }
+.game-card.card-spell .learning-cost { width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; margin: 0; }
+.game-card.card-spell .learning-cost > span { display: flex; align-items: center; justify-content: center; }
+.game-card.card-spell > .card-illustration { flex-basis: 130px; height: 130px; width: 130px; }
+.companion-relationship-icon { display: inline-block; width: 15px; height: 15px; vertical-align: -3px; margin-right: 3px; color: #30594b; }
+.game-card.card-back { border: 0; background: transparent; box-shadow: none; border-radius: 0; }
+.game-card.card-back.card-white-mirror, .game-card.card-back.card-black-mirror { border-radius: 0; }
+.card-back-art, .catalog-card-art.catalog-back-art { background-size: 100% 100%; background-position: center; border-radius: 0; box-shadow: none; }
+@media(max-width:600px) {
+ .game-card.card-black-mirror:not(.card-back) { padding-inline: 55px; }
+ .game-card.card-black-mirror > .card-title { flex-basis: 54px; }
+ .game-card.card-spell:not(.card-back) { padding: 24px 16px; }
+ .game-card.card-spell > .card-illustration { flex-basis: 84px; height: 84px; width: 84px; }
+}
+
+/* Light family-tinted vellum and restrained cathedral engraving. */
+.game-card.card-black-mirror:not(.card-back) { padding-top: 108px; }
+.game-card:not(.card-white-mirror):not(.card-black-mirror):not(.card-back) {
+ color: #30292e;
+ background:
+ radial-gradient(ellipse at 50% 10%, #fffaf0bb, transparent 65%),
+ repeating-linear-gradient(33deg, #65503706 0 1px, transparent 1px 4px),
+ linear-gradient(115deg, color-mix(in srgb, var(--card-accent) 32%, #f6ebd6), #f7efdf 50%, color-mix(in srgb, var(--card-accent) 26%, #eee0c6));
+ border-color: color-mix(in srgb, var(--card-accent) 35%, #665542);
+ box-shadow: inset 0 0 0 2px var(--card-accent), inset 0 0 0 4px #f8efdc,
+ inset 0 0 0 5px #a38a6244, inset 0 0 30px #886b3822, 0 14px 28px #0009;
+}
+.game-card:not(.card-white-mirror):not(.card-black-mirror):not(.card-back) > .card-title {
+ background: linear-gradient(110deg, color-mix(in srgb, var(--card-accent) 30%, #f5ebd6), #fff8e9 55%, color-mix(in srgb, var(--card-accent) 25%, #f5ebd6));
+ border-color: color-mix(in srgb, var(--card-accent) 45%, #8c7658);
+ box-shadow: inset 0 1px #fff9, inset 0 -1px #80653b33;
+}
+.game-card:not(.card-white-mirror):not(.card-black-mirror) .card-title h2 { color: #342b30; text-shadow: 0 1px #fff8; }
+.game-card:not(.card-white-mirror):not(.card-black-mirror) .card-family-line,
+.game-card:not(.card-white-mirror):not(.card-black-mirror) .card-rules h3 { color: color-mix(in srgb, var(--card-accent) 30%, #392f31); }
+.game-card:not(.card-white-mirror):not(.card-black-mirror) .card-rules p { color: #30292e; }
+.game-card:not(.card-white-mirror):not(.card-black-mirror) .card-type-ribbon {
+ background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--card-accent) 24%, #f4e7cd), transparent);
+ color: color-mix(in srgb, var(--card-accent) 30%, #392f31); border-color: #9d82634d;
+}
+.game-card:not(.card-white-mirror):not(.card-black-mirror) .card-casting-mode > small,
+.game-card:not(.card-white-mirror):not(.card-black-mirror) .card-tool { color: #645448; }
+.game-card .card-item-timing { color: color-mix(in srgb, var(--card-accent) 30%, #392f31); border-color: #9d826350; }
+.game-card .companion-relationship-icon { color: #386451; }
+.game-card:not(.card-white-mirror):not(.card-black-mirror) > .card-illustration {
+ box-shadow: 0 0 0 1px #f9f0d9, 0 0 0 3px #85735c66, 0 5px 10px #50362444;
+}
+.game-card.card-spell:not(.card-back) {
+ background: radial-gradient(ellipse at 50% 35%, #fff9e9bb, transparent 70%),
+ repeating-linear-gradient(6deg, #68563705 0 1px, transparent 1px 3px),
+ linear-gradient(90deg, #a4a6b0, #d4deed 6%, #edf0ec 18%, #f5efdf 50%, #edf0ec 82%, #d4deed 94%, #a4a6b0);
+ box-shadow: inset 0 0 0 1px #8aa8df66, inset 0 0 30px #78694322, 0 14px 28px #0009;
+}
+.game-card.card-spell:not(.card-back)::before,
+.game-card.card-spell:not(.card-back)::after {
+ background: linear-gradient(90deg, #7b87a2 0 3%, transparent 3% 97%, #7b87a2 97%),
+ linear-gradient(#8b8290, #d6dbe5 20%, #fff3d9 38%, #e3d5be 58%, #b1a7ad 82%, #736a7b);
+ border-color: #86738c;
+}
+@media(max-width:600px) { .game-card.card-black-mirror:not(.card-back) { padding-top: 90px; } }
+
+/* The card mirrors introduce the castle before the party enters. */
+.landing-navigation { display: flex; align-items: center; gap: 12px; }
+.mirror-landing .mirror-duet { max-width: 510px; gap: 20px; padding: 8px 8px 35px; margin-bottom: 14px; }
+.mirror-landing .mirror-duet::before { display: none; }
+.mirror-landing .landing-mirror {
+ width: 45%; aspect-ratio: 63 / 88; border: 0; border-radius: 0;
+ background-position: center; background-size: 100% 100%; background-repeat: no-repeat;
+ box-shadow: none;
+}
+.mirror-landing .light-mirror { background-image: url('/art/mirror-white-frame.webp'); filter: drop-shadow(0 0 24px #d8e8ee24); transform: rotate(-6deg); }
+.mirror-landing .dark-mirror { background-image: url('/art/mirror-black-frame.webp'); filter: drop-shadow(0 0 24px #a46ddc30); transform: rotate(6deg) translateY(12px); }
+.mirror-landing .landing-mirror > span { bottom: -19px; letter-spacing: 3px; }
+.mirror-landing h1 { font-size: clamp(44px, 5.6vw, 80px); letter-spacing: .035em; color: #f2e7d4; text-shadow: 0 3px 25px #c3a6df20; }
+.mirror-landing .intro > p:not(.eyebrow) { color: #d0c9cf; }
+@media(max-width:600px) {
+ .mirror-landing nav { gap: 12px; flex-wrap: wrap; }
+ .landing-navigation { gap: 8px; }
+ .landing-navigation button { padding: 9px 12px; font-size: 12px; }
+ .mirror-landing .mirror-duet { margin-inline: auto; max-width: 380px; }
+}
+
+.movement-badge { display: inline-flex; align-items: center; gap: 3px; margin-left: 9px; white-space: nowrap; vertical-align: middle; font: 600 14px/1.2 Arial, sans-serif; color: #dfc792; }
+.movement-badge svg { width: 19px; height: 19px; flex: 0 0 auto; }
+.character h2 .movement-badge { font-size: 17px; }
+
+/* Revised printed Spell anatomy: modes are glyphs, with a shaded permanent panel. */
+.game-card.card-spell { aspect-ratio: 36 / 53; }
+.game-card.card-spell > .card-illustration { flex-basis: 110px; height: 110px; width: 110px; }
+@media(max-width:600px) {
+ .game-card.card-spell > .card-illustration { flex-basis: 70px; height: 70px; width: 70px; }
+}
+.game-card.card-spell:not(.card-back) > .card-title {
+ background: #09080e; border-color: #76648c;
+ box-shadow: inset 0 1px #cdb4ed33, 0 2px 4px #33213c33;
+}
+.game-card.card-spell .card-title h2 { color: #d3a9f0; text-shadow: 0 1px 2px #000; }
+.game-card .mode-permanent { background: #49355012; border-radius: 5px; padding: 7px !important; }
+.game-card .card-casting-mode h3:empty { display: none; }
+.spell-mode-icon { display: inline-flex; align-items: center; justify-content: center; color: #59426d; width: 23px; height: 23px; flex: 0 0 23px; }
+.spell-mode-icon svg { width: 21px; height: 21px; }
+.game-card .card-sigil-sockets > .spell-mode-icon { border: 0; background: transparent; box-shadow: none; width: 23px; height: 28px; }
+.spell-sockets .waived-socket { opacity: .42; border-style: dashed; }
+.game-card.card-white-mirror .card-title h2 { font-size: 18px; }
+.spell-cast-guide .spell-mode-icon { color: #dcc2ed; }
+@media(max-width:600px) {
+ .game-card.card-spell .card-rules p { font-size: 11px; }
+ .game-card.card-white-mirror .card-title h2 { font-size: 16px; }
+}

@@ -31,17 +31,11 @@ export const storedGems = (s: State, owner = s.players[s.active].id) =>
 const event = (s: State, text: string) =>
   s.log.push({ id: s.log.length + 1, turn: s.turn, text });
 export function awardDiamondGem(s: State, secret: string, owner: string) {
-  const g = s.magic.gems.find((g) => g.secret === secret),
-    p = s.players.find((p) => p.id === owner)!;
+  const g = s.magic.gems.find((g) => g.secret === secret);
   if (!g || g.location !== "RESERVED")
     throw Error("This Secret's Diamond Gem is not available.");
-  if (storedGems(s, owner).length < s.rules.gemPolicies.capacity) {
-    g.location = "PLAYER_STORAGE";
-    g.owner = owner;
-  } else {
-    g.location = "ROOM";
-    g.room = p.room;
-  }
+  g.location = "PLAYER_STORAGE";
+  g.owner = owner;
 }
 export function magicPlan(s: State, c: MagicCommand) {
   const p = s.players[s.active];
@@ -57,6 +51,10 @@ export function magicPlan(s: State, c: MagicCommand) {
   )
     throw Error(
       "Finish the current turn resolution before using magical resources.",
+    );
+  if (c.action === "LEAVE")
+    throw Error(
+      "Collected Diamond Gems stay in player storage and cannot be left in rooms.",
     );
   if (roomActionsBlocked(s, p.room))
     throw Error("Clear Darkness before this action.");
@@ -135,10 +133,6 @@ export function applyMagic(s: State, c: MagicCommand) {
     g!.location = "PLAYER_STORAGE";
     g!.owner = c.action === "TAKE" ? p.id : c.target;
     delete g!.room;
-  } else if (c.action === "LEAVE") {
-    g!.location = "ROOM";
-    g!.room = p.room;
-    delete g!.owner;
   } else if (c.action === "INSTALL_GEM") {
     g!.location = "KALEIDOSCOPE";
     g!.gap = c.target;
@@ -252,6 +246,11 @@ export function assertMagic(s: State) {
   if (!supportsFilledGaps(s, s.mosaic))
     throw Error("An installed gap must remain surrounded.");
   const wild = [
+    ...Object.values(s.rooms).flatMap((r) =>
+      r.objects
+        .filter((t) => t.kind === "Sigil" && t.sigilColor === "Wild")
+        .map((t) => t.id),
+    ),
     ...s.magic.wildStorage.map((t) => t.id),
     ...s.spells.quick.flatMap((q) =>
       q.sigils.filter((t) => t.color === "Wild").map((t) => t.id),

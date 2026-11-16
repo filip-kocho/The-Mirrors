@@ -106,11 +106,14 @@ test("Threshold curse selects a legal corridor on the actual map and retains its
     path: "test-results/black-mirror-corridor-choice.png",
   });
   await choice.getByRole("button", { name: "Confirm curse choice" }).click();
+  const second = (await saved(page)).blackMirror.resolution!.choice!.options[0].id;
+  await choice.getByRole("button",{name: "Corridor "+second,exact:true}).click();
+  await choice.getByRole("button",{name:"Confirm curse choice"}).click();
   await place(page);
   await expect(
     page.getByRole("img", { name: `Corridor Block ${edge}`, exact: true }),
   ).toBeVisible();
-  expect((await saved(page)).blackMirror.thresholds).toEqual([edge]);
+  expect((await saved(page)).blackMirror.thresholds).toEqual([edge,second]);
 });
 
 test("Darkness requires separate Courage payments while Portal routes allow exploration", async ({

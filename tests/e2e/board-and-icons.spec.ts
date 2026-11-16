@@ -41,7 +41,7 @@ test("take arrows disable when Mirror slots are full and enable after leaving a 
   await page.getByRole("button", { name: "Resume saved expedition" }).click();
   await page.getByRole("button", { name: "I am Rowan" }).click();
   await page
-    .getByRole("button", { name: "Take White Mirror", exact: true })
+    .getByRole("button", { name: "Take " + byId["WM-01"].name, exact: true })
     .click();
   await page
     .locator('[data-token-id="BM-01"]')
@@ -53,12 +53,12 @@ test("take arrows disable when Mirror slots are full and enable after leaving a 
   await expect(take).toBeDisabled();
   await expect(take).toHaveAttribute("title", /capacity/);
   await page
-    .getByRole("button", { name: "Leave White Mirror", exact: true })
+    .getByRole("button", { name: "Leave " + byId["WM-01"].name, exact: true })
     .click();
   await expect(take).toBeEnabled();
   await take.click();
   await expect(
-    page.getByRole("button", { name: "Take White Mirror", exact: true }),
+    page.getByRole("button", { name: "Take " + byId["WM-01"].name, exact: true }),
   ).toBeDisabled();
 });
 test("icons inspect collected Mirrors, Items and Elements with public Black card faces; room Spells remain inspectable", async ({
@@ -115,7 +115,7 @@ test("icons inspect collected Mirrors, Items and Elements with public Black card
     ).toBeGreaterThan(0);
   }
   for (const name of [
-    "White Mirror",
+    byId["WM-01"].name,
     "Black Mirror",
     "Air",
     "Element Bandolier",
@@ -150,17 +150,17 @@ test("icons inspect collected Mirrors, Items and Elements with public Black card
     .locator(".room-inspector .object-action")
     .getByRole("button", { name: "Take Air", exact: true });
   await expect(takeAir).toHaveCSS("border-radius", "50%");
-  await takeAir.click();
-  await expect(airIcon).toBeVisible();
+  await expect(takeAir).toBeDisabled();
+  await expect(takeAir).toHaveAttribute("title", /next turn/);
   const white = page.getByRole("button", {
-    name: "Inspect White Mirror · mirror slot",
+    name: "Inspect "+byId["WM-01"].name+" \u00b7 mirror slot",
     exact: true,
   });
   await expect(white.locator("svg")).toHaveCount(1);
   await expect(white).toHaveText("");
   await white.click();
   await expect(
-    page.getByRole("dialog").getByRole("heading", { name: "White Mirror" }),
+    page.getByRole("dialog").getByRole("heading", { name: byId["WM-01"].name }),
   ).toBeVisible();
   await expect(
     page.getByRole("dialog").getByLabel("Secret", { exact: true }),
@@ -212,7 +212,7 @@ test("icons inspect collected Mirrors, Items and Elements with public Black card
   ).toBeVisible();
   await page.keyboard.press("Escape");
   await page
-    .getByRole("button", { name: "Inspect Air · element slot", exact: true })
+    .getByRole("button", { name: "Inspect Air · room", exact: true })
     .click();
   await expect(
     page.getByRole("dialog").getByRole("heading", { name: "Air", exact: true }),
@@ -267,10 +267,10 @@ test("Placement chooses exact hand and room cards; cancellation changes nothing 
     .locator('[data-token-id="BM-01"]')
     .getByRole("button", { name: "Take Black Mirror", exact: true })
     .click();
-  // White Mirrors share their printed name, so select the physical ID's row.
+  // Select the physical Mirror row.
   await page
     .locator('.room-inspector [data-token-id="WM-01"]')
-    .getByRole("button", { name: "Take White Mirror", exact: true })
+    .getByRole("button", { name: "Take " + byId["WM-01"].name, exact: true })
     .click();
   const before = await page.evaluate(() =>
     localStorage.getItem("the-mirrors-save-v1"),

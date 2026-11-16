@@ -1,4 +1,5 @@
 import { refreshGems } from "./magicResources";
+import { discardToRoom } from "./discard";
 import { companionDeparture, leaveCompanion } from "./companions";
 import { portalSupply, assignPortals } from "./portals";
 import { discardBoundSigils, returnQuickSigils } from "./sigils";
@@ -62,9 +63,9 @@ export function abandonSpell(
   spell: string,
 ) {
   const i = hero.inventory.findIndex((t) => t.id === spell);
-  if (i >= 0) s.rooms[hero.room].objects.push(...hero.inventory.splice(i, 1));
-  hero.spellSlots = hero.spellSlots.map((id) => (id === spell ? null : id));
+  if (i >= 0) discardToRoom(s, hero.room, hero.inventory.splice(i, 1));
   discardBoundSigils(s, spell);
+  hero.spellSlots = hero.spellSlots.map((id) => (id === spell ? null : id));
   // Seals stay with the physical Spell; their original afflicted owner clears them.
 }
 export function visitRoom(
@@ -137,7 +138,13 @@ export function updateTurnSpellOffer(s: State) {
   s.spells.portalOffer =
     hasSpell(s, "TURN_PORTAL", hero.id) &&
     !s.blackMirror.rooms[hero.room]?.portal &&
-    portalSupply(s) > 0
+    portalSupply(s) >= 2 &&
+    Object.values(s.rooms).some(
+      (r) =>
+        r.id !== "Hall" &&
+        r.id !== hero.room &&
+        !s.blackMirror.rooms[r.id]?.portal,
+    )
       ? { owner: hero.id, turn: s.turn }
       : null;
 }
@@ -247,7 +254,7 @@ function addLocks(
 function leave(s: State, hero: State["players"][number], ids: string[]) {
   const tokens = hero.inventory.filter((t) => ids.includes(t.id));
   hero.inventory = hero.inventory.filter((t) => !ids.includes(t.id));
-  s.rooms[hero.room].objects.push(...tokens);
+  discardToRoom(s, hero.room, tokens);
   event(s, `${hero.name} leaves ${tokens.length} object(s) in ${hero.room}.`);
   return tokens;
 }
@@ -533,7 +540,6 @@ export function advanceEffects(
         });
         break;
       case "SIGIL_SEALS": {
-        if (hasSpell(s, "SEAL_IMMUNITY", hero.id)) break;
         let prevented = hasSpell(s, "SEAL_GUARD", hero.id) ? 1 : 0;
         const actions = hero.spellSlots.flatMap((id) =>
           id
@@ -585,6 +591,44 @@ export function advanceEffects(
           `${hero.name} gains ${added} ${effect.scope} Sigil Seal(s)${added ? "" : "; no eligible learned actions (review)"}.`,
         );
         if (effect.scope === "QUICK") lose(s, hero, added);
+        break;
+      }
+      case "PORTAL_PAIR": {
+        const eligible = Object.values(s.rooms).filter(
+          (r) =>
+            r.id !== "Hall" &&
+            r.id !== hero.room &&
+            !s.blackMirror.rooms[r.id]?.portal,
+        );
+        if (
+          hero.room === "Hall" ||
+          s.blackMirror.rooms[hero.room]?.portal ||
+          portalSupply(s) < 2 ||
+          !eligible.length
+        ) {
+          event(
+            s,
+            "Cannot place a complete Portal pair: both rooms must be free and two tokens available. No Portal placed; Occuldor is still summoned (provisional fallback).",
+          );
+          break;
+        }
+        const ids = choose(
+          "Choose the matching Portal's destination",
+          eligible.map((r) => ({
+            id: r.id,
+            label: r.id + (r.explored ? " (explored)" : " (unexplored)"),
+          })),
+          1,
+          "rooms",
+        );
+        if (ids === null) return;
+        if (ids.length !== 1 || !eligible.some((r) => r.id === ids[0]))
+          throw Error("Choose another room without a Portal.");
+        assignPortals(s, [hero.room, ids[0]]);
+        event(
+          s,
+          `Matching Portals connect ${hero.room} and ${ids[0]}; discovery is unchanged.`,
+        );
         break;
       }
       case "ROOM": {

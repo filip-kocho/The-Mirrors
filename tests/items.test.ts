@@ -237,13 +237,13 @@ describe("all 25 revised Item abilities", () => {
     z.players[0].knowledge[0] = true;
     expect(automaticLearningPlan(z, "SP-01").elementIds).toEqual([]);
   });
-  it("IT-11 consumes a local Element and can be used by each hero once per round", () => {
+  it("IT-11 consumes a carried Element and Hexlocks its slot and can be used by each hero once per round", () => {
     let s = fixture();
     card(s, "IT-11");
-    physical(s, "E-Air-1");
+    physical(s, "E-Air-1", s.players[0].inventory);
     physical(s, "E-Air-2");
     s = use(s, "IT-11", ["E-Air-1"]);
-    expect(s.players[0].courage).toBe(20);
+    expect(s.players[0].courage).toBe(19);
     expect(() => use(s, "IT-11", ["E-Air-2"])).toThrow("round");
     s.moved = true;
     s = reduce(s, { type: "END", playerId: "P1" });
@@ -255,6 +255,12 @@ describe("all 25 revised Item abilities", () => {
         1,
       ),
     );
+    s = reduce(s, {
+      type: "TRANSFER",
+      playerId: "P2",
+      tokenId: "E-Air-2",
+      direction: "take",
+    });
     s = use(s, "IT-11", ["E-Air-2"]);
     expect(s.items.round).toBe(1);
     s.moved = true;
@@ -267,8 +273,8 @@ describe("all 25 revised Item abilities", () => {
         1,
       ),
     );
-    physical(s, "E-Air-3");
-    expect(use(s, "IT-11", ["E-Air-3"]).players[0].courage).toBe(22);
+    physical(s, "E-Air-3", s.players[0].inventory);
+    expect(use(s, "IT-11", ["E-Air-3"]).players[0].courage).toBe(20);
     expect(loadSave(JSON.stringify(s))).toEqual(s);
   });
   it("IT-12 leaves exactly two carried mirrors before movement and prevents replacement", () => {
@@ -282,7 +288,7 @@ describe("all 25 revised Item abilities", () => {
     expect(s).toEqual(before);
     s = use(s, "IT-12", ["WM-01", "BM-01"]);
     expect(s.players[0].courage).toBe(20);
-    expect(() => planTransfer(s, "WM-02", "take")).toThrow("until");
+    expect(() => planTransfer(s, "WM-02", "take")).toThrow("capacity");
     s = reduce(s, { type: "MOVE", playerId: "P1", path: ["R01", "Hall"] });
     expect(s.items.restrictions.P1).toBeUndefined();
     const late = fixture();
@@ -298,7 +304,8 @@ describe("all 25 revised Item abilities", () => {
       physical(s, "E-Air-" + i, s.players[0].inventory);
     expect(() => use(s, "IT-13", ["IT-13"])).toThrow();
     s = use(s, "IT-13", ["IT-01"]);
-    expect(s.removed.some((t) => t.id === "IT-01")).toBe(true);
+    expect(s.rooms.R01.objects.some((t) => t.id === "IT-01")).toBe(true);
+    expect(s.discardedThisTurn["IT-01"]).toBe(s.turn);
     expect(s.blackMirror.resolution?.phase).toBe("item");
     s = loadSave(JSON.stringify(s));
     while (s.blackMirror.resolution?.choice) {
@@ -313,7 +320,7 @@ describe("all 25 revised Item abilities", () => {
     expect(
       s.players[0].inventory.filter((t) => t.kind === "Element"),
     ).toHaveLength(3);
-    expect(s.players[0].courage).toBe(21);
+    expect(s.players[0].courage).toBe(20);
   });
   it("IT-14 removes a learned Spell and its bindings without relocking Knowledge", () => {
     let s = fixture();
@@ -321,11 +328,15 @@ describe("all 25 revised Item abilities", () => {
     equipSpell(s);
     s.blackMirror.bindings["SP-01"] = ["Scarlet"];
     s = use(s, "IT-14", ["SP-01"]);
-    expect(s.removed.some((t) => t.id === "SP-01")).toBe(true);
-    expect(s.blackMirror.spentSigils).toEqual(["Scarlet"]);
+    expect(s.rooms.R01.objects.some((t) => t.id === "SP-01")).toBe(true);
+    expect(
+      s.rooms.R01.objects
+        .filter((t) => t.kind === "Sigil")
+        .map((t) => t.sigilColor),
+    ).toEqual(["Scarlet"]);
     expect(s.players[0].knowledge[0]).toBe(true);
     expect(s.players[0].spellSlots[0]).toBeNull();
-    expect(s.players[0].courage).toBe(21);
+    expect(s.players[0].courage).toBe(20);
   });
   it("IT-15 sacrifices only an owned free Sigil", () => {
     let s = fixture();
@@ -337,6 +348,11 @@ describe("all 25 revised Item abilities", () => {
     s = use(s, "IT-15", ["sigil:0"]);
     expect(s.players[0].sigils).toEqual([]);
     expect(s.blackMirror.bindings["SP-01"]).toEqual(["Scarlet"]);
+    expect(
+      s.rooms.R01.objects
+        .filter((t) => t.kind === "Sigil")
+        .map((t) => t.sigilColor),
+    ).toEqual([]);
     expect(s.blackMirror.spentSigils).toEqual(["Amber"]);
     expect(s.players[0].courage).toBe(21);
   });
@@ -351,6 +367,66 @@ describe("all 25 revised Item abilities", () => {
     expect(s.players[0].secrets).toEqual(["SE-02"]);
     expect(s.players[0].courage).toBe(20);
     expect(s.log.at(-1)?.text).not.toContain("SE-01");
+    expect(s.rooms.R01.objects.some((t) => t.id === "SE-01")).toBe(true);
+    expect(() => planTransfer(s, "SE-01", "take")).toThrow("next turn");
+    s.moved = true;
+    s = reduce(s, { type: "END", playerId: "P1" });
+    s = reduce(s, { type: "REVEAL", playerId: "P2" });
+    s.players[1].room = "R01";
+    s = reduce(s, {
+      type: "TRANSFER",
+      playerId: "P2",
+      tokenId: "SE-01",
+      direction: "take",
+    });
+    expect(s.players[1].secrets).toContain("SE-01");
+    expect(s.rooms.R01.objects.some((t) => t.id === "SE-01")).toBe(false);
+  });
+  it("discarded objects persist in the room, stay blocked through reload and movement, and unlock next turn", () => {
+    let s = fixture();
+    card(s, "IT-11");
+    physical(s, "E-Air-1", s.players[0].inventory);
+    s = use(s, "IT-11", ["E-Air-1"]);
+    expect(s.spentElements).toHaveLength(0);
+    expect(s.rooms.R01.objects.some((t) => t.id === "E-Air-1")).toBe(true);
+    s = loadSave(JSON.stringify(s));
+    expect(() => planTransfer(s, "E-Air-1", "take")).toThrow("next turn");
+    s = reduce(s, { type: "MOVE", playerId: "P1", path: ["R01", "Hall"] });
+    s.players[0].room = "R01";
+    expect(() => planTransfer(s, "E-Air-1", "take")).toThrow("next turn");
+    s = reduce(s, { type: "END", playerId: "P1" });
+    s = reduce(s, { type: "REVEAL", playerId: "P2" });
+    s.players[1].room = "R01";
+    s = reduce(s, {
+      type: "TRANSFER",
+      playerId: "P2",
+      tokenId: "E-Air-1",
+      direction: "take",
+    });
+    expect(s.players[1].inventory.some((t) => t.id === "E-Air-1")).toBe(true);
+  });
+  it("discarded Sigils keep their physical identity and can be collected next turn", () => {
+    let s = fixture();
+    card(s, "IT-14");
+    equipSpell(s);
+    s.blackMirror.bindings["SP-01"] = ["Amber"];
+    s = use(s, "IT-14", ["SP-01"]);
+    const sigil = s.rooms.R01.objects.find((t) => t.kind === "Sigil")!;
+    expect(() => planTransfer(s, sigil.id, "take")).toThrow("next turn");
+    expect(s.blackMirror.spentSigils).toHaveLength(0);
+    s.moved = true;
+    s = reduce(s, { type: "END", playerId: "P1" });
+    s = reduce(s, { type: "REVEAL", playerId: "P2" });
+    s.players[1].room = "R01";
+    s = reduce(s, {
+      type: "TRANSFER",
+      playerId: "P2",
+      tokenId: sigil.id,
+      direction: "take",
+    });
+    expect(s.players[1].sigils).toContain("Amber");
+    expect(s.spells.availableIds.P2).toContain(sigil.id);
+    expect(s.players[1].knowledge[0]).toBe(true);
   });
   it("IT-17 leaves Loyal and Stray Companions, blocks replacement and prevents following on departure", () => {
     let s = fixture();
@@ -362,7 +438,7 @@ describe("all 25 revised Item abilities", () => {
     expect(s.players[0].courage).toBe(20);
     expect(() =>
       reduce(s, { type: "RECRUIT", playerId: "P1", tokenId: t.id }),
-    ).toThrow("departure");
+    ).toThrow("next turn");
     s = reduce(s, { type: "MOVE", playerId: "P1", path: ["R01", "Hall"] });
     expect(s.players[0].companions).toHaveLength(0);
     expect(s.rooms.R01.objects.some((x) => x.id === t.id)).toBe(true);
@@ -464,7 +540,7 @@ describe("all 25 revised Item abilities", () => {
       spellId: spell.id,
       action: index,
     });
-    expect(s.players[0].courage).toBe(Math.min(35, 18 + colors.length * 3));
+    expect(s.players[0].courage).toBe(Math.min(35, 18 + colors.length));
     expect(s.players[0].sigils).toEqual([]);
     expect(loadSave(JSON.stringify(s))).toEqual(s);
     expect(() =>
@@ -522,7 +598,7 @@ describe("all 25 revised Item abilities", () => {
       validElementPayment(s, ["Air", "Air", "Fire"], ["E-Air-1", "E-Aether-1"]),
     ).toBe(true);
   });
-  it("permanent commitments obey Seals and exact colors; action-granularity rewards remain configurable", () => {
+  it("permanent commitments obey Seals and exact colors; legacy action-granularity settings still reward only actual committed Sigils", () => {
     let s = fixture();
     card(s, "IT-24");
     const spell = Object.values(byId).find((c) =>
@@ -552,7 +628,7 @@ describe("all 25 revised Item abilities", () => {
     s.blackMirror.seals = [];
     s.rules.itemPolicies.permanentReward = "ACTION";
     s = reduce(s, command);
-    expect(s.players[0].courage).toBe(21);
+    expect(s.players[0].courage).toBe(18 + mode.sigil_slots.length);
     expect(s.blackMirror.bindings[spell.id]).toEqual(mode.sigil_slots);
   });
   it("Locket protects only its holder when Mamba arrives and never prevents a Tool sacrifice", () => {

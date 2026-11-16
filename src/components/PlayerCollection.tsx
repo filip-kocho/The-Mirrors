@@ -36,12 +36,7 @@ export function PlayerCollection({
             />
           ))}
       </div>
-      {player.companions.length > 0 && (
-        <p className="muted">
-          Your Companions follow you. Click a figurine to read its card.
-        </p>
-      )}
-      <h3>Private Secrets · {player.secrets.length}</h3>
+      <h3>SECRETS · {player.secrets.length}</h3>
       <div className="collection-icons">
         {player.secrets.map((id, i) => (
           <button

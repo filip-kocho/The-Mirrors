@@ -101,7 +101,7 @@ describe("mirror loop", () => {
           id: "P3",
           name: "C",
         });
-        s.magic.wildStorage.push({id:"WILD-P3",owner:"P3"});
+        s.magic.wildStorage.push({ id: "WILD-P3", owner: "P3" });
         s.players[1].room = "R01";
         s.players[1].courage = 12;
         const matchingRoom = Object.values(s.rooms).find(
@@ -124,7 +124,7 @@ describe("mirror loop", () => {
           }
           room.restored = true;
           s.mosaic[i] = room.color;
-          grantSigil(s,"P1",room.color!);
+          grantSigil(s, "P1", room.color!);
         });
         s.rage = rage;
         s.players[0].restored = rage;
@@ -386,6 +386,63 @@ describe("mirror loop", () => {
   });
 });
 describe("neutral spatial Kaleidoscope", () => {
+  it("scores only occupied shared-edge tiles owned by the placing hero, regardless of Sigil color", () => {
+    const mosaic = Array(35).fill(null),
+      owners = Array(35).fill(null);
+    const cell = kaleidoscopeCells.find((c) => c.neighbors.length >= 3)!;
+    const [a, b, other] = cell.neighbors;
+    mosaic[a] = "Scarlet";
+    mosaic[b] = "Emerald";
+    mosaic[other] = "Amber";
+    owners[a] = owners[b] = "P1";
+    owners[other] = "P2";
+    const unrelated = kaleidoscopeCells.find(
+      (c) => c.id !== cell.id && !cell.neighbors.includes(c.id),
+    )!.id;
+    mosaic[unrelated] = "Scarlet";
+    owners[unrelated] = "P1";
+    expect(
+      placementReward(mosaic, cell.id, "Scarlet", false, [], owners, "P1"),
+    ).toBe(3);
+    expect(
+      placementReward(mosaic, cell.id, "Amber", false, [], owners, "P2"),
+    ).toBe(2);
+    owners[b] = null;
+    expect(
+      placementReward(mosaic, cell.id, "Scarlet", false, [], owners, "P1"),
+    ).toBe(2);
+    mosaic[a] = null;
+    expect(
+      placementReward(mosaic, cell.id, "Scarlet", false, [], owners, "P1"),
+    ).toBe(1);
+  });
+  it("records placement ownership, awards the bonus once, and preserves it in saves", () => {
+    let s = fixture();
+    s.mosaic[0] = "Scarlet";
+    s.mosaicOwners[0] = "P1";
+    s.rooms.R01.restored = s.rooms.R02.restored = true;
+    s.rage = 2;
+    s.pending = {
+      room: "R02",
+      card: "BM-01",
+      stage: "placement",
+      skipped: true,
+    };
+    const before = s.players[0].courage;
+    s = reduce(s, { type: "PLACE", playerId: "P1", cell: 1 });
+    expect(s.players[0].courage).toBe(before + 2);
+    expect(s.players[1].courage).toBe(18);
+    expect(s.mosaicOwners[1]).toBe("P1");
+    expect(loadSave(JSON.stringify(s)).mosaicOwners).toEqual(s.mosaicOwners);
+    expect(() =>
+      reduce(s, { type: "PLACE", playerId: "P1", cell: 1 }),
+    ).toThrow();
+    const old = JSON.parse(JSON.stringify(s));
+    delete old.mosaicOwners;
+    expect(loadSave(JSON.stringify(old)).mosaicOwners).toEqual(
+      Array(35).fill(null),
+    );
+  });
   it("has 35 symmetric connected cells with an edge route to every cell", () => {
     expect(kaleidoscopeCells).toHaveLength(35);
     const seen = new Set([0]),
@@ -512,7 +569,7 @@ it("runs all 35 real pairs to victory with exact conservation and the final Conf
   }
   expect(s.rage).toBe(35);
   expect(s.outcome).toBe("victory");
-  expect(s.removed.filter(t=>t.kind.endsWith("Mirror"))).toHaveLength(70);
+  expect(s.removed.filter((t) => t.kind.endsWith("Mirror"))).toHaveLength(70);
   expect(s.players[0].sigils).toHaveLength(35);
   expect(s.players[0].knowledge.every(Boolean)).toBe(true);
 });

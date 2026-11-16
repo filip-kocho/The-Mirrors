@@ -16,6 +16,7 @@ export function connections(
   const normal = roomGraph[room].neighbors.filter(
     (id) =>
       (owner && ignoresThreshold(s, owner)) ||
+      (owner && !s.moved && s.spells.usage["companion-passage:"+owner+":"+connectionId(room,id)] === s.turn) ||
       (owner &&
         !s.moved &&
         s.magic.movement[owner]?.turn === s.turn &&

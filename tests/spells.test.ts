@@ -146,7 +146,7 @@ describe("Spell learning", () => {
     expect(s.players[0].knowledge[0]).toBe(true);
     expect(s.rooms.R01.objects.some((t) => t.id === "SP-01")).toBe(true);
     expect(s.spentElements).toHaveLength(1);
-    expect(() => learn(s, "SP-01")).toThrow("current room");
+    expect(() => learn(s, "SP-01")).toThrow("next turn");
   });
   it("conserves repeated costs and supports every catalog Spell's learning requirements", () => {
     for (const card of Object.values(byId).filter(

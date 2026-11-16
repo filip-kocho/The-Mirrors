@@ -14,6 +14,7 @@ import {
   placementReward,
 } from "../src/game/map/kaleidoscopeCells";
 import {
+  awardDiamondGem,
   storedGems,
   gapReady,
   supportsFilledGaps,
@@ -181,17 +182,46 @@ describe("Wild Diamond Gem transactions", () => {
     expect(s.blackMirror.thresholds).toContain(edge);
     expect(connections(s, "Hall")).not.toContain("R01");
   });
-  it("room transfer cannot refresh an exhausted physical Gem", () => {
-    let s = magic(earn(), "SWIFT");
-    s = magic(s, "LEAVE");
-    s.active = 1;
-    s = magic(s, "TAKE");
-    expect(storedGems(s)[0].exhausted).toBe(true);
-    expect(() => magic(s, "SWIFT")).toThrow("exhausted");
+  it("collected Gems cannot be left, even when exhausted", () => {
+    const s = magic(earn(), "SWIFT"),
+      before = JSON.stringify(s);
+    expect(() => magic(s, "LEAVE")).toThrow("cannot be left");
+    expect(JSON.stringify(s)).toBe(before);
+    expect(loadSave(before)).toEqual(s);
+  });
+  it("stores and installs multiple Gems in one turn, one per ready gap", () => {
+    let s = earn();
+    s.decks.Secret = s.decks.Secret.filter((id) => id !== "SE-01");
+    s.players[0].completedSecrets.push({
+      id: "SE-01",
+      turn: s.turn,
+      reward: 1,
+      gained: 0,
+      rewardType: "DIAMOND_GEM",
+    });
+    awardDiamondGem(s, "SE-01", "P1");
+    expect(storedGems(s)).toHaveLength(2);
+    const gaps = kaleidoscopeGems.filter((g) => g.bonus === 3).slice(0, 2);
+    restore(s, [...new Set(gaps.flatMap((g) => g.cells))]);
+    const before = s.players[0].courage;
+    s = magic(s, "INSTALL_GEM", gaps[0].id);
+    expect(() => magic(s, "INSTALL_GEM", gaps[0].id, "DG-01")).toThrow();
+    s = magic(s, "INSTALL_GEM", gaps[1].id, "DG-01");
+    expect(storedGems(s)).toHaveLength(0);
+    expect(s.players[0].courage).toBe(Math.min(35, before + 6));
+    expect(
+      s.magic.gems.filter((g) => g.location === "KALEIDOSCOPE"),
+    ).toHaveLength(2);
     expect(loadSave(JSON.stringify(s))).toEqual(s);
-    s.turn++;
-    beginHeroTurn(s);
-    expect(storedGems(s)[0].exhausted).toBe(false);
+  });
+  it("upgrades saved one-Gem storage and exclusive Spell modes", () => {
+    const s = earn(),
+      old = JSON.parse(JSON.stringify(s));
+    old.rules.gemPolicies.capacity = 1;
+    old.rules.spellPolicies.modePolicy = "EXCLUSIVE_ACTIVE_MODE";
+    const loaded = loadSave(JSON.stringify(old));
+    expect(loaded.rules.gemPolicies.capacity).toBe(10);
+    expect(loaded.rules.spellPolicies.modePolicy).toBe("BOTH_ALLOWED");
   });
   it("direct transfer is disabled unless configured", () => {
     let s = earn();
@@ -322,7 +352,11 @@ describe("Wild Sigil sockets and central installation", () => {
     beginHeroTurn(s);
     expect(s.magic.wildStorage.some((t) => t.id === "WILD-P1")).toBe(false);
     abandonSpell(s, s.players[0], "SP-01");
-    expect(s.spells.spentIds).toContain("WILD-P1");
+    expect(
+      s.rooms[s.players[0].room].objects.some(
+        (t) => t.id === "WILD-P1" && t.kind === "Sigil",
+      ),
+    ).toBe(true);
     expect(loadSave(JSON.stringify(s))).toEqual(s);
   });
   it("two distinct Wilds fill two sockets, but one cannot be reused", () => {

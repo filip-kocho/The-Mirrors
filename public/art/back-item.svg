@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504" preserveAspectRatio="none"><defs>
+<radialGradient id="velvet"><stop stop-color="#35303d"/><stop offset=".55" stop-color="#1b1823"/><stop offset="1" stop-color="#08090e"/></radialGradient>
+<linearGradient id="metal" x2=".8" y2="1"><stop stop-color="#3b333e"/><stop offset=".25" stop-color="#d1a568"/><stop offset=".48" stop-color="#4e4350"/><stop offset=".7" stop-color="#d1a568"/><stop offset="1" stop-color="#332a37"/></linearGradient>
+<filter id="grain"><feTurbulence baseFrequency=".65" numOctaves="3" seed="8" type="fractalNoise"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".12"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter>
+<clipPath id="edge"><rect x="9" y="9" width="342" height="486" rx="14"/></clipPath></defs>
+<g clip-path="url(#edge)"><g fill="url(#velvet)" stroke="url(#metal)" stroke-width="9"><rect x="9" y="9" width="342" height="486" rx="14"/></g><rect width="360" height="504" filter="url(#grain)" opacity=".4"/>
+<g fill="none" stroke="url(#metal)" stroke-width="1.3"><rect x="22" y="22" width="316" height="460" rx="8"/>
+<path opacity=".5" d="M86 338V213Q86 156 180 83Q274 156 274 213V338M98 332V213Q98 164 180 99Q262 164 262 213V332M115 196Q139 171 180 148Q221 171 245 196M180 99V148"/>
+<path d="M180 46L190 62L180 78L170 62ZM180 426L190 442L180 458L170 442"/>
+<path opacity=".6" d="M80 365Q115 355 145 382L180 408L215 382Q245 355 280 365M104 374Q139 374 180 419Q221 374 256 374"/>
+<path d="M135 215Q135 194 180 176Q225 194 225 215V286Q225 310 180 329Q135 310 135 286Z" fill="#100e1880" stroke-width="3"/>
+<path d="M143 217Q143 202 180 185Q217 202 217 217V284Q217 302 180 320Q143 302 143 284Z" opacity=".6"/>
+</g><g fill="none" stroke="#d1a568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M180 210L199 243L180 285L161 243ZM180 210V285M161 243H199"/></g>
+<g fill="#d1a568"><path d="M180 165L184 172L180 179L176 172ZM180 326L184 333L180 340L176 333Z"/></g></g></svg>

@@ -59,7 +59,7 @@
           "Amber"
         ],
         "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
-        "effect": "Increase normal movement allowance by 1."
+        "effect": "Increase your maximum movement allowance by 2 rooms."
       }
     ],
     "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
@@ -248,7 +248,7 @@
           "Scarlet"
         ],
         "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
-        "effect": "Leave 1 carried Element in your room and gain 3 Courage."
+        "effect": "Leave 1 carried Element in your room and gain 1 Courage. Add 1 Element Hexlock on that slot."
       },
       {
         "name": "Permanent",
@@ -413,7 +413,7 @@
           "Scarlet"
         ],
         "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
-        "effect": "Leave 1 carried Mirror in your room and gain 3 Courage."
+        "effect": "Leave 1 carried Mirror in your room and gain 1 Courage. Add 1 Mirror Hexlock on that slot."
       },
       {
         "name": "Permanent",
@@ -512,7 +512,7 @@
           "Scarlet"
         ],
         "assignment": "Temporary; exhaust all matching Sigils, refresh per agreed timing.",
-        "effect": "Remove 1 Sigil Seal from one of your learned Spells."
+        "effect": "Return the bound Sigils from one of your Permanent Spells to your storage. Gain 1 Courage per returned Sigil. That Permanent effect ends and may be activated again."
       },
       {
         "name": "Permanent",
@@ -521,7 +521,7 @@
           "Amethyst"
         ],
         "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
-        "effect": "Prevent all new Sigil Seals on your learned Spell actions. Existing Seals remain."
+        "effect": "Use one fewer Sigil when activating another Permanent Spell."
       }
     ],
     "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
@@ -1096,7 +1096,7 @@
           "Amethyst"
         ],
         "assignment": "Bind exact matching Sigils to this Spell while it stays equipped; no free reassignment.",
-        "effect": "At the start of each of your turns, you may place an available Portal Token in your room if none is present. No additional Sigils are needed."
+        "effect": "At the start of each of your turns, you may place a matching Portal pair in your room and any other room without a Portal."
       }
     ],
     "restrictions": "Quick and Permanent configurations are alternatives unless an effect explicitly permits both.",
