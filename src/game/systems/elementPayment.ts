@@ -1,4 +1,5 @@
 import { hasSpell } from "./spellModifiers";
+import { learningDiscountSource } from "./companionLearning";
 import type { State, Token } from "../domain/engine";
 import { elements } from "../cards/catalog";
 import { itemEffects } from "./itemAccess";
@@ -10,8 +11,7 @@ export function elementResources(s: State) {
   );
 }
 export function reducedCost(s: State, required: Element[], discount?: Element) {
-  const canDiscount = itemEffects(s).some((e) => e.op === "LEARNING_DISCOUNT");
-  if (discount && (!canDiscount || !required.includes(discount)))
+  if (discount && !learningDiscountSource(s, required, discount))
     throw Error("Choose a printed Element requirement to reduce.");
   const cost = [...required];
   if (discount) cost.splice(cost.indexOf(discount), 1);

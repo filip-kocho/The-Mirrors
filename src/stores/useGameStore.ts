@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { emitGameSounds } from "../audio/gameSounds";
 import {
   Command,
   State,
@@ -25,7 +26,10 @@ export const useGameStore = create<Store>((set, get) => ({
     try {
       // Generate fresh entropy only at the new-game boundary, keeping the engine
       // deterministic and saved expeditions reproducible.
-      const game = initialState(names, seed.trim() ? seed : crypto.randomUUID());
+      const game = initialState(
+        names,
+        seed.trim() ? seed : crypto.randomUUID(),
+      );
       set({ game, error: "", notice: "" });
     } catch (e) {
       set({ error: (e as Error).message });
@@ -33,8 +37,10 @@ export const useGameStore = create<Store>((set, get) => ({
   },
   dispatch: (command) => {
     try {
-      const game = reduce(get().game!, command);
+      const before = get().game!;
+      const game = reduce(before, command);
       set({ game, error: "", notice: "" });
+      emitGameSounds(before, game, command);
       try {
         localStorage.setItem(key, JSON.stringify(game));
       } catch {

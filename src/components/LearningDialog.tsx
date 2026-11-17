@@ -10,6 +10,7 @@ import {
 } from "../game/systems/spells";
 import { elementResources, type Element } from "../game/systems/elementPayment";
 import { GameIcon } from "./GameIcon";
+import { learningDiscountSource } from "../game/systems/companionLearning";
 export function LearningDialog({
   s,
   spell,
@@ -37,6 +38,7 @@ export function LearningDialog({
     reason = (e as Error).message;
   }
   const discounts = learningDiscounts(s, spell).filter(Boolean) as Element[];
+  const discountLabel = `${learningDiscountSource(s, byId[spell].learn_elements ?? [], discount) ?? "Learning"} discount`;
   return (
     <dialog
       ref={ref}
@@ -52,9 +54,9 @@ export function LearningDialog({
       </p>
       {discounts.length > 0 && (
         <label>
-          Grimoire discount{" "}
+          {discountLabel}{" "}
           <select
-            aria-label="Grimoire discount"
+            aria-label={discountLabel}
             value={discount}
             onChange={(e) => {
               const d = e.target.value as Element;

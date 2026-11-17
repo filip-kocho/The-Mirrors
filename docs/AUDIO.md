@@ -1,0 +1,11 @@
+# Echoes of the castle
+
+Open Sound in the lower-right corner and enable audio. Music track selects between Ghost Processional and Darkest Child, recorded eerie instrumental pieces by Kevin MacLeod. Both MP3s are bundled locally, loop during play, and require no third-party streaming connection. Source links and CC BY 4.0 attribution appear in the Sound panel and public/audio/CREDITS.md. The procedural background score has been removed.
+
+Music and downloaded game effects have separate volume controls and a master mute. Effects include three alternating stone footsteps, a performed evil laugh for Occuldor, recorded glass breaking, parchment/book sounds for Secrets and learning, magic, Sigil placement, objects and endings. Each companion has a mapped animal or fantasy-creature discovery cue. Moving or recruiting an already discovered companion does not replay its discovery sound. Recorded music does not receive the effects bus's synthetic hall reverb.
+
+Audio starts muted and requires a click or keypress to resume on a later visit. Settings, including the selected track, are saved separately from expeditions under the-mirrors-audio-v1. Older preferences without a track migrate to Ghost Processional. Music continues uninterrupted through turn changes and privacy handoff. Muting and tab hiding pause music without resetting its position and stop scheduled effects. Changing tracks starts the new piece from the beginning.
+
+The pure gameSounds adapter observes successful commands; audio never changes rules or reveals private scouting information. Browser tests check actual MP3 playback and duration, track switching, independent volume, persisted settings, effects, and uninterrupted handoff playback and visibility suspension.
+
+All 22 effect files are bundled locally under public/audio/sfx (less than 1 MB total), under CC0. The Sound panel offers a preview selector for every effect and links to complete creator/source credits. AudioBuffer samples are cached, peak-balanced, and played through the separate effects gain; no procedural tone/noise effects remain. Muting cancels queued effects as well as active voices. The browser test decodes every shipped effect and checks non-silent data, playback, volume controls and continuing music across turns.

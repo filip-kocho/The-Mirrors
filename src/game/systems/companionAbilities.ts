@@ -2,7 +2,12 @@ import type { State } from "../domain/engine";
 import { byId } from "../cards/catalog";
 import { roomGraph } from "../map/roomGraph";
 import { connectionId } from "../map/castleConnections";
-import { isImmobilized, mutableStatus, statusOf, event } from "./blackMirrorRuntime";
+import {
+  isImmobilized,
+  mutableStatus,
+  statusOf,
+  event,
+} from "./blackMirrorRuntime";
 import { roomActionsBlocked } from "./spellModifiers";
 
 export const hasCompanion = (s: State, owner: string, card: string) =>
@@ -31,7 +36,16 @@ export function companionActionPlan(s: State, card: string) {
   let options: { id: string; label: string; group?: string; room?: string }[] =
     [];
   let max = 1;
-  if (card === "CO-04") {
+  if (card === "CO-03") {
+    if (s.moved) throw Error("Poe scouts before your mandatory movement.");
+    if (s.spells.usage["poe:" + p.id] === s.turn)
+      throw Error("Poe has already scouted for you this turn.");
+    options = roomGraph[p.room].neighbors
+      .filter(
+        (id) => id !== "Hall" && !s.rooms[id].explored && !s.rooms[id].restored,
+      )
+      .map((id) => ({ id, label: "Scout " + id, group: "room" }));
+  } else if (card === "CO-04") {
     if (s.moved || isImmobilized(s, p.id))
       throw Error("Use this ability before movement.");
     options = roomGraph[p.room].neighbors
@@ -98,7 +112,12 @@ export function useCompanion(s: State, card: string, ids: string[]) {
     );
   if (plan.limited) s.spells.usage["companion:" + card] = s.items.round;
   const st = mutableStatus(s, p.id);
-  if (card === "CO-04")
+  if (card === "CO-03") {
+    s.spells.usage["poe:" + p.id] = s.turn;
+    s.spells.visions[p.id] = [
+      ...new Set([...(s.spells.visions[p.id] ?? []), ids[0]]),
+    ];
+  } else if (card === "CO-04")
     s.spells.usage["companion-passage:" + p.id + ":" + ids[0]] = s.turn;
   else if (card === "CO-07") {
     st.fear = st.fear.filter((t) => !ids.includes(t.id));

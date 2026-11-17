@@ -23,6 +23,8 @@ export const companionDefinitions = [
   },
   {
     id: "CO-03",
+    effect:
+      "Before your mandatory movement, privately inspect the Sigil color of one adjacent unexplored room. Do not explore the room or reveal its findings.",
     name: "Poe the Raven",
     movementType: "STRAY",
     followingType: "FOLLOWER",

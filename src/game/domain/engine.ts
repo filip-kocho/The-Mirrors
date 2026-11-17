@@ -1,4 +1,5 @@
 import { assertCanCollect, discardToRoom } from "../systems/discard";
+import { recordJuliaLearning } from "../systems/companionLearning";
 import { hasCompanion, useCompanion } from "../systems/companionAbilities";
 import {
   applyMagic,
@@ -963,9 +964,7 @@ export function reduce(state: State, command: Command): State {
       learningDiscounts(s, command.spellId).filter(Boolean).length > 1 &&
       !command.discount
     )
-      throw Error(
-        "Choose the printed Element requirement discounted by your Grimoire.",
-      );
+      throw Error("Choose the printed Element requirement to discount.");
     const discount = command.discount ?? auto.discount;
     const plan = {
       slot: auto.slot,
@@ -1007,9 +1006,10 @@ export function reduce(state: State, command: Command): State {
       ),
     );
     p.spellSlots[plan.slot] = command.spellId;
+    if (plan.discountSource === "Julia") recordJuliaLearning(s);
     checkCapacity(p.inventory, r.objects, statusOf(s, p.id).hexlocks, s, p.id);
     log(
-      `${p.name} learns ${byId[command.spellId].name} in Knowledge slot ${plan.slot + 1}, spending ${byId[command.spellId].learn_elements!.join(" + ")}.`,
+      `${p.name} learns ${byId[command.spellId].name} in Knowledge slot ${plan.slot + 1}, spending ${plan.elementIds.length} Element token(s)${plan.discountSource ? ` with ${plan.discountSource}'s ${discount} discount` : ""}.`,
     );
   } else if (command.type === "LEAVE_SPELL") {
     const slot = p.spellSlots.indexOf(command.spellId);

@@ -331,3 +331,27 @@ Restored IT-15 Sigil Sacrifice's permanent removal and changed its printed cost/
 ## 2026-11-16 — Release validation
 
 Verified the accumulated card art/presentation, gameplay revisions, player board layout, Kaleidoscope ownership scoring and corrected discard/removal semantics: 425 unit/component tests, all 51 browser tests, and production build passed. The build passed on retry after Next.js displayed a security-upgrade advisory for the installed version; a dependency upgrade remains outstanding.
+
+## 2026-11-16 — Complete Companion special abilities
+
+Added Poe's private pre-movement scouting, map selection, per-hero remembered Sigil colors, saved use limit and hidden handoff. Added Julia's local Earth/Water learning discount, validated payment, minimum-one requirement, provisional configurable refresh, and non-stacking Grimoire precedence. Passive Companion inspectors now show their availability. Audited all ten current abilities and updated the tutorial and implementation matrix. Verified 430 unit/component tests, 11 browser tests and production build (passed on retry after the previously reported Next.js security-upgrade advisory).
+
+## 2026-11-17 — Gothic ambience and game sound effects
+
+Added an original procedural Web Audio score with organ-like drones, distant bells, wind and hall reverb, plus footsteps, spectral laughter on Occuldor arrival, breaking glass, discovery, object handling, magic and endgame cues. Sound is opt-in through the lower-right control, with separate persistent music/effects levels and master mute. Audio pauses on hidden tabs and privacy handoff; rejected commands and resumed saves do not replay events. See AUDIO.md.
+
+Validation: 435 unit/component tests, audio and responsive landing browser tests, and standalone TypeScript passed. Production compilation, TypeScript and static-page generation succeeded, but the build command exited with the existing Next.js security-upgrade advisory on both attempts; dependency remediation remains outstanding.
+
+## Recorded gothic music replacement
+
+Replaced the synthesized background score with locally bundled Ghost Processional and Darkest Child by Kevin MacLeod, licensed CC BY 4.0. Added a persistent track selector and visible attribution/source/license links. Music loops and pauses with mute, privacy handoff and tab visibility; existing game effects retain a separate volume control. Full attribution and original download URLs are in public/audio/CREDITS.md.
+
+Validation: 435 unit/component tests, TypeScript and the recorded-audio browser test pass. Browser verification covers decoded playback of both MP3s, track changes, preferences, mute and effects. Production compilation and page generation complete, but the build exits with the existing Next.js SecurityFatalError dependency advisory.
+
+Music now continues uninterrupted across turn changes and the privacy handoff screen. Verified actual playback advances after End Turn in the browser audio test.
+
+## Downloaded game sound effects
+
+Replaced synthesized effects with 22 downloaded CC0 audio files: performed evil laughter, glass breaking, three stone footsteps, animal/fantasy companion cues, parchment, book learning, magic, gem placement and object/endgame cues. Added companion-discovery detection without replay on transfer, a generic Secret cue that does not identify the private card, per-effect volume balancing and caching. Sound settings now offer a preview selector and source credits. Music still continues through turns.
+
+Validation: 437 unit/component tests and two browser audio tests pass, including decoding every downloaded effect and checking non-silent audio. Source attribution and original filenames are retained in public/audio/sfx/CREDITS.md.

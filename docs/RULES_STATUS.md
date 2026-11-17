@@ -96,3 +96,9 @@ Old saves receive an empty pickup-block ledger; already removed objects are not 
 ## 2026-11-16 — Clarification: permanent discard means removal
 
 CONFIRMED: discard leaves the object in the current room with pickup blocked for that turn. Remove and permanently discard both remove the object from play. IT-15 Sigil Sacrifice therefore removes its paid free Sigil permanently; its card now uses the unambiguous word Remove. Ordinary Spell abandonment still discards its bound Sigils into the room; permanently bound describes their assignment, not permanent disposal. This clarification supersedes the previous inclusion of IT-15 among recoverable room discards.
+
+## Companion ability completion — 2026-11-16
+
+Poe now privately scouts one adjacent unexplored room before mandatory movement. Results persist only in the scouting hero's saved knowledge; the room, findings and public log do not reveal its color. Julia now discounts one Earth/Water learning requirement while in the learner's room, minimum one Element remaining, with validated payment and passive status UI. All ten printed Companion abilities now have executable behavior; see COMPANION_ABILITIES.md.
+
+PROVISIONAL: Julia refreshes once per player turn (configurable as TURN or ROUND in companionPolicies.juliaRefresh). Her discount does not stack with Grimoire; Grimoire takes precedence without consuming Julia's use. Poe permits one room per owner turn, following the catalog's one-room pre-movement scope; blocked corridors do not prevent visual scouting of a physically adjacent room.

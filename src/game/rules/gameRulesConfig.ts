@@ -31,6 +31,7 @@ export const rulesSchema = z.object({
     })),
   companionPolicies: z
     .object({
+      juliaRefresh: z.enum(["TURN", "ROUND"]).default("TURN"),
       reunion: z
         .enum(["FIRST_DEPARTURE", "SAME_OWNER_IMMEDIATE"])
         .default("SAME_OWNER_IMMEDIATE"),
@@ -38,6 +39,7 @@ export const rulesSchema = z.object({
       overflow: z.literal("LEAVE_CARRIER").default("LEAVE_CARRIER"),
     })
     .default(() => ({
+      juliaRefresh: "TURN" as const,
       reunion: "SAME_OWNER_IMMEDIATE" as const,
       flee: "EXPLORED_NEIGHBOR" as const,
       overflow: "LEAVE_CARRIER" as const,
@@ -127,6 +129,7 @@ export const defaultRules: GameRulesConfig = {
     relocation: "PRESERVE_SUPPORT",
   },
   companionPolicies: {
+    juliaRefresh: "TURN",
     reunion: "SAME_OWNER_IMMEDIATE",
     flee: "EXPLORED_NEIGHBOR",
     overflow: "LEAVE_CARRIER",

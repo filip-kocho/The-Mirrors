@@ -1,4 +1,5 @@
 import { roomActionsBlocked } from "./spellModifiers";
+import { learningDiscountSource } from "./companionLearning";
 import { assertCanCollect } from "./discard";
 import { accessibleItems } from "./itemAccess";
 import { byId } from "../cards/catalog";
@@ -21,9 +22,11 @@ export function learningDiscounts(
   s: State,
   spellId: string,
 ): (Element | undefined)[] {
-  return itemEffects(s).some((e) => e.op === "LEARNING_DISCOUNT")
-    ? [...new Set(byId[spellId].learn_elements ?? [])]
-    : [undefined];
+  const required = byId[spellId].learn_elements ?? [];
+  const options = [...new Set(required)].filter((element) =>
+    learningDiscountSource(s, required, element),
+  );
+  return options.length ? options : [undefined];
 }
 export function suggestedPayment(
   s: State,
@@ -113,8 +116,14 @@ export function planLearning(
             : byId[t.card!].name === card.tool_requirement),
       )
     : undefined;
-  if (typeof card.tool_requirement === "string" && !prerequisite && s.rules.spellPolicies.unresolvedTools === "BLOCK")
-    throw Error(`Learning blocked: obsolete Tool prerequisite ${card.tool_requirement} awaits a revised requirement.`);
+  if (
+    typeof card.tool_requirement === "string" &&
+    !prerequisite &&
+    s.rules.spellPolicies.unresolvedTools === "BLOCK"
+  )
+    throw Error(
+      `Learning blocked: obsolete Tool prerequisite ${card.tool_requirement} awaits a revised requirement.`,
+    );
   if (
     typeof card.tool_requirement === "string" &&
     !tool &&
@@ -137,5 +146,13 @@ export function planLearning(
     throw Error(
       "Pay the exact Element cost using distinct accessible tokens and active Item modifiers.",
     );
-  return { elementIds, toolId: tool?.id };
+  return {
+    elementIds,
+    toolId: tool?.id,
+    discountSource: learningDiscountSource(
+      s,
+      card.learn_elements ?? [],
+      discount,
+    ),
+  };
 }

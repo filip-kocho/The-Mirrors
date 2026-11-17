@@ -3,7 +3,10 @@ import { useState } from "react";
 import { LearningDialog } from "./LearningDialog";
 import { itemEffects } from "../game/systems/itemAccess";
 import type { Command, State } from "../game/domain/engine";
-import { automaticLearningPlan } from "../game/systems/spells";
+import {
+  automaticLearningPlan,
+  learningDiscounts,
+} from "../game/systems/spells";
 import { byId } from "../game/cards/catalog";
 import { darkness } from "../game/systems/blackMirrorRuntime";
 import { ActionIcon } from "./ActionIcon";
@@ -18,9 +21,11 @@ export function SpellAction({
   dispatch: (command: Command) => unknown;
 }) {
   const [choosing, setChoosing] = useState(false);
-  const modified = itemEffects(s).some((e) =>
-    ["AETHER_WILD", "DOUBLE", "LEARNING_DISCOUNT"].includes(e.op),
-  );
+  const modified =
+    learningDiscounts(s, spellId).some(Boolean) ||
+    itemEffects(s).some((e) =>
+      ["AETHER_WILD", "DOUBLE", "LEARNING_DISCOUNT"].includes(e.op),
+    );
   const player = s.players[s.active],
     learned = player.spellSlots.includes(spellId);
   let reason = "",

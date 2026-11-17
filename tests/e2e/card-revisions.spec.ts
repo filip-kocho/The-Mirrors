@@ -9,6 +9,7 @@ import {
 } from "../../src/game/systems/sigils";
 import { spellActivationPlan } from "../../src/game/systems/spellActivation";
 import { attachCompanion } from "../../src/game/systems/companions";
+import { roomGraph } from "../../src/game/map/roomGraph";
 import {
   mutableStatus,
   beginHeroTurn,
@@ -43,6 +44,75 @@ async function resume(page: Page, s: State) {
 }
 const saved = (page: Page): Promise<State> =>
   page.evaluate(() => JSON.parse(localStorage.getItem("the-mirrors-save-v1")!));
+
+test("Poe scouts privately before movement and hides the result on handoff", async ({
+  page,
+}) => {
+  const s = initialState(["Rowan", "Elara"], "poe-ui");
+  s.decks.Companion = s.decks.Companion.filter((id) => id !== "CO-03");
+  s.players[0].companions.push({
+    id: "CO-03",
+    card: "CO-03",
+    kind: "Companion",
+  });
+  const target = roomGraph.Hall.neighbors[0];
+  await resume(page, s);
+  await page.getByRole("button", { name: /Inspect Poe/ }).click();
+  const panel = page.getByLabel("Companion ability", { exact: true });
+  await panel.locator(`[data-room-id="${target}"]`).click();
+  await panel.getByRole("button", { name: "Scout privately" }).click();
+  await expect(panel.getByLabel("Private scouting results")).toContainText(
+    s.rooms[target].color!,
+  );
+  expect((await saved(page)).rooms[target].explored).toBe(false);
+  await expect(panel).toContainText("already scouted");
+  await page.keyboard.press("Escape");
+  await page.locator(`.map-panel [data-room-id="${target}"]`).click();
+  await page.getByRole("button", { name: /Move here/ }).click();
+  await page.getByRole("button", { name: /End turn/ }).click();
+  await expect(page.getByLabel("Private scouting results")).toHaveCount(0);
+  await page.getByRole("button", { name: "I am Elara" }).click();
+  await expect(page.getByText("Private fragment visions")).toHaveCount(0);
+});
+
+test("Julia offers a learning discount and pays only the remaining local Element", async ({
+  page,
+}) => {
+  const s = initialState(["Rowan", "Elara"], "julia-ui");
+  s.decks.Companion = s.decks.Companion.filter((id) => id !== "CO-10");
+  s.players[0].companions.push({
+    id: "CO-10",
+    card: "CO-10",
+    kind: "Companion",
+  });
+  s.decks.Spell = s.decks.Spell.filter((id) => id !== "SP-22");
+  s.rooms.Hall.objects.push({ id: "SP-22", card: "SP-22", kind: "Spell" });
+  s.players[0].knowledge[0] = true;
+  const room = Object.values(s.rooms).find((r) =>
+    r.findings.some((t) => t.element === "Water"),
+  )!;
+  room.explored = true;
+  room.objects = structuredClone(room.findings);
+  const water = room.objects.splice(
+    room.objects.findIndex((t) => t.element === "Water"),
+    1,
+  )[0];
+  s.rooms.Hall.objects.push(water);
+  await resume(page, s);
+  await page
+    .getByRole("button", { name: "Learn Rooted Ward", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog", { name: "Choose learning payment" });
+  await expect(dialog.getByLabel("Julia discount")).toHaveValue("Earth");
+  await dialog.getByRole("button", { name: "Pay and learn" }).click();
+  expect((await saved(page)).spentElements.map((t) => t.id)).toEqual([
+    water.id,
+  ]);
+  await page.getByRole("button", { name: /Inspect Julia/ }).click();
+  await expect(
+    page.getByLabel("Companion ability", { exact: true }),
+  ).toContainText("has been used");
+});
 test("Companion token removal is usable outside the card and keeps its round limit", async ({
   page,
 }) => {

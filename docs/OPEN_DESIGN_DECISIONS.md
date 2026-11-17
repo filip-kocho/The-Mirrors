@@ -66,3 +66,7 @@ The approved pair replaces the former single Portal. Pending designer review, an
 - CO-05/06/09 may repeat in legal action windows: no frequency limit was specified. CO-04/07/08 retain the explicitly requested once-per-round limit, attached to the physical Companion.
 - SP-16 automatically waives one affordable printed socket (preferring the last when several choices work). It never discounts itself. The reduced payment stays valid after the discount source ends because the benefit changes activation cost, not upkeep.
 - SP-32 creates a complete pair atomically, never a lone Portal; the selected destination excludes the Hall under the existing room-target convention.
+
+## Companion powers — 2026-11-16
+
+Julia's catalog says one Spell without a refresh boundary. Default is once per player turn, configurable with companionPolicies.juliaRefresh = TURN or ROUND. Julia is local to her room, including when held by another hero, matching her printed room-based ability. Julia and Grimoire discounts do not stack; Grimoire is preferred so Julia's limited use is preserved. Poe scouts one adjacent unexplored room per owner turn before mandatory movement; adjacency uses physical rooms rather than Portal links or traversability. His saved knowledge remains with the scouting hero when Poe changes holders.

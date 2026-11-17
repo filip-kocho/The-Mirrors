@@ -348,6 +348,13 @@ export function HowToPlay() {
           everyone once discovered.
         </p>
         <p>
+          Open Sound in the lower-right corner to enable the castle's ambient
+          music and effects. Music and effects have separate volume sliders and
+          a master mute. Music continues while passing the screen to another hero
+          and pauses while this browser tab is hidden. Your sound preferences are saved
+          separately from the expedition.
+        </p>
+        <p>
           Learning, movement, carrying, placement, collisions, Rage, Sigils and
           victory and all revised Item abilities are playable. Permanent Sigils
           stay committed until the Spell leaves play or SP-16 returns them.
@@ -364,13 +371,17 @@ export function HowToPlay() {
           the map. Additional Spell movement does not replace mandatory
           movement. Some Spell learning remains blocked by obsolete Tool
           prerequisites. Rex protects against arrivals and Alexis adds movement.
-          Open Roderick, Madison, Mason, Mara, Mamba, or Clementine to use their
-          revised abilities; Poe and Julia retain proposed powers awaiting
-          implementation. Secret achievement rewards are playable. Loyal
-          Companions follow their holder; Strays follow the first departing
-          hero. Black Mirror choices and tokens are saved too. Card text shows
-          the designer’s proposed effects, including those still awaiting
-          implementation.
+          Open Poe before mandatory movement and choose Scout privately to
+          inspect one adjacent unexplored room's Sigil color. Only the scouting
+          hero remembers that color; findings stay hidden. Roderick, Madison,
+          Mason, Mara, Mamba and Clementine have actions beside their cards.
+          Julia offers an Earth or Water learning discount to heroes in her
+          room, leaving at least one Element to pay. The provisional refresh is
+          once per player turn; it does not stack with the Grimoire discount.
+          Secret achievement rewards are playable. Loyal Companions follow their
+          holder; Strays follow the first departing hero. Black Mirror choices
+          and tokens are saved too. Card text shows the designer’s proposed
+          effects, including those still awaiting implementation.
         </p>
       </section>
     </article>
